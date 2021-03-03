@@ -36,7 +36,7 @@ navbar:
         - text: "Practical 1: Manipulating data - Solutions"
           href: practicals/1_datamanipulation_solution.html
     - icon: fab fa-github
-      href: https://github.com/oliviergimenez/bayesian-stat-ecology-workshop
+      href: https://github.com/oliviergimenez/bayesian-stats-with-R
     - icon: fab fa-twitter
       href: https://twitter.com/oaggimenez
 output: 

@@ -59,7 +59,7 @@ install.packages(c("tidyverse", "R2jags"))
 
 ## Corrections {.appendix}
 
-If you spot a typo or an error, find a bug, want to suggest changes, or have trouble running the code, please [file an issue](https://github.com/oliviergimenez/bayesian-stat-ecology-workshop/issues) or [get back to me](mailto:olivier.gimenez@cefe.cnrs.fr)
+If you spot a typo or an error, find a bug, want to suggest changes, or have trouble running the code, please [file an issue](https://github.com/oliviergimenez/bayesian-stats-with-R/issues) or [get back to me](mailto:olivier.gimenez@cefe.cnrs.fr)
 
 ## Reuse {.appendix}
 
