@@ -1,6 +1,6 @@
 ---
 title: |
-    | Bayesian statistics for ecology 
+    | Bayesian statistics with R
     | 8. Heterogeneity and multilevel models (aka mixed models)
 author: "Olivier Gimenez"
 date: "March 2021"

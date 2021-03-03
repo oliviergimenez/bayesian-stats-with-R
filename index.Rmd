@@ -1,6 +1,6 @@
 ---
-title: "Bayesian statistics for ecology"
-description: "A workshop with `R` and `Jags`"
+title: "Bayesian statistics with R"
+#description: "A workshop with `R` and `Jags`"
 site: distill::distill_website
 ---
 
@@ -56,38 +56,6 @@ install.packages(c("tidyverse", "R2jags"))
 * Many slides are from [a workshop we used to run a loooong time ago](https://www.maths.ed.ac.uk/~rking33/Book-website/index.html) with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by [Richard McElreath](https://github.com/rmcelreath/statrethinking_winter2019) (16-20, 90-91, 166, 186), [Kerrie Mengersen](https://staff.qut.edu.au/staff/k.mengersen) (16-20, 81), [Francisco Rodriguez Sanchez](https://frodriguezsanchez.net/) (79-80; from the Stan manual), [Jim Albert and Jingchen Hu](https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html) (93-99), [Tristan Marh](https://www.tjmahr.com/) (22), [Jason Matthiopoulos](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/) (31-39, 196), a paper by [Michael McCarthy and Pip Masters](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x) (71-73), [Andrés Lopez-Sepulcre](https://www.lopez-sepulcre.com/) (126) and [John Kruschke' book cover](https://sites.google.com/site/doingbayesiandataanalysis/) (61).
 
 * The sources for the images are: [James Kulich](https://www.elmhurst.edu/blog/thomas-bayes/) for slide 13, Matt Buck for slide 21, [xkcd](https://xkcd.com/1132/) for slide 29 and Mike West for slide 194.
-
-# To-do list
-
-* Short term  
-   + Ajouter des practicals (exam M2 + les exos qui sont dans les slides)
-   + Mention that besides `Jags`, `Stan` and `Nimble`, there are other software options to fit models in the Bayesian framework that do not need coding. Check out the [CRAN Task View: Bayesian Inference](https://cran.r-project.org/web/views/Bayesian.html).
-   + Mention the availability of free Bayesian books: [here](https://www.bookdown.org/home/tags/bayesian/) and Gelman BDA [there](http://www.stat.columbia.edu/~gelman/book/).  
-   + Add a plot with several lines from posterior distribution of regression parameters to a plot of mean response function of a covariate; then get the credible interval on the prediction. 
-   + R 4.0 no longer converts automatically chains of characters in factors when reading file; while it is a good thing, this causes a problem in the plant example on GLMM with older R versions; just need to add an extra step for converting the Sp column into a factor (Sp <- as.factor(Sp)).
-   + Say more on prior predictive checks. 
-   + Say something about confidence, credible and HPD intervals.
-   + Add another Metropolis example, with adaptation, with the beta-binomial example, and discuss several levels of acceptance. 
-   + Add a section on posterior predictive checks, to comply with the 3 steps of a Bayesian analysis as defined by Gelman (set up a probabilistic model, inference and model checking; iterate to improve model).
-   + Do all plots with `ggplot2`; add [short introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse).
-   + ~~Add a short section on sequential analysis (today prior is yesterday posterior).~~
-   + ~~Add an example with Poisson GLM(M) example.~~
-   + In the GLMM section with the plant example, decide to go for number of seeds or log(number of seeds)
-   + Explain the WAIC in more details
-   + Properly introduce GLMs
-
-
-* Mid term   
-
-   + Add a section on LOO, and discuss complementarity with WAIC.
-   + Add a section on models with varying slopes. Can we use the [LKJ prior](https://www.sciencedirect.com/science/article/pii/S0047259X09000876) in `Jags` and `Nimble` ?
-   + Write a short introduction to `Nimble` (resp. `Stan`) and provide both the `Jags` and `Nimble` (resp. `Stan`) codes. Translating `Jags` code in `Nimble` is [easy](https://r-nimble.org/quick-guide-for-converting-from-jags-or-bugs-to-nimble). For now, check out [training materials](https://github.com/nimble-training) and [examples](https://r-nimble.org/examples).
-   + Add a section on population ecology (occupancy models, capture-recapture models). And/or something on hierarchical models, models with hidden variables. Make use of [nimbleEcology](https://cran.r-project.org/web/packages/nimbleEcology/vignettes/Introduction_to_nimbleEcology.html).
-   + Add a section on [penalized splines](https://www.cambridge.org/core/books/semiparametric-regression/02FC9A9435232CA67532B4D31874412C) (possibly using package `jagam`) and [spatial analyses](https://r-nimble.org/html_manual/cha-spatial.html).
-
-* Long term
-
-   + Write a book (whaaaaat?!)
 
 ## Corrections {.appendix}
 

@@ -1,8 +1,6 @@
-name: "bayesian-stat-ecology-workshop"
-title: "Bayesian statistics for ecology"
-description: "A workshop with R and Jags"
+name: "bayesian-stats-with-R"
+title: "Bayesian statistics with R"
 output_dir: "docs"
-#repository_url: https://github.com/wilkelab/SDS375
 include: [".nojekyll"]
 navbar:
 #  logo:

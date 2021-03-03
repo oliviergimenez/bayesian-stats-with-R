@@ -1,6 +1,6 @@
 ---
 title: |
-    | Bayesian statistics for ecology 
+    | Bayesian statistics with R
     | 5. Markov chains Monte Carlo (MCMC)
 author: "Olivier Gimenez"
 date: "March 2021"

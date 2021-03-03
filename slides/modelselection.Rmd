@@ -1,6 +1,6 @@
 ---
 title: |
-    | Bayesian statistics for ecology 
+    | Bayesian statistics with R
     | 7. Contrast scientific hypotheses with model selection
 author: "Olivier Gimenez"
 date: "March 2021"

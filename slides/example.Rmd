@@ -1,6 +1,6 @@
 ---
 title: |
-    | Bayesian statistics for ecology 
+    | Bayesian statistics with R
     | 3. Analyses by hand
 author: "Olivier Gimenez"
 date: "March 2021"
