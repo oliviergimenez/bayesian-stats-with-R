@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data manipulation - solutions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Olivier Gimenez" />
+    <script src="libs/header-attrs-2.7/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, title-slide
+
+# Data manipulation - solutions
+### Olivier Gimenez
+### last updated: 2021-02-26
+
+---
+
+
+
+
+## Question 1a 
+
+.tiny-font[
+
+```r
+penguins # display data
+```
+
+```
+## # A tibble: 344 x 8
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181        3750
+##  2 Adelie  Torgersen           39.5          17.4               186        3800
+##  3 Adelie  Torgersen           40.3          18                 195        3250
+##  4 Adelie  Torgersen           NA            NA                  NA          NA
+##  5 Adelie  Torgersen           36.7          19.3               193        3450
+##  6 Adelie  Torgersen           39.3          20.6               190        3650
+##  7 Adelie  Torgersen           38.9          17.8               181        3625
+##  8 Adelie  Torgersen           39.2          19.6               195        4675
+##  9 Adelie  Torgersen           34.1          18.1               193        3475
+## 10 Adelie  Torgersen           42            20.2               190        4250
+## # … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;
+```
+]
+
+---
+
+## Question 1a 
+
+.tiny-font[
+
+```r
+penguins %&gt;% glimpse() # display data
+```
+
+```
+## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+```
+]
+
+---
+
+## Question 1b
+
+
+```r
+dat &lt;- penguins %&gt;%
+# filter out missing sex
+  filter(!is.na(sex)) %&gt;% 
+# select variables
+  select(species, island, bill_length_mm, body_mass_g) 
+```
+
+---
+
+## Question 2a
+
+.tiny-font[
+
+```r
+dat # nb of penguins
+```
+
+```
+## # A tibble: 333 x 4
+##    species island    bill_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1        3750
+##  2 Adelie  Torgersen           39.5        3800
+##  3 Adelie  Torgersen           40.3        3250
+##  4 Adelie  Torgersen           36.7        3450
+##  5 Adelie  Torgersen           39.3        3650
+##  6 Adelie  Torgersen           38.9        3625
+##  7 Adelie  Torgersen           39.2        4675
+##  8 Adelie  Torgersen           41.1        3200
+##  9 Adelie  Torgersen           38.6        3800
+## 10 Adelie  Torgersen           34.6        4400
+## # … with 323 more rows
+```
+]
+
+---
+
+## Questions 2b and 2d
+
+
+```r
+# nb of species, and penguins per species
+dat %&gt;% count(species) 
+```
+
+```
+## # A tibble: 3 x 2
+##   species       n
+## * &lt;fct&gt;     &lt;int&gt;
+## 1 Adelie      146
+## 2 Chinstrap    68
+## 3 Gentoo      119
+```
+
+---
+
+## Questions 2b and 2d
+
+
+```r
+dat %&gt;% count(species, sort = TRUE) # idem, arranged by n
+```
+
+```
+## # A tibble: 3 x 2
+##   species       n
+##   &lt;fct&gt;     &lt;int&gt;
+## 1 Adelie      146
+## 2 Gentoo      119
+## 3 Chinstrap    68
+```
+
+
+---
+
+## Question 2c
+
+
+```r
+dat %&gt;% count(island) # nb of island, and penguins per island
+```
+
+```
+## # A tibble: 3 x 2
+##   island        n
+## * &lt;fct&gt;     &lt;int&gt;
+## 1 Biscoe      163
+## 2 Dream       123
+## 3 Torgersen    47
+```
+
+
+---
+
+## Question 2e
+
+
+```r
+# penguins per species and island
+dat %&gt;% count(species, island) 
+```
+
+```
+## # A tibble: 5 x 3
+##   species   island        n
+##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;
+## 1 Adelie    Biscoe       44
+## 2 Adelie    Dream        55
+## 3 Adelie    Torgersen    47
+## 4 Chinstrap Dream        68
+## 5 Gentoo    Biscoe      119
+```
+
+
+
+---
+
+## Question 3a: mean body mass
+
+.tiny-font[
+
+```r
+# option 1
+dat %&gt;%
+  mutate(mean_bm = mean(body_mass_g))
+```
+
+```
+## # A tibble: 333 x 5
+##    species island    bill_length_mm body_mass_g mean_bm
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;       &lt;int&gt;   &lt;dbl&gt;
+##  1 Adelie  Torgersen           39.1        3750   4207.
+##  2 Adelie  Torgersen           39.5        3800   4207.
+##  3 Adelie  Torgersen           40.3        3250   4207.
+##  4 Adelie  Torgersen           36.7        3450   4207.
+##  5 Adelie  Torgersen           39.3        3650   4207.
+##  6 Adelie  Torgersen           38.9        3625   4207.
+##  7 Adelie  Torgersen           39.2        4675   4207.
+##  8 Adelie  Torgersen           41.1        3200   4207.
+##  9 Adelie  Torgersen           38.6        3800   4207.
+## 10 Adelie  Torgersen           34.6        4400   4207.
+## # … with 323 more rows
+```
+]
+
+---
+
+## Question 3a: mean body mass
+
+
+```r
+# option 2
+dat %&gt;%
+  summarise(mean_bm = mean(body_mass_g))
+```
+
+```
+## # A tibble: 1 x 1
+##   mean_bm
+##     &lt;dbl&gt;
+## 1   4207.
+```
+
+
+---
+
+## Question 3b: mean body mass per species
+
+.tiny-font[
+
+```r
+# option 1
+dat %&gt;%
+  group_by(species) %&gt;% 
+  mutate(mean_bm = mean(body_mass_g))
+```
+
+```
+## # A tibble: 333 x 5
+## # Groups:   species [3]
+##    species island    bill_length_mm body_mass_g mean_bm
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;       &lt;int&gt;   &lt;dbl&gt;
+##  1 Adelie  Torgersen           39.1        3750   3706.
+##  2 Adelie  Torgersen           39.5        3800   3706.
+##  3 Adelie  Torgersen           40.3        3250   3706.
+##  4 Adelie  Torgersen           36.7        3450   3706.
+##  5 Adelie  Torgersen           39.3        3650   3706.
+##  6 Adelie  Torgersen           38.9        3625   3706.
+##  7 Adelie  Torgersen           39.2        4675   3706.
+##  8 Adelie  Torgersen           41.1        3200   3706.
+##  9 Adelie  Torgersen           38.6        3800   3706.
+## 10 Adelie  Torgersen           34.6        4400   3706.
+## # … with 323 more rows
+```
+]
+
+
+
+---
+
+## Question 3b: mean body mass per species
+
+
+```r
+# option 2
+dat %&gt;% 
+  group_by(species) %&gt;% 
+  summarize(mean_bm = mean(body_mass_g))
+```
+
+```
+## # A tibble: 3 x 2
+##   species   mean_bm
+## * &lt;fct&gt;       &lt;dbl&gt;
+## 1 Adelie      3706.
+## 2 Chinstrap   3733.
+## 3 Gentoo      5092.
+```
+
+
+---
+
+## Question 3c: mean traits
+
+
+```r
+# all at once, through column selection
+dat %&gt;% 
+  group_by(species) %&gt;% 
+  summarize(across(bill_length_mm:body_mass_g, mean))
+```
+
+```
+## # A tibble: 3 x 3
+##   species   bill_length_mm body_mass_g
+## * &lt;fct&gt;              &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Adelie              38.8       3706.
+## 2 Chinstrap           48.8       3733.
+## 3 Gentoo              47.6       5092.
+```
+
+
+
+---
+
+## Question 3c: mean traits
+
+
+```r
+# all at once, through column format selection
+dat %&gt;% 
+  group_by(species) %&gt;% 
+  summarize(across(where(is.numeric), mean))
+```
+
+```
+## # A tibble: 3 x 3
+##   species   bill_length_mm body_mass_g
+## * &lt;fct&gt;              &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Adelie              38.8       3706.
+## 2 Chinstrap           48.8       3733.
+## 3 Gentoo              47.6       5092.
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

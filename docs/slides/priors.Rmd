@@ -1,0 +1,466 @@
+---
+title: |
+    | Bayesian statistics with R
+    | 4. A detour with priors
+author: "Olivier Gimenez"
+date: "March 2021"
+output:
+  beamer_presentation:
+    fig_caption: no
+    includes:
+      in_header: header.tex
+    latex_engine: pdflatex
+    slide_level: 2
+    theme: metropolis
+  ioslides_presentation: default
+classoption: aspectratio=169
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE, 
+                      echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      fig.height=6, 
+                      fig.width = 1.777777*6,
+                      tidy = FALSE, 
+                      comment = NA, 
+                      highlight = TRUE, 
+                      prompt = FALSE, 
+                      crop = TRUE,
+                      comment = "#>",
+                      collapse = TRUE)
+knitr::opts_knit$set(width = 60)
+library(tidyverse)
+library(reshape2)
+theme_set(theme_light(base_size = 16))
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+      if (knitr:::is_latex_output()) output else otherwise
+  }
+}
+insert_pause <- make_latex_decorator(". . .", "\n")
+insert_slide_break <- make_latex_decorator("----", "\n")
+insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
+
+
+
+
+
+# A detour to explore priors
+
+# Influence of the prior
+
+## Prior $Beta(0.5,0.5)$ and posterior survival $Beta(19.5,38.5)$
+```{r echo=FALSE}
+x <- seq(0, 1, length=200)
+# distribution a posteriori beta
+plot(x,dbeta(x, .5+19,.5+57-19),type='l',xlab='',ylab='',main='',lwd=3,col='red')
+# distribution a priori uniforme
+points(x,dbeta(x, .5, .5),type='l',lwd=3)
+```
+
+## Prior $Beta(2,2)$ and posterior survival $Beta(21,40)$
+```{r echo=FALSE}
+x <- seq(0, 1, length=200)
+# distribution a posteriori beta
+plot(x,dbeta(x, 2+19,2+57-19),type='l',xlab='',ylab='',main='',lwd=3,col='red')
+# distribution a priori uniforme
+points(x,dbeta(x, 2, 2),type='l',lwd=3)
+```
+
+## Prior $Beta(20,1)$ and posterior survival $Beta(39,49)$
+```{r echo=FALSE}
+x <- seq(0, 1, length=200)
+# distribution a posteriori beta
+plot(x,dbeta(x, 20+19,1+57-19),type='l',xlab='',ylab='',main='',lwd=3,col='red')
+# distribution a priori uniforme
+points(x,dbeta(x, 20, 1),type='l',lwd=3)
+```
+
+## The role of the prior
+
+`r insert_inc_bullet()` In biological applications, the prior is a convenient means of incorporating expert opinion or information from previous or related studies that would otherwise need to be ignored. We'll get back to that.
+
+`r insert_inc_bullet()` With sparse data, the role of the prior can be to enable inference on key parameters that would otherwise be impossible.
+
+`r insert_inc_bullet()` With sufficiently large and informative datasets the prior typically has little effect on the results.
+
+`r insert_inc_bullet()` Always perform a sensitivity analysis.
+
+## Informative priors vs. no information
+
+`r insert_inc_bullet()` Informative priors aim to reflect information available to the analyst that is gained independently of the data being studied.
+
+`r insert_inc_bullet()` In the absence of any prior information on one or more model parameters we wish to ensure that this lack of knowledge is properly reflected in the prior.
+
+`r insert_inc_bullet()` Always perform a sensitivity analysis. 
+
+`r insert_slide_break()`
+
+```{r, out.width = '11cm',out.height='7cm',fig.align='center',echo=FALSE}
+knitr::include_graphics('img/falling_man.jpg')    
+```
+
+# How to incorporate prior information? 
+
+## Estimating survival using capture-recapture data
+
+* A bird might captured, missed and recaptured; this is coded $101$.
+
+`r insert_pause()`
+
+* Simplest model relies on constant survival $\phi$ and detection $p$ probabilities.
+
+`r insert_pause()`
+
+* Likelihood for that particular bird:
+
+$$\Pr(101) = \phi (1-p) \phi p $$
+
+`r insert_pause()`
+
+* We assume a vague prior:
+
+$$\phi_{prior} \sim \text{Beta}(1,1) = \text{Uniform}(0,1)$$
+
+## Notation
+
+* $y_{i,t} = 1$ if individual $i$ detected at occasion $t$ and $0$ otherwise
+* $z_{i,t} = 1$ if individual $i$ alive between occasions $t$ and $t+1$ and $0$ otherwise
+
+`r insert_html_math()`
+\begin{align*}
+   y_{i,t} \mid z_{i,t} &\sim \text{Bernoulli}(p \; z_{i,t}) &\text{[likelihood (observation eq.)]} \\
+   z_{i,t+1} \mid z_{i,t}&\sim \text{Bernoulli}(\phi \; z_{i,t}) &\text{[likelihood (state eq.)]} \\
+  \phi &\sim \text{Beta}(1, 1) &\text{[prior for }\phi \text{]} \\ 
+  p &\sim \text{Beta}(1, 1) &\text{[prior for p]} \\ 
+\end{align*}
+`r insert_html_math()`
+
+
+## European dippers in Eastern France (1981-1987)
+
+```{r, out.width = '10cm',out.height='6cm',fig.align='center',echo=FALSE}
+knitr::include_graphics('img/dipper.png')    
+```
+
+## How to incorporate prior information?
+
+`r insert_inc_bullet()` If no information, mean posterior survival is $\phi_{posterior} = 0.56$ with credible interval $[0.51,0.61]$.
+
+`r insert_inc_bullet()` Using information on body mass and annual survival of 27 European passerines, we can predict survival of European dippers using only body mass.
+
+`r insert_inc_bullet()` For dippers, body mass is 59.8g, therefore $\phi = 0.57$ with $\text{sd} = 0.073$.
+
+`r insert_inc_bullet()` Assuming an informative prior $\phi_{prior} \sim \text{Normal}(0.57,0.073^2)$.
+
+`r insert_inc_bullet()` Mean posterior $\phi_{posterior} = 0.56$ with credible interval $[0.52, 0.60]$.
+
+`r insert_inc_bullet()` No increase of precision in posterior inference.
+
+## How to incorporate prior information?
+
+`r insert_inc_bullet()` Now if you had only the three first years of data, what would have happened?
+
+`r insert_inc_bullet()` Width of credible interval is 0.47 (vague prior) vs. 0.30 (informative prior).
+
+`r insert_inc_bullet()` Huge increase of precision in posterior inference ($40\%$ gain)!
+
+## Compare \textcolor{blue}{vague} vs. \textcolor{red}{informative} prior
+
+```{r include = FALSE}
+# read in data
+data <- as.matrix(read.table("dat/dipper.dat"))
+
+# number of individuals 
+n <- dim(data)[[1]] 
+
+# number of capture occasions
+K <- dim(data)[[2]] 
+
+# compute the date of first capture
+e <- NULL
+for (i in 1:n){
+	temp <- 1:K
+	e <- c(e,min(temp[data[i,]==1]))
+	}
+
+# data
+datax <- list(N=n,Years=K,obs=data,First=e)
+
+# mark-recapture analysis for European Dippers
+model <- 
+paste("
+model
+{
+for (i in 1:N){
+	alive[i,First[i]] <- 1
+	for (j in (First[i]+1):Years){
+		alive[i,j] ~ dbern(alivep[i,j])
+		alivep[i,j] <- surv * alive[i,j-1]
+		obs[i,j] ~ dbern(sightp[i,j])
+		sightp[i,j] <- resight * alive[i,j]
+		}
+	}
+surv~dunif(0,1)
+resight~dunif(0,1)
+}
+")
+writeLines(model,"code/CJS.txt")
+
+# In JAGS we have to give good initial values for the latent state alive. At all occasions when an individual was observed, its state is alive = 1 for sure. In addition, if an individual was not observed at an occasion, but was alive for sure, because it was observed before and thereafter (i.e. has a capture history of e.g. {101} or {10001}), then we know that the individual was alive at all of these occasions, and thus alive = 1. Therefore, we should provide initial values of alive = 1 at these positions as well. The following function provides such initial values from the observed capture histories (from Kery and Schaub book)
+
+known.state.cjs <- function(ch){
+   state <- ch
+   for (i in 1:dim(ch)[1]){
+      n1 <- min(which(ch[i,]==1))
+      n2 <- max(which(ch[i,]==1))
+      state[i,n1:n2] <- 1
+      state[i,n1] <- NA
+      }
+   state[state==0] <- NA
+   return(state)
+   }
+
+Xinit <- known.state.cjs(data)
+
+# first list of inits
+init1 <- list(surv=.1,resight=.1,alive=Xinit)
+# second list of inits
+init2 <- list(surv=.9,resight=.9,alive=Xinit)
+
+# specify the parameters to be monitored
+parameters <- c("resight","surv")
+
+# load R2jags
+library(R2jags)
+
+# run the MCMC analysis WITHOUT PRIOR INFORMATION
+CJS.sim <-jags(data=datax, inits=list(init1,init2), parameters,n.iter=1000,model.file="code/CJS.txt",n.chains=2,n.burnin=500)
+
+# to see the numerical results
+# CJS.sim
+# traceplot(CJS.sim) # diagnostic de convergence
+
+# keep 3 first years only
+data = data[,1:3]
+databis = NULL
+for (i in 1:nrow(data)){
+	# discard all non existing individuals i.e. those that were never captured
+	# test whether there was at least 1 detection and keep this individual if it was the case
+	if (sum(data[i,] == c(0,0,0))<3)  databis = rbind(databis,data[i,])
+	}
+data = databis
+
+# number of individuals 
+n <- dim(data)[[1]] 
+
+# number of capture occasions
+K <- dim(data)[[2]] 
+
+# compute the date of first capture
+e <- NULL
+for (i in 1:n){
+	temp <- 1:K
+	e <- c(e,min(temp[data[i,]==1]))
+	}
+
+# data
+datax <- list(N=n,Years=K,obs=data,First=e)
+
+Xinit <- known.state.cjs(data)
+
+# first list of inits
+init1 <- list(surv=.1,resight=.1,alive=Xinit)
+# second list of inits
+init2 <- list(surv=.9,resight=.9,alive=Xinit)
+
+# specify the parameters to be monitored
+parameters <- c("resight","surv")
+
+# run the MCMC analysis WITHOUT PRIOR INFORMATION
+CJS.sim.wo.apriori <-jags(data=datax, inits=list(init1,init2), parameters,n.iter=1000,model.file="code/CJS.txt",n.chains=2,n.burnin=500)
+
+# same model but with informative prior on survival 
+model <- 
+paste("
+model
+{
+for (i in 1:N){
+	alive[i,First[i]] <- 1
+	for (j in (First[i]+1):Years){
+		alive[i,j] ~ dbern(alivep[i,j])
+		alivep[i,j] <- surv * alive[i,j-1]
+		obs[i,j] ~ dbern(sightp[i,j])
+		sightp[i,j] <- resight * alive[i,j]
+		}
+	}
+surv~dnorm(0.57,187.6) # Norm(0.57,sd=0.073) ; precision = 1/var = 1/0.073^2
+resight~dunif(0,1)
+}
+")
+writeLines(model,"code/CJS2.txt")
+
+CJS.sim.apriori <-jags(data=datax, inits=list(init1,init2), parameters,n.iter=1000,model.file="code/CJS2.txt",n.chains=2,n.burnin=500)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+res = as.mcmc(CJS.sim.wo.apriori) 
+res = rbind(res[[1]],res[[2]]) 
+#head(res)
+
+res2 = as.mcmc(CJS.sim.apriori) 
+res2 = rbind(res2[[1]],res2[[2]]) 
+#head(res2)
+
+plot(density(res2[,'surv']),xlab='survival',ylab='probability density',col='red',lwd=4,main='',xlim=c(0.2,1))
+lines(density(res[,'surv']),xlab='survival',ylab='probability density',col='blue',lwd=4,main='')
+legend('topleft',lwd=2,legend=c('with prior info','without prior info'),col=c('red','blue'))
+```
+
+# Prior elicitation via moment matching
+
+## Remember the Beta distribution
+
+* Recall that the Beta distribution is a continuous distribution with values between 0 and 1. Useful for modelling survival or detection probabilities. 
+
+`r insert_pause()`
+
+* If $X \sim Beta(\alpha,\beta)$, then the first and second moments of $X$ are:
+
+$$\mu = \text{E}(X) = \frac{\alpha}{\alpha + \beta}$$
+
+$$\sigma^2 = \text{Var}(X) = \frac{\alpha\beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$$
+
+## Moment matching
+
+* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$? 
+
+`r insert_pause()`
+
+* Parameters $\mu$ and $\sigma^2$ are seen as the moments of a $Beta(\alpha,\beta)$ distribution.
+
+`r insert_pause()`
+
+* Now we look for values of $\alpha$ and $\beta$ that match the observed moments of the Beta distribution ($\mu$ and $\sigma^2$).
+
+`r insert_pause()`
+
+* We need another set of equations:
+
+$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$
+
+$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$
+
+`r insert_slide_break()`
+
+* For our model, that means:
+
+```{r echo = TRUE}
+(alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2)
+(beta <- alpha * ( (1/0.57) - 1))
+```
+
+`r insert_pause()`
+
+* Now use $\phi_{prior} \sim \text{Beta}(\alpha = 25.6,\beta = 19.3)$ instead of $\phi_{prior} \sim \text{Normal}(0.57,0.073^2)$
+
+# Your turn 
+
+## Question
+
+Use simulations to check that our estimates are correct. 
+
+# Solution
+
+## `R` code
+
+```{r eval = FALSE, echo = TRUE}
+alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2
+beta <- alpha * ( (1/0.57) - 1)
+n <- 10000
+samp <- rbeta(n, alpha, beta)
+(mu <- mean(samp))
+(sigma <- sqrt(var(samp)))
+```
+
+
+# Prior predictive checks
+
+## Linear regression
+
+\begincols
+\begincol
+
+Unreasonable prior $\beta \sim N(0, 1000^2)$
+
+```{r echo=1, fig.height=3, fig.width=3, fig.align='left'}
+plot(density(rnorm(1000, 0, 1000)),   
+     main="", xlab="Height (m)")
+```
+\endcol
+
+\begincol
+
+Reasonable prior $\beta \sim N(2, 0.5^2)$
+
+```{r echo=1, fig.height=3, fig.width=3, fig.align='left'}
+plot(density(rnorm(1000, 2, 0.5)),   
+      main="", xlab="Height (m)")
+```
+\endcol
+\endcols
+
+## Logistic regression
+
+\begincols
+\begincol
+
+Unreasonable
+$\text{logit}(\phi) = \beta \sim N(0, 10^2)$
+
+```{r echo=1, fig.height=3, fig.width=3, fig.align='left'}
+plot(density(plogis(rnorm(1000,0,10)), 
+from = 0, to = 1), main='', xlab='survival')
+```
+\endcol
+
+\begincol
+
+Reasonable 
+$\text{logit}(\phi) = \beta \sim N(0, 1.5^2)$
+
+```{r echo=1, fig.height=3, fig.width=3, fig.align='left'}
+plot(density(plogis(rnorm(1000,0,1.5)), 
+from = 0, to = 1), main='', xlab='survival')
+```
+\endcol
+\endcols
+
+# Dynamic updating
+
+## Today's posterior is tomorrow's prior
+
+If you obtain more data, no need to redo all of the analysis. Your posterior from the first analysis simply becomes your prior for the next analysis (and so on). 
+
+`r insert_pause()`
+
+* Stage 0. Prior $p(\theta) \sim \text{Beta}(1,1)$.
+
+`r insert_pause()`
+
+* Stage 1. Observe $y_1 = 22$ successes from $n_1 = 29$ trials.
+    * Likelihood is $p(y_1 | \theta) \sim \text{Binomial}(n_1=29,\theta)$.
+    * Posterior is $p(\theta | y_1) \sim \text{Beta}(23,8)$ with mean $23/31 = 0.74$.
+
+`r insert_pause()`
+
+* Stage 2. Observe $y_2=5$ successed from $n_2=10$ new trials.
+    * Likelihood is $p(y_2 | \theta) \sim \text{Binomial}(n_2=10,\theta)$.
+    * Prior is $p(\theta) \sim \text{Beta}(23,8)$ from stage 1.
+    * Posterior is $p(\theta | y_1 \text{ and } y_2) \propto p(\theta | y_1) p(y_2 | \theta) = \text{Beta}(28,13)$ with mean $28/41 = 0.68$.
+
+

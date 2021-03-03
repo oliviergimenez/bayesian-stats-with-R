@@ -1,0 +1,12 @@
+
+model{
+for(i in 1:n){
+	y[i] ~ dnorm(mu[i],tau.y)
+	mu[i] <- a + b*x[i]
+	}
+tau.y <- 1/(sigma.y*sigma.y)
+sigma.y ~ dunif(0,100)
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+}
+

@@ -1,0 +1,14 @@
+
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a + b * cov[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+	}
+
