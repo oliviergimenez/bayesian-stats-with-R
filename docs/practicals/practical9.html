@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Practical 9</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Olivier Gimenez" />
+    <script src="libs/header-attrs-2.7/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, title-slide
+
+# Practical 9
+### Olivier Gimenez
+### last updated: 2021-03-03
+
+---
+
+
+
+
+## Longitudinal study on coral reef and GLMM (Poisson)
+
+&gt; A survey of a coral reef uses 10 predefined linear transects covered by divers once every week. The response variable of interest is the abundance of a particular species of anemone as a function of water temperature. Counts of anemones are recorded at 20 regular line segments along the transect. The following piece of code will generate a data set with realistic properties according to the above design. Make sure you understand what it is doing. You might want to explain the script to the colleague next to you. Also, to try and make sense of the code of others, it is always good to plot and/or run small sections of the code. 
+
+From Jason Matthiopoulos' book. 
+
+---
+## Data generation
+
+.small-font[
+
+```r
+transects &lt;- 10
+data &lt;- NULL
+for (tr in 1:transects){
+  # random effect (intercept)
+  ref &lt;- rnorm(1,0,.5) 
+  # water temperature gradient
+  t &lt;- runif(1, 18,22) + runif(1,-.2,0.2)*1:20 
+  # Anemone gradient (expected response)
+  ans &lt;- exp(ref -14 + 1.8 * t - 0.045 * t^2) 
+  # actual counts on 20 segments of the current transect
+  an &lt;- rpois(20, ans) 
+  data &lt;- rbind(data, cbind(rep(tr, 20), t, an))
+}
+```
+]
+
+---
+
+* Generate a data set using the anemone code
+
+* Using Jags, fit a GLMM with quadratic effect of temperature and a random intercept.
+
+* Fit the same model to the same data in a Frequentist framework using function `lme4::glmer()`. 
+* Compare the estimates.
+
+---
+# Solution
+
+---
+## Make sense of the code
+
+* Always difficult to make sense of the code of others. 
+
+* Good to plot and/or run small sections of the code. 
+
+---
+
+.tiny-font[
+
+```r
+# random effect (intercept)
+ref &lt;- rnorm(1,0,.5) 
+# water temperature gradient
+t &lt;- runif(1, 18,22) + runif(1,-.2,0.2)*1:20
+
+plot(t,type='l')
+```
+
+&lt;img src="practical9_files/figure-html/unnamed-chunk-2-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.tiny-font[
+
+```r
+ans &lt;- exp(ref -14 + 1.8 * t - 0.045 * t^2) # Anemone gradient (expected response)
+
+plot(t,log(ans),type='l')
+```
+
+&lt;img src="practical9_files/figure-html/unnamed-chunk-3-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.tiny-font[
+
+```r
+data &lt;- data.frame(Transect = data[,1],
+                   Temperature = data[,2],
+                   Anemones = data[,3])
+
+plot(data$Temperature, data$Anemones)
+```
+
+&lt;img src="practical9_files/figure-html/unnamed-chunk-4-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+## Write down model
+
+`\begin{align*}
+   \text{Count}_i &amp;\sim \text{Poisson(}\lambda_i) &amp;\text{[likelihood]}\\
+  \text{log}(\lambda_i) &amp;= a_{\text{TRANSECT[i]}} + b_1 \; \text{temp}_{i} + b_2 \; \text{temp}^2_{i} &amp;\text{[linear model]} \\
+  a_j &amp;\sim \text{Normal}(\bar{a}, \sigma) &amp;\text{[prior for varying intercepts}] \\ 
+  \bar{a} &amp;\sim \text{Normal}(0, 1000) &amp;\text{[prior for population mean}] \\ 
+  \sigma &amp;\sim \text{Uniform}(0, 100) &amp;\text{[prior for standard deviation}] \\ 
+  b_1, b_2 &amp;\sim \text{Normal}(0, 1000) &amp;\text{[prior for slopes}] \\ 
+\end{align*}`
+
+---
+
+Standardize Temperature covariate. 
+.small-font[
+
+```r
+boo &lt;- data$Temperature
+data$Temp &lt;- (boo - mean(boo)) / sd(boo)
+head(data)
+```
+
+```
+##   Transect Temperature Anemones      Temp
+## 1        1    21.10513       60 1.0064546
+## 2        1    21.06386       66 0.9782412
+## 3        1    21.02259       67 0.9500278
+## 4        1    20.98132       46 0.9218144
+## 5        1    20.94005       53 0.8936010
+## 6        1    20.89878       54 0.8653876
+```
+]
+
+---
+
+.small-font[
+
+```r
+model &lt;- 
+paste("
+model {
+  for (i in 1:n){
+    count[i] ~ dpois(lambda[i])
+    log(lambda[i]) &lt;- a[transect[i]] + b[1] * x[i] + b[2] * pow(x[i],2)
+  }
+  for (j in 1:nbtransects){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  mu.a ~ dnorm (0, 0.001)
+  tau.a &lt;- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b[1] ~ dnorm (0, 0.001)
+  b[2] ~ dnorm (0, 0.001)
+}
+")
+writeLines(model,here::here("slides","code","GLMMpoisson.bug"))
+```
+]
+
+---
+
+.small-font[
+
+```r
+dat &lt;- list(n = nrow(data), 
+            nbtransects = transects, 
+            x = data$Temp, 
+            count = data$Anemones, 
+            transect = data$Transect)
+
+init1 &lt;- list(a = rnorm(transects), b = rnorm(2), 
+              mu.a = rnorm(1), sigma.a = runif(1))
+init2 &lt;- list(a = rnorm(transects), b = rnorm(2), 
+              mu.a = rnorm(1), sigma.a = runif(1))
+inits &lt;- list(init1, init2)
+
+par &lt;- c ("a", "b", "mu.a", "sigma.a")
+```
+]
+
+---
+
+.tiny-font[
+
+```r
+library(R2jags)
+fit &lt;- jags(data = dat, 
+            inits = inits, 
+            parameters.to.save = par, 
+            n.iter = 2500, 
+            model.file=here::here("slides","code","GLMMpoisson.bug"), 
+            n.chains = 2, 
+            n.burn = 1000)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 200
+##    Unobserved stochastic nodes: 14
+##    Total graph size: 1622
+## 
+## Initializing model
+```
+]
+
+---
+
+.tiny-font[
+
+```r
+round(fit$BUGSoutput$summary[, -c(4,6)], 3)
+```
+
+```
+##              mean    sd     2.5%      50%    97.5%  Rhat n.eff
+## a[1]        4.055 0.035    3.987    4.054    4.122 1.001  3000
+## a[2]        3.995 0.039    3.915    3.995    4.071 1.001  3000
+## a[3]        3.467 0.053    3.364    3.466    3.572 1.001  3000
+## a[4]        3.276 0.060    3.162    3.277    3.392 1.001  3000
+## a[5]        3.486 0.040    3.404    3.486    3.565 1.001  3000
+## a[6]        4.851 0.021    4.809    4.852    4.892 1.003   620
+## a[7]        2.780 0.060    2.663    2.779    2.900 1.001  2700
+## a[8]        4.073 0.043    3.991    4.073    4.158 1.001  3000
+## a[9]        3.636 0.038    3.559    3.637    3.709 1.007   250
+## a[10]       4.076 0.045    3.987    4.077    4.162 1.003   720
+## b[1]        0.041 0.022   -0.001    0.041    0.084 1.001  3000
+## b[2]       -0.067 0.013   -0.092   -0.067   -0.042 1.002   890
+## deviance 1284.482 4.934 1276.761 1283.846 1295.486 1.001  1900
+## mu.a        3.775 0.224    3.316    3.774    4.205 1.001  3000
+## sigma.a     0.680 0.210    0.415    0.637    1.193 1.001  3000
+```
+]
+
+---
+
+.tiny-font[
+
+```r
+library(lme4)
+fit_lme4 &lt;- glmer(Anemones ~ Temp + I(Temp^2) + (1 | Transect), data = data, family = poisson)
+fit_lme4
+```
+
+```
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: poisson  ( log )
+## Formula: Anemones ~ Temp + I(Temp^2) + (1 | Transect)
+##    Data: data
+##       AIC       BIC    logLik  deviance  df.resid 
+## 1345.0637 1358.2569 -668.5318 1337.0637       196 
+## Random effects:
+##  Groups   Name        Std.Dev.
+##  Transect (Intercept) 0.5375  
+## Number of obs: 200, groups:  Transect, 10
+## Fixed Effects:
+## (Intercept)         Temp    I(Temp^2)  
+##     3.77102      0.04065     -0.06679
+```
+]
+
+Parameter estimates obtained with both approaches are very similar.
+
+---
+
+.center[
+
+```r
+visreg::visreg(fit_lme4, xvar = 'Temp')
+```
+
+![](practical9_files/figure-html/unnamed-chunk-11-1.svg)&lt;!-- --&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

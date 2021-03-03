@@ -44,10 +44,10 @@ Where: Zoom
 
 * You need to have [`R`](https://cloud.r-project.org/) and [`RStudio`](https://rstudio.com/products/rstudio/download/#download) installed
 * Download `Jags` from [sourceforge](http://sourceforge.net/projects/mcmc-jags/files/) and install it
-* Install the following `R` packages: `tidyverse`, `here`, `lme4` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
+* Install the following `R` packages: `tidyverse`, `here`, `lme4`, `visreg`, `lattice` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
 
 ```{r eval = FALSE, echo = TRUE}
-install.packages(c("tidyverse", "R2jags", "here", "lme4"))
+install.packages(c("tidyverse", "R2jags", "here", "lme4", "visreg", "lattice"))
 ```
 
 

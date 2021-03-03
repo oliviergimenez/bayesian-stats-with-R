@@ -1,5 +1,5 @@
 ---
-title: "Practical 3"
+title: "Practical 9"
 author: "Olivier Gimenez"
 date: "last updated: `r Sys.Date()`"
 output:
@@ -22,53 +22,194 @@ library(palmerpenguins)
 library(tidyverse)
 ```
 
-## Moment matching
+## Longitudinal study on coral reef and GLMM (Poisson)
 
-* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$? 
+> A survey of a coral reef uses 10 predefined linear transects covered by divers once every week. The response variable of interest is the abundance of a particular species of anemone as a function of water temperature. Counts of anemones are recorded at 20 regular line segments along the transect. The following piece of code will generate a data set with realistic properties according to the above design. Make sure you understand what it is doing. You might want to explain the script to the colleague next to you. Also, to try and make sense of the code of others, it is always good to plot and/or run small sections of the code. 
 
-* Parameters $\mu$ and $\sigma^2$ are seen as the moments of a $Beta(\alpha,\beta)$ distribution.
-
-* Now we look for values of $\alpha$ and $\beta$ that match the observed moments of the $Beta$ distribution.
-
-* We need another set of equations:
-
-$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$
-
-$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$
+From Jason Matthiopoulos' book. 
 
 ---
-## Moment matching
-
-* For our model, that means:
+## Data generation
 
 .small-font[
-```{r echo = TRUE}
-(alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2)
-(beta <- alpha * ( (1/0.57) - 1))
+```{r}
+transects <- 10
+data <- NULL
+for (tr in 1:transects){
+  # random effect (intercept)
+  ref <- rnorm(1,0,.5) 
+  # water temperature gradient
+  t <- runif(1, 18,22) + runif(1,-.2,0.2)*1:20 
+  # Anemone gradient (expected response)
+  ans <- exp(ref -14 + 1.8 * t - 0.045 * t^2) 
+  # actual counts on 20 segments of the current transect
+  an <- rpois(20, ans) 
+  data <- rbind(data, cbind(rep(tr, 20), t, an))
+}
 ```
 ]
 
-
 ---
-## Question
 
-* Use simulations to check that our estimates are correct. 
+* Generate a data set using the anemone code
 
-* Hint: The `R` function `rbeta()` might be of use.
+* Using Jags, fit a GLMM with quadratic effect of temperature and a random intercept.
 
+* Fit the same model to the same data in a Frequentist framework using function `lme4::glmer()`. 
+* Compare the estimates.
 
 ---
 # Solution
 
-```{r eval = TRUE, echo = TRUE}
-alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2
-beta <- alpha * ( (1/0.57) - 1)
-n <- 10000
-samp <- rbeta(n, alpha, beta)
-```
+---
+## Make sense of the code
 
-```{r eval = TRUE, echo = TRUE}
-(mu <- mean(samp))
-(sigma <- sqrt(var(samp)))
-```
+* Always difficult to make sense of the code of others. 
 
+* Good to plot and/or run small sections of the code. 
+
+---
+
+.tiny-font[
+```{r fig.width = 5.5, fig.asp = 0.8, dev = "svg", fig.align="center"}
+# random effect (intercept)
+ref <- rnorm(1,0,.5) 
+# water temperature gradient
+t <- runif(1, 18,22) + runif(1,-.2,0.2)*1:20
+
+plot(t,type='l')
+```
+]
+
+---
+
+.tiny-font[
+```{r fig.width = 5.5, fig.asp = 1, dev = "svg", fig.align="center"}
+ans <- exp(ref -14 + 1.8 * t - 0.045 * t^2) # Anemone gradient (expected response)
+
+plot(t,log(ans),type='l')
+```
+]
+
+---
+
+.tiny-font[
+```{r fig.width = 5.5, fig.asp = 0.9, dev = "svg", fig.align="center"}
+data <- data.frame(Transect = data[,1],
+                   Temperature = data[,2],
+                   Anemones = data[,3])
+
+plot(data$Temperature, data$Anemones)
+```
+]
+
+---
+## Write down model
+
+\begin{align*}
+   \text{Count}_i &\sim \text{Poisson(}\lambda_i) &\text{[likelihood]}\\
+  \text{log}(\lambda_i) &= a_{\text{TRANSECT[i]}} + b_1 \; \text{temp}_{i} + b_2 \; \text{temp}^2_{i} &\text{[linear model]} \\
+  a_j &\sim \text{Normal}(\bar{a}, \sigma) &\text{[prior for varying intercepts}] \\ 
+  \bar{a} &\sim \text{Normal}(0, 1000) &\text{[prior for population mean}] \\ 
+  \sigma &\sim \text{Uniform}(0, 100) &\text{[prior for standard deviation}] \\ 
+  b_1, b_2 &\sim \text{Normal}(0, 1000) &\text{[prior for slopes}] \\ 
+\end{align*}
+
+---
+
+Standardize Temperature covariate. 
+.small-font[
+```{r}
+boo <- data$Temperature
+data$Temp <- (boo - mean(boo)) / sd(boo)
+head(data)
+```
+]
+
+---
+
+.small-font[
+```{r}
+model <- 
+paste("
+model {
+  for (i in 1:n){
+    count[i] ~ dpois(lambda[i])
+    log(lambda[i]) <- a[transect[i]] + b[1] * x[i] + b[2] * pow(x[i],2)
+  }
+  for (j in 1:nbtransects){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  mu.a ~ dnorm (0, 0.001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b[1] ~ dnorm (0, 0.001)
+  b[2] ~ dnorm (0, 0.001)
+}
+")
+writeLines(model,here::here("slides","code","GLMMpoisson.bug"))
+```
+]
+
+---
+
+.small-font[
+```{r}
+dat <- list(n = nrow(data), 
+            nbtransects = transects, 
+            x = data$Temp, 
+            count = data$Anemones, 
+            transect = data$Transect)
+
+init1 <- list(a = rnorm(transects), b = rnorm(2), 
+              mu.a = rnorm(1), sigma.a = runif(1))
+init2 <- list(a = rnorm(transects), b = rnorm(2), 
+              mu.a = rnorm(1), sigma.a = runif(1))
+inits <- list(init1, init2)
+
+par <- c ("a", "b", "mu.a", "sigma.a")
+```
+]
+
+---
+
+.tiny-font[
+```{r}
+library(R2jags)
+fit <- jags(data = dat, 
+            inits = inits, 
+            parameters.to.save = par, 
+            n.iter = 2500, 
+            model.file=here::here("slides","code","GLMMpoisson.bug"), 
+            n.chains = 2, 
+            n.burn = 1000)
+```
+]
+
+---
+
+.tiny-font[
+```{r}
+round(fit$BUGSoutput$summary[, -c(4,6)], 3)
+```
+]
+
+---
+
+.tiny-font[
+```{r}
+library(lme4)
+fit_lme4 <- glmer(Anemones ~ Temp + I(Temp^2) + (1 | Transect), data = data, family = poisson)
+fit_lme4
+```
+]
+
+Parameter estimates obtained with both approaches are very similar.
+
+---
+
+.center[
+```{r, fig.width = 5.5, fig.asp = 1, dev = "svg"}
+visreg::visreg(fit_lme4, xvar = 'Temp')
+```
+]

@@ -1,5 +1,5 @@
 ---
-title: "Practical 3"
+title: "Practical 8"
 author: "Olivier Gimenez"
 date: "last updated: `r Sys.Date()`"
 output:
@@ -22,53 +22,87 @@ library(palmerpenguins)
 library(tidyverse)
 ```
 
-## Moment matching
+## Model selection with wAIC
 
-* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$? 
+* Consider the plant example. 
 
-* Parameters $\mu$ and $\sigma^2$ are seen as the moments of a $Beta(\alpha,\beta)$ distribution.
-
-* Now we look for values of $\alpha$ and $\beta$ that match the observed moments of the $Beta$ distribution.
-
-* We need another set of equations:
-
-$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$
-
-$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$
+* Compare the three models (no, partial and complete pooling) with wAIC.
 
 ---
-## Moment matching
 
-* For our model, that means:
-
-.small-font[
-```{r echo = TRUE}
-(alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2)
-(beta <- alpha * ( (1/0.57) - 1))
-```
-]
-
-
----
-## Question
-
-* Use simulations to check that our estimates are correct. 
-
-* Hint: The `R` function `rbeta()` might be of use.
-
-
----
 # Solution
 
-```{r eval = TRUE, echo = TRUE}
-alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2
-beta <- alpha * ( (1/0.57) - 1)
-n <- 10000
-samp <- rbeta(n, alpha, beta)
+---
+## wAIC of model with no pooling
+
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.1$model,
+                        variable.names = c("WAIC", "deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_completepooling <- round(c(waic = tmp[["waic"]], 
+                                p_waic = tmp[["p_waic"]]),1)
 ```
 
-```{r eval = TRUE, echo = TRUE}
-(mu <- mean(samp))
-(sigma <- sqrt(var(samp)))
+---
+## wAIC of model with partial pooling
+
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.2$model,
+                        variable.names = c("WAIC","deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_partialpooling <- round(c(waic = tmp[["waic"]], 
+                               p_waic = tmp[["p_waic"]]),1)
 ```
 
+---
+## wAIC of model with complete pooling
+
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.3$model,
+                        variable.names = c("WAIC","deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_nopooling <- round(c(waic = tmp[["waic"]], 
+                          p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+## Model ranking
+
+```{r eval = FALSE}
+data.frame(model = c('no pooling', 
+                     'partial pooling', 
+                     'complete pooling'),
+           waic = c(waic_nopooling[1],
+                    waic_partialpooling[1],
+                    waic_completepooling[1]),
+           p_waic = c(waic_nopooling[2],
+                      waic_partialpooling[2],
+                      waic_completepooling[2])) %>%
+  arrange(waic)
+```
+
+---
+## Model ranking
+
+```{r echo=FALSE}
+load(here::here("slides/dat/waic.RData"))
+waic
+```

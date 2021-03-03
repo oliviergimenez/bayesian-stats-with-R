@@ -45,6 +45,10 @@ navbar:
           href: practicals/practical6.html
         - text: "Practical 7"
           href: practicals/practical7.html
+        - text: "Practical 8"
+          href: practicals/practical8.html
+        - text: "Practical 9"
+          href: practicals/practical9.html
     - icon: fab fa-github
       href: https://github.com/oliviergimenez/bayesian-stats-with-R
     - icon: fab fa-twitter
