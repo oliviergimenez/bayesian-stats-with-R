@@ -31,10 +31,20 @@ navbar:
           href: slides/mixedmodels.pdf
     - text: "Worksheets"
       menu:
-        - text: "Practical 1: Manipulating data"
-          href: practicals/1_datamanipulation.html
-        - text: "Practical 1: Manipulating data - Solutions"
-          href: practicals/1_datamanipulation_solution.html
+        - text: "Practical 1"
+          href: practicals/practical1.html
+        - text: "Practical 2"
+          href: practicals/practical2.html
+        - text: "Practical 3"
+          href: practicals/practical3.html
+        - text: "Practical 4"
+          href: practicals/practical4.html
+        - text: "Practical 5"
+          href: practicals/practical5.html
+        - text: "Practical 6"
+          href: practicals/practical6.html
+        - text: "Practical 7"
+          href: practicals/practical7.html
     - icon: fab fa-github
       href: https://github.com/oliviergimenez/bayesian-stats-with-R
     - icon: fab fa-twitter

@@ -1,0 +1,62 @@
+---
+title: "Practical 1"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Setting the scene
+
+* The chance of the  test being positive given you are a vampire is $\Pr(+|\text{vampire}) = 0.90$ (**sensitivity**).
+
+* The chance of a negative test given you are mortal is $\Pr(-|\text{mortal}) = 0.95$ (**specificity**).
+
+---
+
+## Question
+
+* Suppose the diagnostic test has the same sensitivity and specificity but vampirism is more common: $10\%$ of the population is vampire. 
+
+* What is the probability that a person is a vampire, given that the test is positive?
+
+---
+
+## Solution
+
+The probability that a person is a vampire, given that the test is positive
+
+- $\Pr(+ | \text{vampire}) = 0.9$
+- $\Pr(- | \text{mortal}) = 0.95$
+- $\Pr(\text{vampire}) = 0.1$
+
+\begin{align}
+ \Pr(+) &= \Pr(+ | \text{vampire}) \Pr(\text{vampire}) + \Pr(+ | \text{mortal}) \Pr(\text{mortal}) \\
+  &= 0.9*0.1 + 0.05*0.9 \\
+  &=0.135
+\end{align}
+
+
+\begin{align}
+ \Pr(\text{vampire} | +) &= \Pr(+ | \text{vampire}) \Pr(\text{vampire}) / \Pr(+) \\
+  &= 0.9*0.1 / 0.135\\
+  &= 0.666 \text{ (no comment)}
+\end{align}
+
+

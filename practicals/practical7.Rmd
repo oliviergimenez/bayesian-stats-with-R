@@ -1,0 +1,347 @@
+---
+title: "Practical 7"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(R2jags)
+library(tidyverse)
+```
+
+## Model selection with wAIC
+
+* Fit models with rainfall effect, temperature effect and without any covariate to the stork data.
+
+* Rank them with wAIC.
+
+---
+# Solution
+
+---
+## Data
+
+```{r }
+nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,
+              89,69,71,53,41,53,31,35,14,18)
+
+nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,
+             145,117,90,80,67,54,58,39,42,23,23)
+
+temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,
+          15.3,14.4,14.4,12.7,11.7,11.9,15.9,13.4,14.0,13.9,
+          12.9,15.1,13.0)
+
+rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,
+          28,96,48,90,86,78,87)
+```
+
+---
+## Model with both covariates
+
+.tiny-font[
+```{r}
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a + b.temp * temp[i] + b.rain * rain[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b.temp ~ dnorm(0,0.001)
+b.rain ~ dnorm(0,0.001)
+			
+	}
+")
+writeLines(model,here::here("slides", "code", "logistic.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+```{r}
+init1 <- list(a = -0.5, b.temp = -0.5, b.rain = -0.5)
+init2 <- list(a = 0.5, b.temp = 0.5, b.rain = 0.5)
+inits <- list(init1,init2)
+parameters <- c("a","b.temp","b.rain")
+nb.burnin <- 1000
+nb.iterations <- 2000
+
+datax <- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              temp = (temp - mean(temp)) / sd(temp), 
+              rain = (rain - mean(rain)) / sd(rain))
+```
+
+---
+## Run Jags
+
+.tiny-font[
+```{r}
+storks <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logistic.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+]
+
+---
+## Calculate wAIC with Jags
+
+* Check out post at <https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c>
+
+.tiny-font[
+```{r}
+samples <- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic <- round(c(waic = tmp[["waic"]], 
+                p_waic = tmp[["p_waic"]]),1)
+waic
+```
+]
+
+---
+## Model with temperature only
+
+.tiny-font[
+```{r}
+# model specification
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a + b * cov[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,here::here("slides", "code", "logtemp.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+.small-font[
+```{r}
+# list of lists of initial values (one for each MCMC chain)
+init1 <- list(a = -0.5, b = -0.5)
+init2 <- list(a = 0.5, b = 0.5)
+inits <- list(init1,init2)
+# specify parameters that need to be estimated
+parameters <- c("a","b")
+# specify nb iterations for burn-in and final inference 
+nb.burnin <- 1000
+nb.iterations <- 2000
+
+# read in data
+datax <- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              cov = (temp - mean(temp)) / sd(temp))
+```
+]
+
+---
+
+## Load R2jags to run Jags through R
+
+.tiny-font[
+```{r}
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logtemp.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+]
+
+---
+
+## Compute wAIC
+
+```{r}
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_temp <- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+
+## Model with rainfall only
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# read in data
+datax <- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              cov = (rain - mean(rain)) / sd(rain))
+```
+
+---
+## Load R2jags to run Jags through R
+
+.tiny-font[
+```{r}
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logtemp.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+]
+
+---
+
+## Compute wAIC
+
+```{r}
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_rain <- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+## Model with no effect of covariates
+
+.tiny-font[
+```{r}
+# model specification
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,here::here("slides", "code", "lognull.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+.small-font[
+```{r}
+# list of lists of initial values (one for each MCMC chain)
+init1 <- list(a = -0.5)
+init2 <- list(a = 0.5)
+inits <- list(init1,init2)
+# specify parameters that need to be estimated
+parameters <- c("a")
+# specify nb iterations for burn-in and final inference 
+nb.burnin <- 1000
+nb.iterations <- 2000
+
+# read in data
+datax <- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs)
+```
+]
+
+---
+## Load R2jags to run Jags through R
+
+.tiny-font[
+```{r}
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "lognull.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+]
+
+---
+## Compute wAIC
+
+```{r}
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_null <- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+## Compare WAIC
+
+.tiny-font[
+```{r}
+data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
+           waic = c(waic[1], waic_temp[1], waic_rain[1], waic_null[1]),
+           p_waic = c(waic[2], waic_temp[2], waic_rain[2], waic_null[2])) %>%
+  arrange(waic)
+```
+]
+
+* Model with rainfall only seems to be better supported by the data. 
+
+* In case models have similar wAIC values, model-averaging might be useful. 
