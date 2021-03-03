@@ -1,0 +1,25 @@
+% Allowing for slides with 2 columns
+\def\begincols{\begin{columns}[c]}
+\def\endcols{\end{columns}}
+\def\begincol{\begin{column}{0.5\textwidth}}
+\def\endcol{\end{column}}
+
+% Reducing black space between R code and output
+% \setlength{\topsep}{0pt}{}
+\setlength{\emergencystretch}{0em}
+\setlength{\parskip}{2pt}
+\setlength{\partopsep}{1pt}
+
+% Reducing font size of R code and output
+% Code below from http://stackoverflow.com/a/38324868
+% See also http://stackoverflow.com/a/39961605
+
+% Change fontsize of R code
+\let\oldShaded\Shaded
+\let\endoldShaded\endShaded
+%\renewenvironment{Shaded}{\footnotesize\oldShaded}{\endoldShaded}
+
+% Change fontsize of output
+\let\oldverbatim\verbatim
+\let\endoldverbatim\endverbatim
+\renewenvironment{verbatim}{\footnotesize\oldverbatim}{\endoldverbatim}

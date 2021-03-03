@@ -1,0 +1,358 @@
+---
+title: |
+    | Bayesian statistics for ecology 
+    | 7. Contrast scientific hypotheses with model selection
+author: "Olivier Gimenez"
+date: "March 2021"
+output:
+  beamer_presentation:
+    fig_caption: no
+    includes:
+      in_header: header.tex
+    latex_engine: pdflatex
+    slide_level: 2
+    theme: metropolis
+  ioslides_presentation: default
+classoption: aspectratio=169
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE, 
+                      echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      fig.height=6, 
+                      fig.width = 1.777777*6,
+                      tidy = FALSE, 
+                      comment = NA, 
+                      highlight = TRUE, 
+                      prompt = FALSE, 
+                      crop = TRUE,
+                      comment = "#>",
+                      collapse = TRUE)
+knitr::opts_knit$set(width = 60)
+library(tidyverse)
+library(reshape2)
+library(R2jags)
+theme_set(theme_light(base_size = 16))
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+      if (knitr:::is_latex_output()) output else otherwise
+  }
+}
+insert_pause <- make_latex_decorator(". . .", "\n")
+insert_slide_break <- make_latex_decorator("----", "\n")
+insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
+
+
+# Model selection
+
+## How to select a best model?
+
+`r insert_inc_bullet()` Is there any effect of rain or temperature or both on breeding success?
+
+`r insert_inc_bullet()` The proportion of explained variance $R^2$ is problematic, because the more variables you have, the bigger $R^2$ is.
+
+`r insert_inc_bullet()` Idea: **penalize models with too many parameters**.
+
+## Akaike information criterion (AIC)
+
+$$AIC = - 2 \log(L(\hat{\theta}_1,\ldots,\hat{\theta}_K)) + 2 K$$
+
+with $L$ the likelihood and $K$ the number of parameters $\theta_i$.
+
+## Akaike information criterion (AIC)
+
+$$\text{AIC} = {\color{red}{- 2 \log(L(\hat{\theta}_1,\ldots,\hat{\theta}_K))}} + 2 K$$
+
+\textcolor{red}{A measure of goodness-of-fit of the model to the data}: the more parameters you have, the smaller the deviance is (or the bigger the likelihood is).
+
+## Akaike information criterion (AIC)
+
+$$\text{AIC} = - 2 \log(L(\hat{\theta}_1,\ldots,\hat{\theta}_K)) + {\color{red}{2 K}}$$
+
+\textcolor{red}{A penalty}: twice the number of parameters $K$
+
+## Akaike information criterion (AIC)
+
+`r insert_inc_bullet()` AIC makes the balance between *quality of fit* and *complexity* of a model.
+
+`r insert_inc_bullet()` Best model is the one with lowest AIC value.
+
+`r insert_inc_bullet()` Two models are difficult to distinguish if $\Delta \text{AIC} < 2$.
+
+## Bayesian version
+
+* Watanabe-Akaike Information Criteria or WAIC:
+
+$$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[p(y_i \mid \theta)] + 
+                  2 p_\text{WAIC}$$
+
+* where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood of the $i$th observation and
+
+* $p_\text{WAIC}$ is the effective number of parameters computed using the posterior variance of the likelihood. 
+
+* Relatively new and not yet available in Jags in routine.
+
+```{r include = FALSE}
+nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71,
+              53,41,53,31,35,14,18)
+
+nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80,
+            67,54,58,39,42,23,23)
+
+temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4,
+         12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0)
+
+rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86,
+           78,87)
+
+datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, 
+              temp = (temp - mean(temp))/sd(temp), 
+              rain = (rain - mean(rain))/sd(rain))
+
+```
+
+
+## WAIC in Jags
+
+```{r include=FALSE}
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a + b.temp * temp[i] + b.rain * rain[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b.temp ~ dnorm(0,0.001)
+b.rain ~ dnorm(0,0.001)
+			
+	}
+")
+writeLines(model,"code/logistic.txt")
+init1 <- list(a = -0.5, b.temp = -0.5, b.rain = -0.5)
+init2 <- list(a = 0.5, b.temp = 0.5, b.rain = 0.5)
+inits <- list(init1,init2)
+parameters <- c("a","b.temp","b.rain")
+nb.burnin <- 1000
+nb.iterations <- 2000
+storks <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = "code/logistic.txt",
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+```{r}
+# calculate wAIC with JAGS
+# https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c
+samples <- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+```
+
+## WAIC in Jags
+
+```{r}
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+waic
+```
+
+# Your turn
+
+## Model selection with WAIC
+
+* Fit models with rainfall effect, temperature effect and without any covariate.
+
+* Rank them with WAIC.
+
+# Solution
+
+## Model with temperature only
+
+```{r}
+# model specification
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a + b * cov[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,"code/logtemp.txt")
+```
+
+`r insert_slide_break()`
+
+```{r}
+# list of lists of initial values (one for each MCMC chain)
+init1 <- list(a = -0.5, b = -0.5)
+init2 <- list(a = 0.5, b = 0.5)
+inits <- list(init1,init2)
+# specify parameters that need to be estimated
+parameters <- c("a","b")
+# specify nb iterations for burn-in and final inference 
+nb.burnin <- 1000
+nb.iterations <- 2000
+# read in data
+datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, 
+              cov = (temp - mean(temp))/sd(temp))
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE}
+# load R2jags to run Jags through R
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = "code/logtemp.txt",
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+`r insert_slide_break()`
+
+```{r}
+# compute WAIC
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_temp <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+## Model with rainfall only
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# read in data
+datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, 
+              cov = (rain - mean(rain))/sd(rain))
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# load R2jags to run Jags through R
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = "code/logtemp.txt",
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# compute WAIC
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_rain <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+## Model with no effect of covariates
+
+```{r}
+# model specification
+model <- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) <- a
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,"code/lognull.txt")
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# list of lists of initial values (one for each MCMC chain)
+init1 <- list(a = -0.5)
+init2 <- list(a = 0.5)
+inits <- list(init1,init2)
+# specify parameters that need to be estimated
+parameters <- c("a")
+# specify nb iterations for burn-in and final inference 
+nb.burnin <- 1000
+nb.iterations <- 2000
+# read in data
+datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs)
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# load R2jags to run Jags through R
+storks_temp <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = "code/lognull.txt",
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# compute WAIC
+samples <- jags.samples(storks_temp$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_null <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+## Compare WAIC
+
+```{r}
+data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
+           waic = c(waic[1],waic_temp[1],waic_rain[1],waic_null[1]),
+           p_waic = c(waic[2],waic_temp[2],waic_rain[2],waic_null[2])) %>%
+  arrange(waic)
+```
+
+Model with rainfall only seems to be better supported by the data. In case models have similar WAIC values, model-averaging might be useful. 

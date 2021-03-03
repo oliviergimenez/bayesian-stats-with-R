@@ -1,0 +1,16 @@
+
+model {
+  for (i in 1:n){
+    count[i] ~ dpois(lambda[i])
+    log(lambda[i]) <- a[transect[i]] + b[1] * x[i] + b[2] * pow(x[i],2)
+  }
+  for (j in 1:nbtransects){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  mu.a ~ dnorm (0, 0.001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b[1] ~ dnorm (0, 0.001)
+  b[2] ~ dnorm (0, 0.001)
+}
+

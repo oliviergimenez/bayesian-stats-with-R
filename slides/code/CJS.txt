@@ -1,0 +1,16 @@
+
+model
+{
+for (i in 1:N){
+	alive[i,First[i]] <- 1
+	for (j in (First[i]+1):Years){
+		alive[i,j] ~ dbern(alivep[i,j])
+		alivep[i,j] <- surv * alive[i,j-1]
+		obs[i,j] ~ dbern(sightp[i,j])
+		sightp[i,j] <- resight * alive[i,j]
+		}
+	}
+surv~dunif(0,1)
+resight~dunif(0,1)
+}
+

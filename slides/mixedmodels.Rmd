@@ -1,0 +1,877 @@
+---
+title: |
+    | Bayesian statistics for ecology 
+    | 8. Heterogeneity and multilevel models (aka mixed models)
+author: "Olivier Gimenez"
+date: "March 2021"
+output:
+  beamer_presentation:
+    fig_caption: no
+    includes:
+      in_header: header.tex
+    latex_engine: pdflatex
+    slide_level: 2
+    theme: metropolis
+  ioslides_presentation: default
+classoption: aspectratio=169
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE, 
+                      echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      fig.height=6, 
+                      fig.width = 1.777777*6,
+                      tidy = FALSE, 
+                      comment = NA, 
+                      highlight = TRUE, 
+                      prompt = FALSE, 
+                      crop = TRUE,
+                      comment = "#>",
+                      collapse = TRUE)
+knitr::opts_knit$set(width = 60)
+library(tidyverse)
+library(reshape2)
+library(R2jags)
+theme_set(theme_light(base_size = 16))
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+      if (knitr:::is_latex_output()) output else otherwise
+  }
+}
+insert_pause <- make_latex_decorator(". . .", "\n")
+insert_slide_break <- make_latex_decorator("----", "\n")
+insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
+
+
+# Multilevel (aka mixed-effect) models
+
+## What are multilevel models?
+
+`r insert_inc_bullet()` Multilevel models include both fixed and random effects.
+
+`r insert_inc_bullet()` Random effects are statistical parameters that attempt to **explain noise caused by clusters** of the population you are trying to model.
+
+`r insert_inc_bullet()` A multilevel model assumes that the dataset being analysed consists of **a hierarchy of different populations** whose differences relate to that hierarchy.
+
+`r insert_inc_bullet()` Measurement that come **in clusters** or groups.
+
+# Your turn
+
+## Question
+
+* Come up with examples of clusters or groups
+
+# Solution
+
+## Clusters might be:
+
+* Classrooms within schools
+* Students within classrooms
+* Chapters within books
+* Individuals within populations
+* Populations within species
+* Trajectories within individuals
+* Fishes within tanks
+* Frogs within ponds
+* PhD applicants in doctoral schools
+* Nations in continents
+* Sex or age are not clusters per se (if we were to sample again, we would take the same levels, e.g. male/female and young/old)
+
+
+## Why do we need multilevel models?
+
+`r insert_inc_bullet()` Model the clustering itself.
+
+`r insert_inc_bullet()` Interested in variance components (environmental vs. genetic variance).
+
+`r insert_inc_bullet()` Control for bias due to pseudoreplication (time, space, individual).
+
+## McElreath's explanation of multilevel models
+
+`r insert_inc_bullet()` Fixed-effect models have amnesia.
+
+`r insert_inc_bullet()` Every new cluster (individual, species, classroom) is a new world.
+
+`r insert_inc_bullet()` No information passed among clusters.
+
+`r insert_inc_bullet()` Multilevel models remember and pool information. They have memory.
+
+`r insert_inc_bullet()` Properties of clusters come from a population.
+
+`r insert_inc_bullet()` If previous clusters improve your guess about a new cluster, you want to use pooling.
+
+
+## Plant experiment in the field at CEFE 
+
+```{r, out.width = '8cm',out.height='6cm',fig.align='center',echo=FALSE}
+knitr::include_graphics(here::here("slides","img","pdm.png"))
+```
+
+Courtesy of Pr Eleni Kazakou
+
+## Number of grains per species (cluster) as a function of biomass
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+# On lit le jeu de données à analyser et on le nettoie
+VMG <- read_csv2(here::here("slides","dat","VMG.csv")) %>%
+  mutate(Sp = as_factor(Sp),
+         Vm = as.numeric(Vm))
+
+# crée crée un vecteur contenant le nb de graines (en log)
+y <- round(VMG$NGrTotest)
+
+# crée un vecteur contenant la biomass
+x <- VMG$Vm
+
+# crée un vecteur contenant le nom des espèces
+Sp <- VMG$Sp
+
+# crée un vecteur contenant le numéro des espèces
+species <- as.numeric(Sp)
+
+# nombre d'espèces
+nbspecies <- length(levels(Sp)) # ou bien length(unique(species))
+
+# nombre de mesures
+n <- length(y)
+```
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.align='center',out.width = '12cm',out.height='7cm'}
+# graphical representation
+library(lattice)
+dat <- data.frame(Biomass=x,nb_grain=y,Species=Sp)
+xyplot(log(nb_grain) ~ Biomass | Species,data=dat,
+       xlab='Biomass',ylab='Number of grains (log transformed)')
+```
+
+
+## GLM with complete pooling
+
+`r insert_html_math()`
+\begin{align*}
+   \text{Y}_i &\sim \text{Distribution(mean}_i\text{)} &\text{[likelihood]} \\
+  \text{link(mean)}_i & = \alpha + \beta \; x_{i} &\text{[linear model]} \\
+  \alpha &\sim \text{to be determined} &\text{[prior for intercept}] \\ 
+  \beta &\sim \text{to be determined} &\text{[prior for slope}] \\ 
+\end{align*}
+`r insert_html_math()`
+
+**Model with complete pooling. All clusters the same.**
+
+## GLM with no pooling
+
+`r insert_html_math()`
+\begin{align*}
+   \text{Y}_i &\sim \text{Distribution(mean}_i\text{)} &\text{[likelihood]} \\
+  \text{link(mean)}_i & = \alpha_{\text{CLUSTER}[i]} + \beta \; x_{i} &\text{[linear model]} \\
+  \alpha_j &\sim \text{to be determined} &\text{[prior for intercept}] \\ 
+  \beta &\sim \text{to be determined} &\text{[prior for slope}] \\ 
+\end{align*}
+`r insert_html_math()`
+
+**Model with no pooling. All clusters unrelated (fixed effect).**
+
+## GL**M**M or GLM with partial pooling
+
+`r insert_html_math()`
+\begin{align*}
+   \text{Y}_i &\sim \text{Distribution(mean}_i\text{)} &\text{[likelihood]} \\
+  \text{link(mean)}_i & = \alpha_{\text{CLUSTER}[i]} + \beta \; x_{i} &\text{[linear model]} \\
+  \alpha_j &\sim \text{Normal}(\bar{\alpha}, \sigma) &\text{[prior for varying intercepts}] \\ 
+  \bar{\alpha} &\sim \text{to be determined} &\text{[prior for population mean}] \\
+  \sigma &\sim \text{to be determined} &\text{[prior for standard deviation}] \\ 
+  \beta &\sim \text{to be determined} &\text{[prior for slope}] \\ 
+\end{align*}
+`r insert_html_math()`
+
+**Model with partial pooling. Clusters are somehow related (random effect).**
+
+# Back to the plant example
+
+## Model with complete pooling (all species are the same)
+
+`r insert_html_math()`
+\begin{align*}
+   \text{nseeds}_i &\sim \text{Normal}(\mu_i,\sigma^2) &\text{[likelihood]} \\
+  \mu_i & = \alpha + \beta \; \text{biomass}_{i} &\text{[linear model]} \\
+  \alpha &\sim \text{Normal}(0,1000) &\text{[prior for intercept}] \\ 
+  \beta &\sim \text{Normal}(0,1000) &\text{[prior for slope}] \\
+  \sigma &\sim \text{Uniform}(0,100) &\text{[prior for standard deviation}] \\
+\end{align*}
+`r insert_html_math()`
+
+## Read in and manipulate data
+
+```{r}
+# read in data
+VMG <- read_csv2(here::here("slides","dat","VMG.csv")) %>%
+  mutate(Sp = as_factor(Sp),
+         Vm = as.numeric(Vm))
+# nb of seeds
+y <- log(VMG$NGrTotest)
+# biomass
+x <- VMG$Vm
+x <- (x - mean(x))/sd(x)
+# species name
+Sp <- VMG$Sp
+# species label
+species <- as.numeric(Sp)
+# species name
+nbspecies <- length(levels(Sp))
+# total nb of measurements 
+n <- length(y)
+```
+
+## Specify the model in Jags
+
+```{r message=FALSE, warning=FALSE}
+model <- 
+paste("
+model{
+for(i in 1:n){
+	y[i] ~ dnorm(mu[i],tau.y)
+	mu[i] <- a + b*x[i]
+	}
+tau.y <- 1/(sigma.y*sigma.y)
+sigma.y ~ dunif(0,100)
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+}
+")
+writeLines(model,here::here("slides","code","completepooling.bug"))
+```
+
+## Prepare ingredients for running Jags
+
+```{r}
+# data
+allom.data <- list(y=y,n=n,x=x)
+
+# initial values
+init1 <- list(a=rnorm(1), b=rnorm(1),sigma.y=runif(1))
+init2 <- list(a=rnorm(1), b=rnorm(1),sigma.y=runif(1))
+inits <- list(init1,init2)
+
+# parameters to be estimated
+allom.parameters <- c("a", "b", "sigma.y")
+```
+
+## Run Jags
+
+```{r}
+allom.1 <- jags(allom.data,
+                inits,
+                allom.parameters,
+                n.iter = 2500,
+                model.file = here::here("slides","code","completepooling.bug"), 
+                n.chains = 2, 
+                n.burn = 1000)
+```
+
+## Display results
+
+```{r}
+allom.1
+```
+
+```{r}
+freq_lm <- lm(y ~ x,allom.data)	
+summary(freq_lm)
+```
+
+
+## Output
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(lattice)
+xyplot(y ~ x | Sp,
+       xlab = "Biomass", ylab = "Number of seeds",main="complete pooling",
+       panel = function(x, y) {
+           panel.xyplot(x, y)
+           panel.abline(a=c(1991,1677),col='red',lwd=3)
+       })
+```
+
+## Model with partial pooling (species random effect)
+
+```{r, fig.align='center',echo=FALSE}
+knitr::include_graphics(here::here("slides","img","varyingint.png"))
+```
+
+## Model with partial pooling (all species related in some way)
+
+`r insert_html_math()`
+\begin{align*}
+   \text{nseeds}_i &\sim \text{Normal}(\mu_i,\sigma^2) &\text{[likelihood]} \\
+  \mu_i & = \alpha_{\text{species}[i]} + \beta \; \text{biomass}_{i} &\text{[linear model]} \\
+  \alpha_j &\sim \text{Normal}(\bar{\alpha},\sigma_{\alpha}) &\text{[prior for varying intercepts}] \\ 
+  \bar{\alpha} &\sim \text{Normal}(0,1000) &\text{[prior for population mean}] \\ 
+  \sigma_{\alpha} &\sim \text{Uniform}(0,100) &\text{[prior for }\sigma_{\alpha}] \\
+  \beta &\sim \text{Normal}(0,1000) &\text{[prior for slope}] \\ 
+  \sigma &\sim \text{Uniform}(0,100) &\text{[prior for }\sigma] \\
+\end{align*}
+`r insert_html_math()`
+
+## Implementation in Jags
+
+```{r message=FALSE, warning=FALSE}
+model <- paste("
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (mu[i], tau.y)
+    mu[i] <- a[species[i]] + b *x[i]}
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+  for (j in 1:nbspecies){ 
+  a[j] ~ dnorm(mu.a, tau.a)}
+  mu.a ~ dnorm(0, 0.001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b ~ dnorm (0, 0.001)    }")
+writeLines(model,here::here("slides","code","varint.bug"))
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+allom.data <- list(n=n, 
+                    nbspecies= nbspecies,
+                    x=x,
+                    y=y,
+                    species=species)
+
+# on specifie le modele 
+model <- 
+paste("
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (mu[i], tau.y)
+    mu[i] <- a[species[i]] + b *x[i]
+  }
+
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:nbspecies){
+    a[j] ~ dnorm(mu.a, tau.a)
+  }
+  
+  mu.a ~ dnorm (0, 0.001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+
+  b ~ dnorm (0, 0.001)
+
+}
+")
+writeLines(model,here::here("slides","code","varint.bug"))
+
+init1 <- list(a=rnorm(nbspecies), b=rnorm(1), mu.a=rnorm(1),sigma.y=runif(1), sigma.a=runif(1))
+init2 <- list(a=rnorm(nbspecies), b=rnorm(1), mu.a=rnorm(1),sigma.y=runif(1), sigma.a=runif(1))
+inits<-list(init1,init2)
+allom.parameters <- c ("a", "b", "mu.a","sigma.y", "sigma.a")
+# run JAGS
+allom.2 <- jags(allom.data,
+                inits,
+                allom.parameters, 
+                n.iter = 2500,
+                model.file = here::here("slides","code","varint.bug"), 
+                n.chains = 2, 
+                n.burn = 1000)
+allom.2
+```
+
+```{r}
+library(lme4)
+freq_lmm <- lmer(y ~ x + (1 | species), allom.data, REML = FALSE)	
+summary(freq_lmm)
+```
+
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+## graph (correction BUG 2015)
+acoef.sp <- allom.2$BUGSoutput$summary[1:33,1]
+bcoef <- allom.2$BUGSoutput$summary[34,1]
+
+# varying-intercept predicted values
+yfit <- rep(0,length=n)
+for (k in 1:n){yfit[k] <- acoef.sp[species[k]] + bcoef * x[k]}
+
+# pooling model (no species effect) predicted values
+ylinear <- rep(0,length=n)
+for (k in 1:n){ylinear[k] <- 1991 + 1677 * x[k]}
+
+## define function to fit observed and predicted values in species-specific panels 
+panelfun2 <- 
+  function(x, y, subscripts, ...){ 
+           llines(x, lmhat[subscripts], type="p") # observed data
+           llines(x, hat[subscripts], type="l", lty=1,col='green',lwd=3) # partial pooling
+           llines(x, hat2[subscripts], type="l", lty=1,col='red',lwd=3) # no pooling 
+} 
+
+# assign observed and predicted values
+lmhat <- y # observed data
+hat <- yfit # partial pooling
+hat2 <- ylinear # no pooling
+```
+
+## Compare \textcolor{red}{complete pooling} vs \textcolor{green}{partial pooling}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# build a multipanel plot 
+xyplot(y ~ x | Sp, panel=panelfun2,
+       xlab="Biomass", 
+       ylab="Number of seeds",      
+       key = list(text = list(c("partial pooling", "no pooling")),
+       lines = list(lwd = 3, col = c("green", "red"),
+       type = c("l", "l"))))
+```
+
+## Model with no pooling (all species unrelated)
+
+`r insert_html_math()`
+\begin{align*}
+   \text{nseeds}_i &\sim \text{Normal}(\mu_i,\sigma^2) &\text{[likelihood]} \\
+  \mu_i & = \alpha_{\text{species}[i]} + \beta \; \text{biomass}_{i} &\text{[linear model]} \\
+  \alpha_j &\sim \text{Normal}(0,1000) &\text{[prior for intercepts}] \\ 
+  \beta &\sim \text{Normal}(0,1000) &\text{[prior for slope}] \\ 
+  \sigma &\sim \text{Uniform}(0,100) &\text{[prior for}\sigma] \\
+\end{align*}
+`r insert_html_math()`
+
+## Implementation in Jags
+
+```{r message=FALSE, warning=FALSE}
+model <- paste("
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (mu[i], tau.y)
+    mu[i] <- a[species[i]] + b *x[i]}
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif(0, 100)
+  for (j in 1:nbspecies){ a[j] ~ dnorm (0, 0.001)}
+  b ~ dnorm (0,0.001)    }")
+writeLines(model,here::here("slides","code","nopooling.bug"))
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+allom.data <- list (n=n, nbspecies= nbspecies,x=x,y=y,species=species)
+
+# on specifie le modele 
+model <- 
+paste("
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (mu[i], tau.y)
+    mu[i] <- a[species[i]] + b *x[i]
+  }
+
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:nbspecies){
+    a[j] ~ dnorm (0, 0.001)
+  }
+  
+  b ~ dnorm (0, 0.001)
+
+}
+")
+writeLines(model,here::here("slides","code","nopooling.bug"))
+
+init1 <- list(a=rnorm(nbspecies), b=rnorm(1), sigma.y=runif(1))
+init2 <- list(a=rnorm(nbspecies), b=rnorm(1), sigma.y=runif(1))
+inits<-list(init1,init2)
+allom.parameters <- c ("a", "b","sigma.y")
+# run JAGS
+allom.3 <- R2jags::jags(allom.data,inits,allom.parameters, n.iter = 2500,model.file=here::here("slides","code","nopooling.bug"), n.chains = 2, n.burn = 1000)
+allom.3
+
+## graph (correction BUG 2015)
+acoef.sp <- allom.3$BUGSoutput$summary[1:33,1]
+bcoef <- allom.3$BUGSoutput$summary[34,1]
+
+# fixed-effect predicted values
+yfit2 <- rep(0,length=n)
+for (k in 1:n){yfit2[k] <- acoef.sp[species[k]] + bcoef * x[k]}
+
+# assign observed and predicted values
+hat3 <- yfit2 # complete pooling
+
+## define function to fit observed and predicted values in species-specific panels 
+panelfun3 <- 
+  function(x, y, subscripts, ...){ 
+           llines(x, lmhat[subscripts], type="p") # observed data
+           llines(x, hat[subscripts], type="l", lty=1,col='green',lwd=3) # partial pooling
+           llines(x, hat2[subscripts], type="l", lty=1,col='red',lwd=3) # no pooling
+           llines(x, hat3[subscripts], type="l", lty=1,col='blue',lwd=3) # complete pooling
+}
+```
+
+## Compare \textcolor{red}{complete pooling} vs \textcolor{green}{partial pooling} vs \textcolor{blue}{no pooling} 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# build a multipanel plot 
+xyplot(y ~ x | Sp, panel=panelfun3,  
+       xlab="Biomass", 
+       ylab="Number of seeds",      
+       key = list(text = list(c("partial pooling", "complete pooling", "no pooling")),
+       lines = list(lwd = 3, col = c("green", "red", "blue"),
+       type = c("l", "l", "l"))))
+```
+
+
+```{r}
+freq_lmm2 <- lmer (y ~ x + (1 + x | species), allom.data, REML = FALSE)	
+summary(freq_lmm2)
+```
+
+```{r}
+freq_lmm_wocorr <- lmer(y ~ x + (1 | species) + 	
+                                   (0 + x | species), allom.data, REML = FALSE)	
+summary(freq_lmm_wocorr)
+
+lm(y ~ -1 + as.factor(species) + x, allom.data)	
+```
+
+```{r}
+model <- 	
+paste("	
+# varying-intercept, varying-slope allometry model 	
+# with Vm as a species predictor 	
+	
+model {	
+  for (i in 1:n){	
+    y[i] ~ dnorm (mu[i], tau.y)	
+    mu[i] <- a[species[i]] + b[species[i]] * x[i]	
+  }	
+	
+  tau.y <- pow(sigma.y, -2)	
+  sigma.y ~ dunif (0, 100)	
+	
+  for (j in 1:nbspecies){	
+    a[j] ~ dnorm (mu.a, tau.a)	
+    b[j] ~ dnorm (mu.b, tau.b)	
+  }	
+  	
+  mu.a ~ dnorm (0, .0001)	
+  tau.a <- pow(sigma.a, -2)	
+  sigma.a ~ dunif (0, 100)	
+	
+  mu.b ~ dnorm (0, .0001)	
+  tau.b <- pow(sigma.b, -2)	
+  sigma.b ~ dunif (0, 100)	
+	
+}	
+")	
+writeLines(model,here::here("slides","code","varintvarslope.bug"))
+	
+init1 <- list(a=rnorm(nbspecies), b=rnorm(nbspecies), mu.a=rnorm(1),mu.b=rnorm(1),	
+sigma.y=runif(1), sigma.a=runif(1), sigma.b=runif(1))	
+init2 <- list(a=rnorm(nbspecies), b=rnorm(nbspecies), mu.a=rnorm(1),mu.b=rnorm(1),	
+sigma.y=runif(1), sigma.a=runif(1), sigma.b=runif(1))	
+inits<-list(init1,init2)	
+allom.parameters <- c ("a", "b", "mu.a","mu.b", "sigma.y", "sigma.a", "sigma.b")	
+	
+allom.3 <- R2jags::jags(allom.data,
+                        inits,
+                        allom.parameters, 
+                        n.iter = 2500,
+                        model.file=here::here("slides","code","varintvarslope.bug"), 
+                        n.chains = 2, 
+                        n.burn = 1000)	
+allom.3	
+```
+
+
+## Shrinkage results from pooling of information
+
+`r insert_inc_bullet()` Varying effect estimates shrink towards mean ($\bar{\alpha}$).
+
+`r insert_inc_bullet()` Avoids underfitting as in complete pooling model (null variance) or overfitting as in no pooling model (infinite variance).
+
+`r insert_inc_bullet()` Varying effects: adaptive regularization through cluster variance estimation.
+
+`r insert_inc_bullet()` Further from mean, more shrinkage.
+
+`r insert_inc_bullet()` Fewer data in cluster, more shrinkage.
+
+# Multilevel models are awesome!
+
+## Multilevel models in a nutshell
+
+`r insert_inc_bullet()` **Shrinkage via pooling is desirable**. The no-pooling model overstates variation among clusters and makes the
+individual clusters look more different than they are (overfitting). The complete-pooling model simply ignores the variation among clusters (underfitting).
+
+`r insert_inc_bullet()` We can **generalize to a wider population**. Is there an allometry relationship between number of seeds and biomass?
+
+`r insert_inc_bullet()` We may consider **varying slopes**. We'd need to deal with correlations between intercept and slope random effects. Open a whole new world with spatial (or time) autocorrelation, phylogenetic regressions, quantitative genetics, network models.
+
+`r insert_inc_bullet()` We may **include predictors at the cluster level**. Imagine we know something about functional traits, and wish to determine whether some species-to-species variation in the allometry relationship is explained by these traits. 
+
+# Your turn
+
+## Model selection with WAIC
+
+* Consider the plant example. Compare the three models (no, partial and complete pooling) with WAIC.
+
+# Solution
+
+## `R` code
+
+WAIC of model with no pooling
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.1$model,
+                        variable.names = c("WAIC", "deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_completepooling <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+`r insert_slide_break()`
+
+WAIC of model with partial pooling
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.2$model,
+                        variable.names = c("WAIC","deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_partialpooling <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+`r insert_slide_break()`
+
+WAIC of model with complete pooling
+```{r eval = FALSE}
+samples <- jags.samples(model = allom.3$model,
+                        variable.names = c("WAIC","deviance"), 
+                        type = "mean", 
+                        n.iter = 2000, 
+                        n.burnin = 1000, 
+                        n.thin = 1)
+samples$p_waic <- samples$WAIC
+samples$waic <- samples$deviance + samples$p_waic
+tmp <- sapply(samples, sum)
+waic_nopooling <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
+```
+
+## Model ranking
+
+```{r eval = FALSE}
+data.frame(model = c('no pooling', 'partial pooling', 'complete pooling'),
+           waic = c(waic_nopooling[1],
+                    waic_partialpooling[1],
+                    waic_completepooling[1]),
+           p_waic = c(waic_nopooling[2],
+                      waic_partialpooling[2],
+                      waic_completepooling[2])) %>%
+  arrange(waic)
+```
+
+## Model ranking
+
+```{r echo=FALSE}
+load(here::here("slides/dat/waic.RData"))
+waic
+```
+
+
+# Conclusions
+
+## Take-home messages about Bayesian statistics
+
+* Frees the modeler in you (M. Kéry)
+     + Uses probability to quantify uncertainty for everything (propagation of uncertainty).
+     + Allows use of prior information ('better' estimates).
+     + Can fit complex (hierarchical) models with same MCMC algorithms.
+
+`r insert_pause()`
+
+* With great tools come great responsabilities
+  + Checking convergence is painful.
+  + Specifying priors might be tricky.
+  + Model adequacy should be checked (posterior predictive checks - not covered).
+  + Computational burden can be high (see function `R2jags::jags.parallel()` and package [\alert{`jagsUI`}](https://github.com/kenkellner/jagsui).
+
+`r insert_pause()`
+
+* So what?
+     + Make an informed and pragmatic choice.
+     + Are you after complexity, speed, uncertainties, etc?
+     + Talk to colleagues.
+
+`r insert_slide_break()`
+
+```{r, out.width = '13cm',out.height='5cm',fig.align='center',echo=FALSE}
+knitr::include_graphics(here::here("slides","img","bayesian_evol.png"))
+```
+
+## [\alert{Why become a bayesian? Ask twitter!}](https://twitter.com/ChelseaParlett/status/1282798645453000704)
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics(here::here("slides","img","whytwitter.png"))
+```
+
+# Bonus
+
+## Longitudinal study on coral reef and GLMM (Poisson)
+
+> A survey of a coral reef uses 10 predefined linear transects covered by divers once every week. The response variable of interest is the abundance of a particular species of anemone as a function of water temperature. Counts of anemones are recorded at 20 regular line segments along the transect. The following piece of code will generate a data set with realistic properties according to the above design. Make sure you understand what it is doing. You might want to explain the script to the colleague next to you. Also, to try and make sense of the code of others, it is always good to plot and/or run small sections of the code. 
+
+From Jason Matthiopoulos' book. 
+
+`r insert_slide_break()`
+
+```{r}
+transects <- 10
+data <- NULL
+for (tr in 1:transects){
+  ref <- rnorm(1,0,.5) # random effect (intercept)
+  t <- runif(1, 18,22) + runif(1,-.2,0.2)*1:20 # water temperature gradient
+  ans <- exp(ref -14 + 1.8 * t - 0.045 * t^2) # Anemone gradient (expected response)
+  an <- rpois(20, ans) # actual counts on 20 segments of the current transect
+  data <- rbind(data,cbind(rep(tr, 20), t, an))
+}
+```
+
+`r insert_slide_break()`
+
+* Generate a data set using the anemone code and fit a GLMM with quadratic effect of temperature and a random intercept.
+
+* Fit the same model to the same data in a Frequentist framework using function `lme4::glmer()`. 
+
+* Compare the estimates.
+
+# Solution
+
+## Make sense of the code
+
+* Always difficult to make sense of the code of others. 
+
+* Good to plot and/or run small sections of the code. 
+
+`r insert_slide_break()`
+
+```{r}
+ref <- rnorm(1,0,.5) # random effect (intercept)
+t <- runif(1, 18,22) + runif(1,-.2,0.2)*1:20 # water temperature gradient
+plot(t,type='l')
+```
+
+`r insert_slide_break()`
+
+```{r}
+ans <- exp(ref -14 + 1.8 * t - 0.045 * t^2) # Anemone gradient (expected response)
+plot(t,log(ans),type='l')
+```
+
+`r insert_slide_break()`
+
+```{r}
+data <- data.frame(Transect=data[,1],Temperature=data[,2],Anemones=data[,3])
+plot(data$Temperature, data$Anemones)
+```
+
+## Write down model
+
+`r insert_html_math()`
+\begin{align*}
+   \text{Count}_i &\sim \text{Poisson(}\lambda_i) &\text{[likelihood]}\\
+  \text{log}(\lambda_i) &= a_{\text{TRANSECT[i]}} + b_1 \; \text{temp}_{i} + b_2 \; \text{temp}^2_{i} &\text{[linear model]} \\
+  a_j &\sim \text{Normal}(\bar{a}, \sigma) &\text{[prior for varying intercepts}] \\ 
+  \bar{a} &\sim \text{Normal}(0, 1000) &\text{[prior for population mean}] \\ 
+  \sigma &\sim \text{Uniform}(0, 100) &\text{[prior for standard deviation}] \\ 
+  b_1, b_2 &\sim \text{Normal}(0, 1000) &\text{[prior for slopes}] \\ 
+\end{align*}
+`r insert_html_math()`
+
+`r insert_slide_break()`
+
+Standardize Temperature covariate. 
+```{r}
+data$Temp <- (data$Temperature - mean(data$Temperature))/sd(data$Temperature)
+head(data)
+```
+
+`r insert_slide_break()`
+
+```{r}
+model <- 
+paste("
+model {
+  for (i in 1:n){
+    count[i] ~ dpois(lambda[i])
+    log(lambda[i]) <- a[transect[i]] + b[1] * x[i] + b[2] * pow(x[i],2)
+  }
+  for (j in 1:nbtransects){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  mu.a ~ dnorm (0, 0.001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b[1] ~ dnorm (0, 0.001)
+  b[2] ~ dnorm (0, 0.001)
+}
+")
+writeLines(model,here::here("slides","code","GLMMpoisson.bug"))
+```
+
+`r insert_slide_break()`
+
+```{r}
+dat <- list(n = nrow(data), 
+            nbtransects = transects, 
+            x = data$Temp, 
+            count = data$Anemones, 
+            transect = data$Transect)
+init1 <- list(a=rnorm(transects), b=rnorm(2), mu.a=rnorm(1), sigma.a=runif(1))
+init2 <- list(a=rnorm(transects), b=rnorm(2), mu.a=rnorm(1), sigma.a=runif(1))
+inits <- list(init1,init2)
+par <- c ("a", "b", "mu.a", "sigma.a")
+```
+
+`r insert_slide_break()`
+
+```{r}
+fit <- jags(dat, inits, par, n.iter = 2500, model.file=here::here("slides","code","GLMMpoisson.bug"), n.chains = 2, n.burn = 1000)
+```
+
+`r insert_slide_break()`
+
+```{r}
+fit
+```
+
+
+`r insert_slide_break()`
+
+```{r}
+library(lme4)
+fit_lme4 <- glmer(Anemones ~ Temp + I(Temp^2) + (1 | Transect), data=data, family=poisson)
+fit_lme4
+```
+
+Parameter estimates obtained with both approaches are very similar.
+
+`r insert_slide_break()`
+
+```{r}
+visreg::visreg(fit_lme4,xvar='Temp')
+```
+
+<!-- # Generate R code only -->
+<!-- ```{r} -->
+<!-- knitr::purl('BayesianStatistics_OGimenez.Rmd') -->
+<!-- ``` -->
+

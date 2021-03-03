@@ -1,0 +1,175 @@
+---
+title: "Data manipulation - solutions"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Question 1a 
+
+.tiny-font[
+```{r}
+penguins # display data
+```
+]
+
+---
+
+## Question 1a 
+
+.tiny-font[
+```{r}
+penguins %>% glimpse() # display data
+```
+]
+
+---
+
+## Question 1b
+
+```{r}
+dat <- penguins %>%
+# filter out missing sex
+  filter(!is.na(sex)) %>% 
+# select variables
+  select(species, island, bill_length_mm, body_mass_g) 
+```
+
+---
+
+## Question 2a
+
+.tiny-font[
+```{r}
+dat # nb of penguins
+```
+]
+
+---
+
+## Questions 2b and 2d
+
+```{r}
+# nb of species, and penguins per species
+dat %>% count(species) 
+```
+
+---
+
+## Questions 2b and 2d
+
+```{r}
+dat %>% count(species, sort = TRUE) # idem, arranged by n
+```
+
+
+---
+
+## Question 2c
+
+```{r}
+dat %>% count(island) # nb of island, and penguins per island
+```
+
+
+---
+
+## Question 2e
+
+```{r}
+# penguins per species and island
+dat %>% count(species, island) 
+```
+
+
+
+---
+
+## Question 3a: mean body mass
+
+.tiny-font[
+```{r}
+# option 1
+dat %>%
+  mutate(mean_bm = mean(body_mass_g))
+```
+]
+
+---
+
+## Question 3a: mean body mass
+
+```{r}
+# option 2
+dat %>%
+  summarise(mean_bm = mean(body_mass_g))
+```
+
+
+---
+
+## Question 3b: mean body mass per species
+
+.tiny-font[
+```{r}
+# option 1
+dat %>%
+  group_by(species) %>% 
+  mutate(mean_bm = mean(body_mass_g))
+```
+]
+
+
+
+---
+
+## Question 3b: mean body mass per species
+
+```{r}
+# option 2
+dat %>% 
+  group_by(species) %>% 
+  summarize(mean_bm = mean(body_mass_g))
+```
+
+
+---
+
+## Question 3c: mean traits
+
+```{r}
+# all at once, through column selection
+dat %>% 
+  group_by(species) %>% 
+  summarize(across(bill_length_mm:body_mass_g, mean))
+```
+
+
+
+---
+
+## Question 3c: mean traits
+
+```{r}
+# all at once, through column format selection
+dat %>% 
+  group_by(species) %>% 
+  summarize(across(where(is.numeric), mean))
+```

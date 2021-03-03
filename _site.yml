@@ -1,0 +1,47 @@
+name: "bayesian-stat-ecology-workshop"
+title: "Bayesian statistics for ecology"
+description: "A workshop with R and Jags"
+output_dir: "docs"
+#repository_url: https://github.com/wilkelab/SDS375
+include: [".nojekyll"]
+navbar:
+#  logo:
+#    image: images/cefe.png
+#    href: https://www.cefe.cnrs.fr/en/
+  source_url: true
+  left:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Slides"
+      menu:
+        - text: "Motivations"
+          href: slides/motivations.pdf
+        - text: "The likelihood"
+          href: slides/likelihood.pdf
+        - text: "Bayesian analyses by hand"
+          href: slides/example.pdf
+        - text: "A detour to explore priors"
+          href: slides/priors.pdf
+        - text: "Markov chains Monte Carlo methods (MCMC)"
+          href: slides/mcmc.pdf
+        - text: "Bayesian analyses in R with the Jags software"
+          href: slides/jags.pdf
+        - text: "Contrast scientific hypotheses with model selection"
+          href: slides/modelselection.pdf
+        - text: "Heterogeneity and multilevel models (aka mixed models)"
+          href: slides/mixedmodels.pdf
+    - text: "Worksheets"
+      menu:
+        - text: "Practical 1: Manipulating data"
+          href: practicals/1_datamanipulation.html
+        - text: "Practical 1: Manipulating data - Solutions"
+          href: practicals/1_datamanipulation_solution.html
+    - icon: fab fa-github
+      href: https://github.com/oliviergimenez/bayesian-stat-ecology-workshop
+    - icon: fab fa-twitter
+      href: https://twitter.com/oaggimenez
+output: 
+  distill::distill_article:
+    toc: TRUE
+    theme: theme.css
