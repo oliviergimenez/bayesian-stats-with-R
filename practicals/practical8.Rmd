@@ -1,0 +1,74 @@
+---
+title: "Practical 3"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Moment matching
+
+* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$? 
+
+* Parameters $\mu$ and $\sigma^2$ are seen as the moments of a $Beta(\alpha,\beta)$ distribution.
+
+* Now we look for values of $\alpha$ and $\beta$ that match the observed moments of the $Beta$ distribution.
+
+* We need another set of equations:
+
+$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$
+
+$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$
+
+---
+## Moment matching
+
+* For our model, that means:
+
+.small-font[
+```{r echo = TRUE}
+(alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2)
+(beta <- alpha * ( (1/0.57) - 1))
+```
+]
+
+
+---
+## Question
+
+* Use simulations to check that our estimates are correct. 
+
+* Hint: The `R` function `rbeta()` might be of use.
+
+
+---
+# Solution
+
+```{r eval = TRUE, echo = TRUE}
+alpha <- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2
+beta <- alpha * ( (1/0.57) - 1)
+n <- 10000
+samp <- rbeta(n, alpha, beta)
+```
+
+```{r eval = TRUE, echo = TRUE}
+(mu <- mean(samp))
+(sigma <- sqrt(var(samp)))
+```
+

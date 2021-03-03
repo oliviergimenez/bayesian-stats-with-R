@@ -230,13 +230,7 @@ storks <- jags(data  = datax,
 storks
 ```
 
-# Your turn
-
-## Practical
-
-* Run the stork analysis yourself.
-
-* Does it seem like there is an effect of rainfall or temperature on breeding success?
+# Your turn: Practical 5
 
 # Assess convergence
 
@@ -451,31 +445,5 @@ plot(density(res[,'b.temp']),xlab="",ylab="", main="Temperature",lwd=3)
 abline(v=0,col='red',lwd=2)
 ```
 
-# Your turn
-
-## A stupid question
-
-* Get the posterior distribution of $b^2_{rain} + \cos(b_{temp})$
-
-# Solution
-
-## `R` code
-
-* Evaluate the function for each MCMC iteration
-```{r}
-stupid_pd <- res[,'b.rain']^2 + cos(res[,'b.temp'])
-head(stupid_pd)
-```
-
-`r insert_slide_break()`
-
-* Plot the distribution
-```{r}
-plot(density(stupid_pd), xlab = '', main = '', lwd = 3)
-
-mean(stupid_pd > 0)
-
-hist(stupid_pd)
-```
-
+# Your turn: Practical 6
 

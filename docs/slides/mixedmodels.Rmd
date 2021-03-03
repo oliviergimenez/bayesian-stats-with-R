@@ -870,8 +870,3 @@ Parameter estimates obtained with both approaches are very similar.
 visreg::visreg(fit_lme4,xvar='Temp')
 ```
 
-<!-- # Generate R code only -->
-<!-- ```{r} -->
-<!-- knitr::purl('BayesianStatistics_OGimenez.Rmd') -->
-<!-- ``` -->
-

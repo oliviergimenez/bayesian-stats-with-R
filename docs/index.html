@@ -2415,8 +2415,13 @@ Worksheets
 <span class="down-arrow">&#x25BE;</span>
 </button>
 <div class="nav-dropdown-content">
-<a href="practicals/1_datamanipulation.html">Practical 1: Manipulating data</a>
-<a href="practicals/1_datamanipulation_solution.html">Practical 1: Manipulating data - Solutions</a>
+<a href="practicals/practical1.html">Practical 1</a>
+<a href="practicals/practical2.html">Practical 2</a>
+<a href="practicals/practical3.html">Practical 3</a>
+<a href="practicals/practical4.html">Practical 4</a>
+<a href="practicals/practical5.html">Practical 5</a>
+<a href="practicals/practical6.html">Practical 6</a>
+<a href="practicals/practical7.html">Practical 7</a>
 </div>
 </div>
 <a href="https://github.com/oliviergimenez/bayesian-stats-with-R">
@@ -2463,7 +2468,7 @@ Where: Zoom<br />
 <!-- Syllabus: [click here](syllabus.html)   --> <!-- Upcoming lectures and assignments: [click here](schedule.html)   --></p>
 <h1 id="schedule">Schedule</h1>
 <ol type="1">
-<li>Bayesian inference: Motivation</li>
+<li>An introduction to Bayesian inference</li>
 <li>The likelihood</li>
 <li>Bayesian analyses by hand</li>
 <li>A detour to explore priors</li>
@@ -2483,23 +2488,20 @@ Where: Zoom<br />
 <ul>
 <li>You need to have <a href="https://cloud.r-project.org/"><code>R</code></a> and <a href="https://rstudio.com/products/rstudio/download/#download"><code>RStudio</code></a> installed</li>
 <li>Download <code>Jags</code> from <a href="http://sourceforge.net/projects/mcmc-jags/files/">sourceforge</a> and install it</li>
-<li>Install the following <code>R</code> packages: <code>tidyverse</code> and <code>R2jags</code>. You can install them all at once by running the following code in the <code>R</code> command line:</li>
+<li>Install the following <code>R</code> packages: <code>tidyverse</code>, <code>here</code>, <code>lme4</code> and <code>R2jags</code>. You can install them all at once by running the following code in the <code>R</code> command line:</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span>, <span class='st'>"R2jags"</span><span class='op'>)</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span>, <span class='st'>"R2jags"</span>, <span class='st'>"here"</span>, <span class='st'>"lme4"</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
 <h1 id="credits">Credits</h1>
-<ul>
-<li><p>Many slides are from <a href="https://www.maths.ed.ac.uk/~rking33/Book-website/index.html">a workshop we used to run a loooong time ago</a> with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by <a href="https://github.com/rmcelreath/statrethinking_winter2019">Richard McElreath</a> (16-20, 90-91, 166, 186), <a href="https://staff.qut.edu.au/staff/k.mengersen">Kerrie Mengersen</a> (16-20, 81), <a href="https://frodriguezsanchez.net/">Francisco Rodriguez Sanchez</a> (79-80; from the Stan manual), <a href="https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html">Jim Albert and Jingchen Hu</a> (93-99), <a href="https://www.tjmahr.com/">Tristan Marh</a> (22), <a href="https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/">Jason Matthiopoulos</a> (31-39, 196), a paper by <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x">Michael McCarthy and Pip Masters</a> (71-73), <a href="https://www.lopez-sepulcre.com/">Andrés Lopez-Sepulcre</a> (126) and <a href="https://sites.google.com/site/doingbayesiandataanalysis/">John Kruschke’ book cover</a> (61).</p></li>
-<li><p>The sources for the images are: <a href="https://www.elmhurst.edu/blog/thomas-bayes/">James Kulich</a> for slide 13, Matt Buck for slide 21, <a href="https://xkcd.com/1132/">xkcd</a> for slide 29 and Mike West for slide 194.</p></li>
-</ul>
+<p>Many slides are from <a href="https://www.maths.ed.ac.uk/~rking33/Book-website/index.html">a workshop we used to run a loooong time ago</a> with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by <a href="https://github.com/rmcelreath/statrethinking_winter2019">Richard McElreath</a>, <a href="https://staff.qut.edu.au/staff/k.mengersen">Kerrie Mengersen</a>, <a href="https://frodriguezsanchez.net/">Francisco Rodriguez Sanchez</a>, <a href="https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html">Jim Albert and Jingchen Hu</a>, <a href="https://www.tjmahr.com/">Tristan Marh</a>, <a href="https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/">Jason Matthiopoulos</a>, a paper by <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x">Michael McCarthy and Pip Masters</a>, <a href="https://www.lopez-sepulcre.com/">Andrés Lopez-Sepulcre</a> and <a href="https://sites.google.com/site/doingbayesiandataanalysis/">John Kruschke’ book cover</a>. The sources for the images are <a href="https://www.elmhurst.edu/blog/thomas-bayes/">James Kulich</a>, Matt Buck, <a href="https://xkcd.com/1132/">xkcd</a> and Mike West.</p>
 <h2 class="appendix" id="corrections">Corrections</h2>
 <p>If you spot a typo or an error, find a bug, want to suggest changes, or have trouble running the code, please <a href="https://github.com/oliviergimenez/bayesian-stats-with-R/issues">file an issue</a> or <a href="mailto:olivier.gimenez@cefe.cnrs.fr">get back to me</a></p>
 <h2 class="appendix" id="reuse">Reuse</h2>
-<p>Text and figures are licensed under Creative Commons Attribution <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Any computer code (R, HTML, CSS, etc.) in slides and worksheets, including in slide and worksheet sources, is also licensed under <a href="https://github.com/oliviergimenez/bayesian-stat-ecology-workshop/blob/master/LICENSE.md">MIT</a>.</p>
+<p>Text and figures are licensed under Creative Commons Attribution <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Any computer code (R, HTML, CSS, etc.) in slides and worksheets, including in slide and worksheet sources, is also licensed under <a href="https://github.com/oliviergimenez/bayesian-stats-with-R/blob/master/LICENSE.md">MIT</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Practical 7</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Olivier Gimenez" />
+    <script src="libs/header-attrs-2.7/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, title-slide
+
+# Practical 7
+### Olivier Gimenez
+### last updated: 2021-03-03
+
+---
+
+
+
+
+## Model selection with wAIC
+
+* Fit models with rainfall effect, temperature effect and without any covariate to the stork data.
+
+* Rank them with wAIC.
+
+---
+# Solution
+
+---
+## Data
+
+
+```r
+nbchicks &lt;- c(151,105,73,107,113,87,77,108,118,122,112,120,122,
+              89,69,71,53,41,53,31,35,14,18)
+
+nbpairs &lt;- c(173,164,103,113,122,112,98,121,132,136,133,137,
+             145,117,90,80,67,54,58,39,42,23,23)
+
+temp &lt;- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,
+          15.3,14.4,14.4,12.7,11.7,11.9,15.9,13.4,14.0,13.9,
+          12.9,15.1,13.0)
+
+rain &lt;- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,
+          28,96,48,90,86,78,87)
+```
+
+---
+## Model with both covariates
+
+.tiny-font[
+
+```r
+model &lt;- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) &lt;- a + b.temp * temp[i] + b.rain * rain[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b.temp ~ dnorm(0,0.001)
+b.rain ~ dnorm(0,0.001)
+			
+	}
+")
+writeLines(model,here::here("slides", "code", "logistic.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+
+```r
+init1 &lt;- list(a = -0.5, b.temp = -0.5, b.rain = -0.5)
+init2 &lt;- list(a = 0.5, b.temp = 0.5, b.rain = 0.5)
+inits &lt;- list(init1,init2)
+parameters &lt;- c("a","b.temp","b.rain")
+nb.burnin &lt;- 1000
+nb.iterations &lt;- 2000
+
+datax &lt;- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              temp = (temp - mean(temp)) / sd(temp), 
+              rain = (rain - mean(rain)) / sd(rain))
+```
+
+---
+## Run Jags
+
+.tiny-font[
+
+```r
+storks &lt;- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logistic.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 23
+##    Unobserved stochastic nodes: 3
+##    Total graph size: 181
+## 
+## Initializing model
+```
+]
+
+---
+## Calculate wAIC with Jags
+
+* Check out post at &lt;https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c&gt;
+
+.tiny-font[
+
+```r
+samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic &lt;- samples$WAIC
+samples$waic &lt;- samples$deviance + samples$p_waic
+tmp &lt;- sapply(samples, sum)
+waic &lt;- round(c(waic = tmp[["waic"]], 
+                p_waic = tmp[["p_waic"]]),1)
+waic
+```
+
+```
+##   waic p_waic 
+##  216.7   12.2
+```
+]
+
+---
+## Model with temperature only
+
+.tiny-font[
+
+```r
+# model specification
+model &lt;- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) &lt;- a + b * cov[i]
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+b ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,here::here("slides", "code", "logtemp.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+.small-font[
+
+```r
+# list of lists of initial values (one for each MCMC chain)
+init1 &lt;- list(a = -0.5, b = -0.5)
+init2 &lt;- list(a = 0.5, b = 0.5)
+inits &lt;- list(init1,init2)
+# specify parameters that need to be estimated
+parameters &lt;- c("a","b")
+# specify nb iterations for burn-in and final inference 
+nb.burnin &lt;- 1000
+nb.iterations &lt;- 2000
+
+# read in data
+datax &lt;- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              cov = (temp - mean(temp)) / sd(temp))
+```
+]
+
+---
+
+## Load R2jags to run Jags through R
+
+.tiny-font[
+
+```r
+storks_temp &lt;- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logtemp.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 23
+##    Unobserved stochastic nodes: 2
+##    Total graph size: 125
+## 
+## Initializing model
+```
+]
+
+---
+
+## Compute wAIC
+
+
+```r
+samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic &lt;- samples$WAIC
+samples$waic &lt;- samples$deviance + samples$p_waic
+tmp &lt;- sapply(samples, sum)
+waic_temp &lt;- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+
+## Model with rainfall only
+
+
+```r
+# read in data
+datax &lt;- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
+              cov = (rain - mean(rain)) / sd(rain))
+```
+
+---
+## Load R2jags to run Jags through R
+
+.tiny-font[
+
+```r
+storks_temp &lt;- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "logtemp.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 23
+##    Unobserved stochastic nodes: 2
+##    Total graph size: 134
+## 
+## Initializing model
+```
+]
+
+---
+
+## Compute wAIC
+
+
+```r
+samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic &lt;- samples$WAIC
+samples$waic &lt;- samples$deviance + samples$p_waic
+tmp &lt;- sapply(samples, sum)
+waic_rain &lt;- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+## Model with no effect of covariates
+
+.tiny-font[
+
+```r
+# model specification
+model &lt;- 
+paste("
+model
+{
+	for( i in 1 : N) 
+		{
+		nbchicks[i] ~ dbin(p[i],nbpairs[i])
+		logit(p[i]) &lt;- a
+		}
+			
+# priors for regression parameters
+a ~ dnorm(0,0.001)
+	}
+")
+writeLines(model,here::here("slides", "code", "lognull.txt"))
+```
+]
+
+---
+## MCMC details and data
+
+.small-font[
+
+```r
+# list of lists of initial values (one for each MCMC chain)
+init1 &lt;- list(a = -0.5)
+init2 &lt;- list(a = 0.5)
+inits &lt;- list(init1,init2)
+# specify parameters that need to be estimated
+parameters &lt;- c("a")
+# specify nb iterations for burn-in and final inference 
+nb.burnin &lt;- 1000
+nb.iterations &lt;- 2000
+
+# read in data
+datax &lt;- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs)
+```
+]
+
+---
+## Load R2jags to run Jags through R
+
+.tiny-font[
+
+```r
+storks_temp &lt;- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code", "lognull.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 23
+##    Unobserved stochastic nodes: 1
+##    Total graph size: 51
+## 
+## Initializing model
+```
+]
+
+---
+## Compute wAIC
+
+
+```r
+samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
+                        type = "mean", 
+						n.iter = 2000,
+						n.burnin = 1000,
+						n.thin = 1)
+samples$p_waic &lt;- samples$WAIC
+samples$waic &lt;- samples$deviance + samples$p_waic
+tmp &lt;- sapply(samples, sum)
+waic_null &lt;- round(c(waic = tmp[["waic"]], 
+                     p_waic = tmp[["p_waic"]]),1)
+```
+
+---
+## Compare WAIC
+
+.tiny-font[
+
+```r
+data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
+           waic = c(waic[1], waic_temp[1], waic_rain[1], waic_null[1]),
+           p_waic = c(waic[2], waic_temp[2], waic_rain[2], waic_null[2])) %&gt;%
+  arrange(waic)
+```
+
+```
+##             model  waic p_waic
+## 1            rain 213.0    9.2
+## 2            none 215.4    6.3
+## 3 both_covariates 216.7   12.2
+## 4            temp 220.4   10.3
+```
+]
+
+* Model with rainfall only seems to be better supported by the data. 
+
+* In case models have similar wAIC values, model-averaging might be useful. 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

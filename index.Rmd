@@ -24,7 +24,7 @@ Where: Zoom
 
 # Schedule
 
-1. Bayesian inference: Motivation
+1. An introduction to Bayesian inference
 2. The likelihood
 3. Bayesian analyses by hand
 4. A detour to explore priors
@@ -44,18 +44,16 @@ Where: Zoom
 
 * You need to have [`R`](https://cloud.r-project.org/) and [`RStudio`](https://rstudio.com/products/rstudio/download/#download) installed
 * Download `Jags` from [sourceforge](http://sourceforge.net/projects/mcmc-jags/files/) and install it
-* Install the following `R` packages: `tidyverse` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
+* Install the following `R` packages: `tidyverse`, `here`, `lme4` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
 
 ```{r eval = FALSE, echo = TRUE}
-install.packages(c("tidyverse", "R2jags"))
+install.packages(c("tidyverse", "R2jags", "here", "lme4"))
 ```
 
 
 # Credits
 
-* Many slides are from [a workshop we used to run a loooong time ago](https://www.maths.ed.ac.uk/~rking33/Book-website/index.html) with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by [Richard McElreath](https://github.com/rmcelreath/statrethinking_winter2019) (16-20, 90-91, 166, 186), [Kerrie Mengersen](https://staff.qut.edu.au/staff/k.mengersen) (16-20, 81), [Francisco Rodriguez Sanchez](https://frodriguezsanchez.net/) (79-80; from the Stan manual), [Jim Albert and Jingchen Hu](https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html) (93-99), [Tristan Marh](https://www.tjmahr.com/) (22), [Jason Matthiopoulos](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/) (31-39, 196), a paper by [Michael McCarthy and Pip Masters](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x) (71-73), [Andrés Lopez-Sepulcre](https://www.lopez-sepulcre.com/) (126) and [John Kruschke' book cover](https://sites.google.com/site/doingbayesiandataanalysis/) (61).
-
-* The sources for the images are: [James Kulich](https://www.elmhurst.edu/blog/thomas-bayes/) for slide 13, Matt Buck for slide 21, [xkcd](https://xkcd.com/1132/) for slide 29 and Mike West for slide 194.
+Many slides are from [a workshop we used to run a loooong time ago](https://www.maths.ed.ac.uk/~rking33/Book-website/index.html) with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by [Richard McElreath](https://github.com/rmcelreath/statrethinking_winter2019), [Kerrie Mengersen](https://staff.qut.edu.au/staff/k.mengersen), [Francisco Rodriguez Sanchez](https://frodriguezsanchez.net/), [Jim Albert and Jingchen Hu](https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html), [Tristan Marh](https://www.tjmahr.com/), [Jason Matthiopoulos](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/), a paper by [Michael McCarthy and Pip Masters](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x), [Andrés Lopez-Sepulcre](https://www.lopez-sepulcre.com/) and [John Kruschke' book cover](https://sites.google.com/site/doingbayesiandataanalysis/). The sources for the images are [James Kulich](https://www.elmhurst.edu/blog/thomas-bayes/), Matt Buck, [xkcd](https://xkcd.com/1132/) and Mike West.
 
 ## Corrections {.appendix}
 
@@ -63,5 +61,5 @@ If you spot a typo or an error, find a bug, want to suggest changes, or have tro
 
 ## Reuse {.appendix}
 
-Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Any computer code (R, HTML, CSS, etc.) in slides and worksheets, including in slide and worksheet sources, is also licensed under [MIT](https://github.com/oliviergimenez/bayesian-stat-ecology-workshop/blob/master/LICENSE.md). 
+Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Any computer code (R, HTML, CSS, etc.) in slides and worksheets, including in slide and worksheet sources, is also licensed under [MIT](https://github.com/oliviergimenez/bayesian-stats-with-R/blob/master/LICENSE.md). 
 

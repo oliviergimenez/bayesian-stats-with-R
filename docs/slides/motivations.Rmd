@@ -1,7 +1,7 @@
 ---
 title: |
     | Bayesian statistics with R
-    | 1. Motivation and simple example
+    | 1. An introduction to Bayesian inference
 author: "Olivier Gimenez"
 date: "March 2021"
 output:
@@ -56,12 +56,11 @@ insert_html_math <- make_latex_decorator("", "$$")
 
 * Materials shared by [\alert{Tristan Marh}](https://www.tjmahr.com/), [\alert{Jason Matthiopoulos}](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/), [\alert{Francisco Rodriguez Sanchez}](https://frodriguezsanchez.net/), [\alert{Kerrie Mengersen}](https://staff.qut.edu.au/staff/k.mengersen) and [\alert{Mark Lai}](https://quantscience.rbind.io/).
 
-## Slides codes and data
+## Slides, code and data
 
 * All material prepared with `R`.
 * `R Markdown` used to write reproducible material.
-* Slides available on FigShare [\alert{here}](https://doi.org/10.6084/m9.figshare.12656894.v1).
-* Material available on Github [\alert{there}](https://github.com/oliviergimenez/Bayesian_Workshop).
+* Dedicated website [\alert{https://oliviergimenez.github.io/bayesian-stats-with-R/}](https://oliviergimenez.github.io/bayesian-stats-with-R/).
 
 ## Objectives
 
@@ -78,13 +77,14 @@ knitr::include_graphics('img/brace_yourself.jpeg')
 
 ## What is on our plate?
 
-1. Bayesian inference: Motivation and examples. 
-2. The likelihood. 
-3. A detour to explore priors.
-4. Markov chains Monte Carlo methods (MCMC).
-5. Bayesian analyses in R with the Jags software.
-6. Contrast ecological hypotheses with model selection. 
-7. Heterogeneity and multilevel models (aka mixed models).
+1. An introduction to Bayesian inference
+2. The likelihood
+3. Bayesian analyses by hand
+4. A detour to explore priors
+5. Markov chains Monte Carlo methods (MCMC)
+6. Bayesian analyses in `R` with the `Jags` software
+7. Contrast scientific hypotheses with model selection
+8. Heterogeneity and multilevel models (aka mixed models)
 
 # I want moooooore
 
@@ -191,34 +191,7 @@ knitr::include_graphics('img/gelmanhill.png')
 
 $$\Pr(\text{vampire}|+)= \displaystyle{\frac{ \Pr(+|\text{vampire}) \; \Pr(\text{vampire})}{\Pr(+)}}$$
 
-# Your turn
-
-## Screening for vampirism
-
-* Suppose the diagnostic test has the same sensitivity and specificity but vampirism is more common: $10\%$ of the population is vampire. 
-
-* What is the probability that a person is a vampire, given that the test is positive?
-
-# Solution
-
-## The probability that a person is a vampire, given that the test is positive
-
-- $\Pr(+ | \text{vampire}) = 0.9$
-- $\Pr(- | \text{mortal}) = 0.95$
-- $\Pr(\text{vampire}) = 0.1$
-
-$$\begin{aligned}
- \Pr(+) &= \Pr(+ | \text{vampire}) \Pr(\text{vampire}) + \Pr(+ | \text{mortal}) \Pr(\text{mortal}) \\
-  &= 0.9*0.1 + 0.05*0.9 \\
-  &=0.135
-\end{aligned}
-$$
-
-$$\begin{aligned}
- \Pr(\text{vampire} | +) &= \Pr(+ | \text{vampire}) \Pr(\text{vampire}) / \Pr(+) \\
-  &= 0.9*0.1 / 0.135
-\end{aligned}
-$$
+# Your turn: Practical 1
 
 ## Bayes' theorem
 
@@ -316,7 +289,7 @@ $${\color{red}{\Pr(\theta \mid \text{data})}} = \frac{\color{blue}{\Pr(\text{dat
 
 `r insert_pause()`
 
-* \textcolor{blue}{Likelihood}: We know that guy from before, same as in the MLE approach.
+* \textcolor{blue}{Likelihood}: We know that quantity, same as in the MLE approach.
 
 `r insert_pause()`
 

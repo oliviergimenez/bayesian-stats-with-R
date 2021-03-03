@@ -1,0 +1,106 @@
+---
+title: "Practical 2"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## MLE of the parameters of a Normal distribution
+
+* Assume we have collected data on the height of 100 people:
+```{r}
+# set seed for random numbers
+set.seed(2020)
+# simulate data from Normal distribution
+n <- 100
+height <- rnorm(n, mean=170, sd=10)
+```
+
+---
+
+.center[
+```{r echo=FALSE, fig.width = 5.5, fig.asp = 1, dev = "svg"}
+data.frame(height = height) %>%
+  ggplot(aes(x = height)) + 
+  geom_histogram(color = "blue",
+                 fill = "dodgerblue") + 
+  labs(x = "Height", 
+       y = "Density") +
+  theme_minimal(base_size = 20)
+```
+]
+
+---
+
+* We consider a Normal distribution for the model. 
+
+* Compute the MLE of the parameters of the Normal distribution.
+
+* Hint: Use functions `optim()` and `dnorm()`
+
+---
+
+# Solution
+
+Function for likelihood of a normal distribution with mean $\mu$ and standard deviation $\sigma$:
+```{r}
+negloglik <- function(theta, data) {
+  mu <- theta[1]
+  sigma <- theta[2]
+  x <- data
+  -sum(dnorm(x, mean = mu, sd = sigma, log = TRUE))
+}
+negloglik(theta = c(150,1), height)
+```
+
+---
+
+* Minimiiiiiize
+```{r}
+fit <- optim(par = c(1,1), fn = negloglik, data = height)
+fit
+```
+
+
+---
+
+.center[
+```{r, echo = FALSE, fig.width = 5.5, fig.asp = 1, dev = "svg"}
+binwidth <- 1 
+df <- data.frame(x = height) %>%
+  ggplot(aes(x = height, 
+             mean = fit$par[1], 
+             sd = fit$par[2], 
+             binwidth = binwidth, 
+             n = n)) +
+  geom_histogram(binwidth = binwidth, 
+                 colour = "white", 
+                 fill = "cornflowerblue", 
+                 size = 0.1) +
+  stat_function(fun = function(x) dnorm(x = x, 
+                                        mean = fit$par[1], 
+                                        sd = fit$par[2]) * n * binwidth,
+                color = "darkred", 
+                size = 1) +
+  theme_minimal(base_size = 20)
+df
+```
+]
+

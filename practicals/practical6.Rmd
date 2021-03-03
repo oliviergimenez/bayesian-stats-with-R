@@ -1,0 +1,117 @@
+---
+title: "Practical 6"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+#options(htmltools.dir.version = FALSE)
+#knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+## Working with the MCMC outputs
+
+* From the values you generated in the posterior distribution of parameter say $\theta$, you may get the posterior distribution of any function of $\theta$
+
+* For example, back to the stork Bayesian analysis, get the posterior distribution of $b^2_{rain} + \cos(b_{temp})$
+
+---
+## Solutions
+
+```{r include = FALSE, echo = FALSE}
+nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71,
+              53,41,53,31,35,14,18)
+
+nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80,
+            67,54,58,39,42,23,23)
+
+temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4,
+         12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0)
+
+rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86,
+           78,87)
+
+datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, 
+              temp = (temp - mean(temp))/sd(temp), 
+              rain = (rain - mean(rain))/sd(rain))
+
+# list of lists of initial values (one for each MCMC chain)
+init1 <- list(a = -0.5, b.temp = -0.5, b.rain = -0.5)
+init2 <- list(a = 0.5, b.temp = 0.5, b.rain = 0.5)
+inits <- list(init1,init2)
+
+# specify parameters that need to be estimated
+parameters <- c("a","b.temp","b.rain")
+
+# specify nb iterations for burn-in and final inference 
+nb.burnin <- 1000
+nb.iterations <- 2000
+
+# load R2jags
+library(R2jags)
+# run Jags
+storks <- jags(data  = datax,
+               inits = inits,
+               parameters.to.save = parameters,
+               model.file = here::here("slides", "code","logistic.txt"),
+               n.chains = 2,
+               n.iter = nb.iterations,
+               n.burnin = nb.burnin)
+
+res <- as.mcmc(storks) # convert outputs in a list
+res <- rbind(res[[1]],res[[2]]) # put two MCMC lists on top of each other
+
+```
+
+---
+
+* Evaluate the function for each MCMC iteration
+```{r}
+stupid <- res[,'b.rain']^2 + cos(res[,'b.temp'])
+```
+
+.tiny-font[
+```{r}
+stupid
+```
+]
+
+---
+
+* Plot the distribution 1/2
+.center[
+```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+plot(density(stupid), xlab = '', main = '', lwd = 3)
+```
+]
+
+---
+
+* Plot the distribution 2/2
+.center[
+```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+hist(stupid)
+```
+]
+
+---
+
+* Get the probability that this quantity is strictly positive
+```{r}
+mean(stupid > 0)
+```
+
+
+
