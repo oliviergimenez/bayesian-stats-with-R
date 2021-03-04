@@ -98,7 +98,7 @@ $$ \hat{\theta} = k/n = 19/57$$.
 ## What is the Beta distribution?
 
 $$
-q(\theta \mid \alpha, \beta) = \frac{1}{\text{Beta}(\alpha, \beta)}{\theta^{\alpha-1}} {(1-\theta)^{\theta-1}} 
+q(\theta \mid \alpha, \beta) = \frac{1}{\text{Beta}(\alpha, \beta)}{\theta^{\alpha - 1}} {(1-\theta)^{\beta - 1}} 
 $$
 
 with $\text{Beta}(\alpha, \beta) = \displaystyle{\frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}}$ and $\Gamma(n) = (n-1)!$
