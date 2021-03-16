@@ -124,7 +124,13 @@ knitr::include_graphics('img/mcelreath.png')
 knitr::include_graphics('img/gelmanhill.png')
 ```
 
+`r insert_slide_break()`
 
+```{r, fig.align = 'center', echo = FALSE, out.width = '13cm', out.height='7cm'}
+knitr::include_graphics('img/bda_cover.png')
+```
+
+Free at <http://www.stat.columbia.edu/~gelman/book/>
 
 # What is Bayesian inference?
 

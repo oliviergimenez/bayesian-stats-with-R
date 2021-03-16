@@ -92,7 +92,8 @@ $$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[p(y_i \mid \theta)] +
 
 * where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood of the $i$th observation and
 
-* $p_\text{WAIC}$ is the effective number of parameters computed using the posterior variance of the likelihood. 
+* $p_\text{WAIC}$ is a penalty computed using the posterior variance of the likelihood. 
+* More in this video <https://www.youtube.com/watch?v=vSjL2Zc-gEQ> by McElreath.
 
 * Relatively new and not yet available in Jags in routine.
 

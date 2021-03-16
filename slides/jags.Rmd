@@ -48,7 +48,7 @@ insert_html_math <- make_latex_decorator("", "$$")
 
 # Bayes in practice
 
-## Software implementation (`R` compatible)
+## Software implementation (`R` friendly)
 
 Oldies but goodies:
 
@@ -59,9 +59,17 @@ Oldies but goodies:
 
 The new kids on the block:
 
-* Nimble: What I'm going for these days.
-* Stan: Entirely different algorithmic approach. 
-* Greta: Dunno anything about it. 
+* [Nimble](https://r-nimble.org/): What I'm going for these days.
+* [Stan](https://mc-stan.org/): Entirely different algorithmic approach. 
+* [Greta](https://greta-stats.org/): Dunno anything about it. 
+
+`r insert_pause()`
+
+If you're not into coding:
+
+* [brms](https://paul-buerkner.github.io/brms/): Bayesian regression models with Stan.
+* [MCMCglmm](https://cran.r-project.org/web/packages/MCMCglmm/index.html): Generalised Linear Mixed Models.
+* Check out the [CRAN Task View: Bayesian Inference](https://cran.r-project.org/web/views/Bayesian.html) for more.
 
 ## Introduction to JAGS (Just Another Gibbs Sampler)
 
