@@ -85,14 +85,15 @@ $$\text{AIC} = - 2 \log(L(\hat{\theta}_1,\ldots,\hat{\theta}_K)) + {\color{red}{
 
 ## Bayesian version
 
-* Watanabe-Akaike Information Criteria or WAIC:
+* Watanabe-Akaike (Widely-Applicable) Information Criteria or WAIC:
 
-$$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[p(y_i \mid \theta)] + 
+$$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[\Pr(y_i \mid \theta)] + 
                   2 p_\text{WAIC}$$
 
-* where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood of the $i$th observation and
+* where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood evaluated pointwise at each $i$th observation.
 
 * $p_\text{WAIC}$ is a penalty computed using the posterior variance of the likelihood. 
+
 * More in this video <https://www.youtube.com/watch?v=vSjL2Zc-gEQ> by McElreath.
 
 * Relatively new and not yet available in Jags in routine.
