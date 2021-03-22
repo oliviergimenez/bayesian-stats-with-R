@@ -31,3 +31,7 @@ dens( prior_h )
 + Tout passer en ggplot (MCMC diagnostics library(bayesplot), https://www.tjmahr.com/plotting-partial-pooling-in-mixed-effects-models/). Do all plots with `ggplot2`; add [short introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse).
 
 + Rajouter animation joyplots Rasmus Baath http://www.sumsar.net/blog/2018/12/visualizing-the-beta-binomial/ ou https://relaxed-beaver-4b4dc8.netlify.app/exercises_part1.html 
+
++ Typos: 
+    + Beta distribution: use $a, b$ or $\alpha, \beta$ throughout
+    + End of the first stops at incorporating info in prior capture-recapture example
