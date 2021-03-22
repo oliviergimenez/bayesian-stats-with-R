@@ -35,3 +35,6 @@ dens( prior_h )
 + Typos: 
     + Beta distribution: use $a, b$ or $\alpha, \beta$ throughout
     + End of the first stops at incorporating info in prior capture-recapture example
+
++ Add something on equivalence w/ MLE: exemple de la vraisemblance binomiale $Bin(n,k)$ et du prior beta $Beta(a,b)$. On a vu que la distribution a posteriori de la prob de succès est une beta $Beta(a+k, b+n-k)$. La moyenne a posteriori est $(a+k)/(a+b+n)$ qu'on peut aussi écrire $(1-w)(a/a+b) + w k/n$. Autrement dit, la moyenne a posteriori est la moyenne pondérée par $w$ de la moyenne de prior et du MLE. Quand on a un gros échantillon, $n$ tend vers l'infini pour faire court, et la moyenne a posteriori tend vers le MLE, et ce quelque soit le prior. Same reasonning with variance shows that Bayes gives reasonable results, even w/ small sample size. 
+
