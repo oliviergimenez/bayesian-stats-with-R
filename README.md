@@ -8,8 +8,6 @@ Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](htt
 
 ## To-do list
 
-## To-do list
-
 + Mettre de l’ordre sur diagnostics convergence. Refaire figure. 
 
 + Add a plot with several lines from posterior distribution of regression parameters to a plot of mean response function of a covariate; then get the credible interval on the prediction. 
