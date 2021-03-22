@@ -59,13 +59,13 @@ insert_html_math <- make_latex_decorator("", "$$")
 
 > We have observed 3 births by a female during her 10 breeding
 attempts. What does this tell us about the true probability of
-getting a successful breeding attempt from this female? For the population?
+getting a successful breeding attempt for this female? For the population?
 
 `r insert_slide_break()`
 
-* We don’t know what the probability of a birth is.
+* We don't know what the probability of a birth is.
 
-* But we can calculate the probability of getting our data for different values:
+* But we can see what the probability of getting our data would be for different values:
 
 ```{r,collapse=TRUE}
 dbinom(x=3,size=10,prob=0.1)
@@ -73,7 +73,7 @@ dbinom(x=3,size=10,prob=0.1)
 
 `r insert_slide_break()`
 
-* We don’t know what the probability of a birth is. 
+* We don't know what the probability of a birth is. 
 
 * But we can see what the probability of getting our data would be for different values:
 
@@ -83,7 +83,7 @@ dbinom(x=3,size=10,prob=0.9)
 
 `r insert_slide_break()`
 
-* We don’t know what the probability of a birth is. 
+* We don't know what the probability of a birth is. 
 
 * But we can see what the probability of getting our data would be for different values:
 
@@ -103,7 +103,7 @@ So we would be more likely to observe 3 births if the probability is 0.25 than 0
 
 ## The likelihood
 
-* This reasoning is so common in statistics that it has a special name:
+* This reasoning is so common in statistics that it has a special name.
 
 `r insert_pause()`
 

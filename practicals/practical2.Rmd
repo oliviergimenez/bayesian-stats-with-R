@@ -53,13 +53,13 @@ data.frame(height = height) %>%
 
 * Compute the MLE of the parameters of the Normal distribution.
 
-* Hint: Use functions `optim()` and `dnorm()`
+* Hint: Use functions `optim()` and `dnorm()`.
 
 ---
 
 # Solution
 
-Function for likelihood of a normal distribution with mean $\mu$ and standard deviation $\sigma$:
+Function for likelihood of normal distribution w/ mean $\mu$ and standard deviation $\sigma$:
 ```{r}
 negloglik <- function(theta, data) {
   mu <- theta[1]

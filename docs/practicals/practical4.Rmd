@@ -39,9 +39,8 @@ library(tidyverse)
 * Unreasonable prior $\beta \sim N(0, 1000^2)$
 
 .center[
-```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
-plot(density(rnorm(1000, 0, 1000)),   
-     main="", xlab="Height (m)")
+```{r, echo = TRUE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+plot(density(rnorm(1000, 0, 1000)), main="", xlab="Height (m)")
 ```
 ]
 
@@ -51,9 +50,8 @@ plot(density(rnorm(1000, 0, 1000)),
 * Reasonable prior $\beta \sim N(2, 0.5^2)$
 
 .center[
-```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
-plot(density(rnorm(1000, 2, 0.5)),   
-      main="", xlab="Height (m)")
+```{r, echo = TRUE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+plot(density(rnorm(1000, 2, 0.5)), main="", xlab="Height (m)")
 ```
 ]
 
@@ -63,9 +61,8 @@ plot(density(rnorm(1000, 2, 0.5)),
 * Unreasonable prior $\text{logit}(\phi) = \beta \sim N(0, 10^2)$
 
 .center[
-```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
-plot(density(plogis(rnorm(1000,0,10)), 
-from = 0, to = 1), main='', xlab='survival')
+```{r, echo = TRUE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+plot(density(plogis(rnorm(1000,0,10)), from = 0, to = 1), main = '', xlab = 'survival')
 ```
 ]
 
@@ -75,8 +72,7 @@ from = 0, to = 1), main='', xlab='survival')
 * Reasonable prior $\text{logit}(\phi) = \beta \sim N(0, 1.5^2)$
 
 .center[
-```{r, echo = FALSE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
-plot(density(plogis(rnorm(1000,0,1.5)), 
-from = 0, to = 1), main='', xlab='survival')
+```{r, echo = TRUE, fig.width = 5.5, fig.asp = 0.8, dev = "svg"}
+plot(density(plogis(rnorm(1000,0,1.5)), from = 0, to = 1), main = '', xlab = 'survival')
 ```
 ]

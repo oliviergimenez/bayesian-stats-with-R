@@ -14,7 +14,7 @@ class: center, middle, title-slide
 
 # Practical 2
 ### Olivier Gimenez
-### last updated: 2021-03-03
+### last updated: 2021-03-22
 
 ---
 
@@ -45,13 +45,13 @@ height &lt;- rnorm(n, mean=170, sd=10)
 
 * Compute the MLE of the parameters of the Normal distribution.
 
-* Hint: Use functions `optim()` and `dnorm()`
+* Hint: Use functions `optim()` and `dnorm()`.
 
 ---
 
 # Solution
 
-Function for likelihood of a normal distribution with mean `\(\mu\)` and standard deviation `\(\sigma\)`:
+Function for likelihood of normal distribution w/ mean `\(\mu\)` and standard deviation `\(\sigma\)`:
 
 ```r
 negloglik &lt;- function(theta, data) {

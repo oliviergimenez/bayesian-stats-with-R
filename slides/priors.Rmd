@@ -337,7 +337,7 @@ $$\sigma^2 = \text{Var}(X) = \frac{\alpha\beta}{(\alpha + \beta)^2 (\alpha + \be
 
 ## Moment matching
 
-* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$? 
+* In the capture-recapture example, we know a priori that the mean of the probability we're interested in is $\mu = 0.57$ and its variance is $\sigma^2 = 0.073^2$.
 
 `r insert_pause()`
 
@@ -432,19 +432,19 @@ If you obtain more data, no need to redo all of the analysis. Your posterior fro
 
 `r insert_pause()`
 
-* Stage 0. Prior $p(\theta) \sim \text{Beta}(1,1)$.
+* Stage 0. Prior $\Pr(\theta) \sim \text{Beta}(1,1)$.
 
 `r insert_pause()`
 
 * Stage 1. Observe $y_1 = 22$ successes from $n_1 = 29$ trials.
-    * Likelihood is $p(y_1 | \theta) \sim \text{Binomial}(n_1=29,\theta)$.
-    * Posterior is $p(\theta | y_1) \sim \text{Beta}(23,8)$ with mean $23/31 = 0.74$.
+    * Likelihood is $\Pr(y_1 | \theta) \sim \text{Binomial}(n_1=29,\theta)$.
+    * Posterior is $\Pr(\theta | y_1) \sim \text{Beta}(23,8)$ with mean $23/31 = 0.74$.
 
 `r insert_pause()`
 
 * Stage 2. Observe $y_2=5$ successed from $n_2=10$ new trials.
-    * Likelihood is $p(y_2 | \theta) \sim \text{Binomial}(n_2=10,\theta)$.
-    * Prior is $p(\theta) \sim \text{Beta}(23,8)$ from stage 1.
-    * Posterior is $p(\theta | y_1 \text{ and } y_2) \propto p(\theta | y_1) p(y_2 | \theta) = \text{Beta}(28,13)$ with mean $28/41 = 0.68$.
+    * Likelihood is $\Pr(y_2 | \theta) \sim \text{Binomial}(n_2=10,\theta)$.
+    * Prior is $\Pr(\theta) \sim \text{Beta}(23,8)$ from stage 1.
+    * Posterior is $\Pr(\theta | y_1 \text{ and } y_2) \propto \Pr(\theta | y_1) \Pr(y_2 | \theta) = \text{Beta}(28,13)$ with mean $28/41 = 0.68$.
 
 
