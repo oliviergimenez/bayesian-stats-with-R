@@ -303,7 +303,7 @@ $${\color{red}{\Pr(\theta \mid \text{data})}} = \frac{\color{blue}{\Pr(\text{dat
 
 `r insert_pause()`
 
-* $\color{orange}{\Pr(\text{data}) = \int L(\text{data} \mid \theta) \;\Pr(\theta) d\theta }$: Possibly high-dimensional integral, difficult if not impossible to calculate. This is one of the reasons why we need simulation (MCMC) methods - more soon.
+* $\color{orange}{\Pr(\text{data}) = \int \Pr(\text{data} \mid \theta) \;\Pr(\theta) d\theta }$: Possibly high-dimensional integral, difficult if not impossible to calculate. This is one of the reasons why we need simulation (MCMC) methods - more soon.
 
 `r insert_slide_break()`
 
