@@ -38,3 +38,5 @@ dens( prior_h )
 
 + Add something on equivalence w/ MLE: exemple de la vraisemblance binomiale $Bin(n,k)$ et du prior beta $Beta(a,b)$. On a vu que la distribution a posteriori de la prob de succès est une beta $Beta(a+k, b+n-k)$. La moyenne a posteriori est $(a+k)/(a+b+n)$ qu'on peut aussi écrire $(1-w)(a/a+b) + w k/n$. Autrement dit, la moyenne a posteriori est la moyenne pondérée par $w$ de la moyenne de prior et du MLE. Quand on a un gros échantillon, $n$ tend vers l'infini pour faire court, et la moyenne a posteriori tend vers le MLE, et ce quelque soit le prior. Same reasonning with variance shows that Bayes gives reasonable results, even w/ small sample size. 
 
++ Replace Metropolis example with deer example, makes the link with what precedes, also real examples that involves data, whereas the current example is about approximating a discrete distribution. 
+
