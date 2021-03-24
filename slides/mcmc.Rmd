@@ -397,6 +397,9 @@ abline(h = 19/57, col = "red", lwd = 2)
 text(3700, 0.55, "max lik estimate", col = "red", adj = c(-.1, -.1))
 ```
 
+## Animating the Metropolis algorithm - 1D example
+
+[\alert{https://gist.github.com/oliviergimenez/5ee33af9c8d947b72a39ed1764040bf3}](https://gist.github.com/oliviergimenez/5ee33af9c8d947b72a39ed1764040bf3)
 
 
 ## Animating the Metropolis algorithm - 2D example
