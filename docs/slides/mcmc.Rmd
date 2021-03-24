@@ -184,49 +184,54 @@ knitr::include_graphics('img/maniac.png')
 
 ## The Metropolis algorithm
 
-`r insert_inc_bullet()` We illustrate sampling from a discrete distribution. Suppose we define a discrete probability distribution on the integers $1, \ldots, K$.
+`r insert_inc_bullet()` Let's go back to the deer example and survival estimation.
 
-`r insert_inc_bullet()` We write a short function `pd()` in `R` taking on the values $1, \ldots, 8$ with probabilities proportional to the values 5, 10, 4, 4, 20, 20, 12, and 5.
+`r insert_inc_bullet()` We illustrate sampling from the posterior distribution of winter survival. 
+
+`r insert_inc_bullet()` We write functions in `R` for the likelihood, the prior and the posterior.
 
 `r insert_slide_break()`
 
 ```{r}
-pd <- function(x){
-  values <- c(5, 10, 4, 4, 20, 20, 12, 5)
-  ifelse(x %in% 1:length(values), values[x], 0)
+# deer data, 19 "success" out of 57 "attempts"
+survived <- 19
+released <- 57
+
+# log-likelihood function
+loglikelihood <- function(x, p){
+  dbinom(x = x, size = released, prob = p, log = TRUE)
 }
-prob_dist <- data.frame(x = 1:8, prob = pd(1:8))
-prob_dist
+
+# prior density
+logprior <- function(p){
+  dunif(x = p, min = 0, max = 1, log = TRUE)
+}
+
+# posterior density function (log scale)
+posterior <- function(x, p){
+  loglikelihood(x, p) + logprior(p) # - log(Pr(data))
+}
 ```
 
 `r insert_slide_break()`
 
-```{r echo=FALSE}
-prob_dist %>%
-  ggplot(aes(x = x, y = prob)) + 
-  geom_col(width = 0.3) + 
-  labs(x = 'x', y = 'Probability')
-```
-
-`r insert_slide_break()`
-
-To simulate from this probability distribution, we take a **random walk** described as follows.
+To simulate from this posterior distribution, we use the **Metropolis algorithm**:
 
 `r insert_pause()`
 
-1. We start at any possible location of our random variable from 1 to $K = 8$
+1. We start at any possible value of the parameter to be estimated. 
 
 `r insert_pause()`
 
-2. To decide where to visit next, a fair coin is flipped. If the coin lands heads, we think about visiting the location one value to the left, and if coin lands tails, we consider visiting the location one value to right. We call this location the **candidate** location.
+2. To decide where to visit next, we propose to move away from the current value of the parameter. We add to this current value some random value from say a normal distribution with some variance. We call this the **candidate** location.
 
 `r insert_pause()`
 
-3. We compute the ratio of the probabilities at the candidate and current locations $R = pd(candidate)/pd(current)$
+3. We compute the ratio of the probabilities at the candidate and current locations $R = posterior(candidate)/posterior(current)$. This is where the magic of MCMC happens, in that $\Pr(data)$ (the denominator of the Bayes theorem) cancels out when we compute $R$. 
 
 `r insert_pause()`
 
-4. We spin a continuous spinner that lands anywhere from 0 to 1 – call the random spin $X$. If $X$ is smaller than $R$, we move to the candidate location, and otherwise we remain at the current location.
+4. We spin a continuous spinner that lands anywhere from 0 to 1 –- call the random spin $X$. If $X$ is smaller than $R$, we move to the candidate location, otherwise we remain at the current location.
 
 `r insert_pause()`
 
@@ -235,46 +240,164 @@ To simulate from this probability distribution, we take a **random walk** descri
 `r insert_slide_break()`
 
 ```{r}
-random_walk <- function(pd, start, num_steps){
-  y <- rep(0, num_steps)
-  current <- start
-  for (j in 1:num_steps){
-    candidate <- current + sample(c(-1, 1), 1)
-    prob <- pd(candidate) / pd(current)
-    if (runif(1) < prob) current <- candidate
-    y[j] <- current
-  }
-  return(y)
+# propose candidate value
+move <- function(x, away = .2){ 
+  logitx <- log(x / (1 - x))
+  logit_candidate <- logitx + rnorm(1, 0, away)
+  candidate <- plogis(logit_candidate)
+  return(candidate)
+}
+
+# set up the scene
+steps <- 100
+theta.post <- rep(NA, steps)
+set.seed(1234)
+
+# pick starting value (step 1)
+inits <- 0.5
+theta.post[1] <- inits
+```
+
+`r insert_slide_break()`
+
+```{r}
+for (t in 2:steps){ # repeat steps 2-4 (step 5)
+  
+  # propose candidate value for prob of success (step 2)
+  theta_star <- move(theta.post[t-1])
+  
+  # calculate ratio R (step 3)
+  pstar <- posterior(survived, p = theta_star)  
+  pprev <- posterior(survived, p = theta.post[t-1])
+  logR <- pstar - pprev
+  R <- exp(logR)
+  
+  # decide to accept candidate value or to keep current value (step 4)
+  accept <- rbinom(1, 1, prob = min(R, 1))
+  theta.post[t] <- ifelse(accept == 1, theta_star, theta.post[t-1])
 }
 ```
 
 `r insert_slide_break()`
 
-Starting at the value $X = 4$ and running the algorithm for $s = 10,000$ iterations.
+Starting at the value $0.5$ and running the algorithm for $100$ iterations.
 
 ```{r}
-out <- random_walk(pd, 4, 10000)
-head(out)
-tail(out)
+head(theta.post)
+tail(theta.post)
 ```
 
 `r insert_slide_break()`
 
 ```{r echo = FALSE}
-sim <- data.frame(out) %>% 
-  group_by(out) %>% 
-  summarize(N = n(), prob = N / 10000) %>%
-  select(out, prob) %>%
-  add_column(Type = 'Simulated')
-
-truth <- data.frame(out = 1:8, prob = pd(1:8)/sum(pd(1:8)), Type = 'Actual')
-
-bind_rows(sim,truth) %>%
-  ggplot() +
-  aes(x = out, y = prob, fill = Type) +
-  geom_col(width = 0.5, position = "dodge") + 
-  labs(x = 'x', y = 'Probability')
+plot(x = 1:steps, 
+     y = theta.post, 
+     type = "l", 
+     xlab = "iterations", 
+     ylab = "values from posterior distribution",
+     lwd = 2,
+     ylim = c(0.1, 0.6))
 ```
+
+
+`r insert_slide_break()`
+
+```{r echo = FALSE}
+plot(x = 1:steps, 
+     y = theta.post, 
+     type = "l", 
+     xlab = "iterations", 
+     ylab = "values from posterior distribution",
+     lwd = 2,
+     ylim = c(0.1,0.6))
+
+# pick starting value (step 1)
+inits <- 0.2
+theta.post2 <- rep(NA, steps)
+theta.post2[1] <- inits
+
+for (t in 2:steps){ # repeat steps 2-4 (step 5)
+  # propose candidate value for prob of success (step 2)
+  theta_star <- move(theta.post2[t-1])
+  # calculate ratio R (step 3)
+  pstar <- posterior(survived, p = theta_star)  
+  pprev <- posterior(survived, p = theta.post[t-1])
+  logR <- pstar - pprev
+  R <- exp(logR)
+  
+  # decide to accept candidate value or to keep current value (step 4)
+  accept <- rbinom(1, 1, prob = min(R, 1))
+  theta.post2[t] <- ifelse(accept == 1, theta_star, theta.post2[t-1])
+}
+lines(x = 1:steps, 
+     y = theta.post2, 
+     lwd = 2,
+     col = "blue")
+
+```
+
+
+`r insert_slide_break()`
+
+```{r echo = FALSE}
+plot(x = 1:steps, 
+     y = theta.post, 
+     type = "l", 
+     xlab = "iterations", 
+     ylab = "values from posterior distribution",
+     lwd = 2,
+     ylim = c(0.1,0.6))
+
+lines(x = 1:steps, 
+     y = theta.post2, 
+     lwd = 2,
+     col = "blue")
+```
+
+
+`r insert_slide_break()`
+
+```{r echo = FALSE}
+# set up the scene
+steps <- 5000
+theta.post <- rep(NA, steps)
+set.seed(1234)
+
+# pick starting value (step 1)
+inits <- 0.5
+theta.post[1] <- inits
+
+for (t in 2:steps){ # repeat steps 2-4 (step 5)
+  
+  # propose candidate value for prob of success (step 2)
+  theta_star <- move(theta.post[t-1])
+  
+  # calculate ratio R (step 3)
+  pstar <- posterior(survived, p = theta_star)  
+  pprev <- posterior(survived, p = theta.post[t-1])
+  logR <- pstar - pprev
+  R <- exp(logR)
+  
+  # decide to accept candidate value or to keep current value (step 4)
+  accept <- rbinom(1, 1, prob = min(R, 1))
+  theta.post[t] <- ifelse(accept == 1, theta_star, theta.post[t-1])
+}
+
+plot(x = 1:steps, 
+     y = theta.post, 
+     type = "l", 
+     xlab = "iterations", 
+     ylab = "values from posterior distribution",
+     lwd = 2,
+     ylim = c(0.1, 0.6))
+
+abline(h = mean(theta.post), col = "blue", lwd = 2)
+text(3700, 0.57, "posterior mean", col = "blue", adj = c(-.1, -.1))
+abline(h = 19/57, col = "red", lwd = 2)
+text(3700, 0.55, "max lik estimate", col = "red", adj = c(-.1, -.1))
+```
+
+
 
 ## Animating the Metropolis algorithm - 2D example
 
