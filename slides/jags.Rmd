@@ -205,7 +205,7 @@ parameters <- c("a","b.temp","b.rain")
 
 # specify nb iterations for burn-in and final inference 
 nb.burnin <- 1000
-nb.iterations <- 2000
+nb.iterations <- 2000 # beware: nb.iterations includes nb.burnin!
 ```
 
 ## Run Jags

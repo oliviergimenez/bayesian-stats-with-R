@@ -25,6 +25,8 @@ navbar:
           href: slides/mcmc.pdf
         - text: "Bayesian analyses in R with the Jags software"
           href: slides/jags.pdf
+        - text: "R script of the White stork example"
+          href: slides/stork_example.R
         - text: "Contrast scientific hypotheses with model selection"
           href: slides/modelselection.pdf
         - text: "Heterogeneity and multilevel models (aka mixed models)"
