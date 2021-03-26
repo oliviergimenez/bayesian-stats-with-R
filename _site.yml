@@ -25,31 +25,35 @@ navbar:
           href: slides/mcmc.pdf
         - text: "Bayesian analyses in R with the Jags software"
           href: slides/jags.pdf
-        - text: "R script of the White stork example"
-          href: slides/stork_example.R
         - text: "Contrast scientific hypotheses with model selection"
           href: slides/modelselection.pdf
         - text: "Heterogeneity and multilevel models (aka mixed models)"
           href: slides/mixedmodels.pdf
+    - text: "R scripts"
+      menu:
+        - text: "Jags introduction: Storks example"
+          href: Rscripts/jags_introduction_storks_example.R
+        - text: "Multilevel models: Plants example"
+          href: Rscripts/multilevel_models_plants_example.R
     - text: "Worksheets"
       menu:
-        - text: "Practical 1"
+        - text: "Motivations: Practical 1"
           href: practicals/practical1.html
-        - text: "Practical 2"
+        - text: "The likelihood: Practical 2"
           href: practicals/practical2.html
-        - text: "Practical 3"
+        - text: "A detour to explore priors: Practical 3"
           href: practicals/practical3.html
-        - text: "Practical 4"
+        - text: "A detour to explore priors: Practical 4"
           href: practicals/practical4.html
-        - text: "Practical 5"
+        - text: "Bayesian analyses in R with the Jags software: Practical 5"
           href: practicals/practical5.html
-        - text: "Practical 6"
+        - text: "Bayesian analyses in R with the Jags software: Practical 6"
           href: practicals/practical6.html
-        - text: "Practical 7"
+        - text: "Contrast scientific hypotheses with model selection: Practical 7"
           href: practicals/practical7.html
-        - text: "Practical 8"
+        - text: "Heterogeneity and multilevel models: Practical 8"
           href: practicals/practical8.html
-        - text: "Practical 9"
+        - text: "Heterogeneity and multilevel models: Practical 9"
           href: practicals/practical9.html
     - icon: fab fa-github
       href: https://github.com/oliviergimenez/bayesian-stats-with-R

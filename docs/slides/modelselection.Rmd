@@ -173,5 +173,11 @@ waic <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
 waic
 ```
 
+## Further reading
+
++ Hooten, M.B. and Hobbs, N.T. (2015), A guide to Bayesian model selection for ecologists. Ecological Monographs, 85: 3-28. <https://doi.org/10.1890/14-0661.1>
+
++ Conn, P.B., Johnson, D.S., Williams, P.J., Melin, S.R. and Hooten, M.B. (2018), A guide to Bayesian model checking for ecologists. Ecol Monogr, 88: 526-542. <https://doi.org/10.1002/ecm.1314>
+
 # Your turn: Practical 7
 

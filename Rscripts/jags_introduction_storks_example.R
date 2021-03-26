@@ -3,11 +3,11 @@ nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71,53,41,53
 nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80,67,54,58,39,42,23,23)
 temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4,12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0)
 rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86,78,87)
-datax <- list(N = 23, 
+datax <- list(N = 23, # nb of years
               nbchicks = nbchicks, 
               nbpairs = nbpairs,
-              temp = (temp - mean(temp))/sd(temp),
-              rain = (rain - mean(rain))/sd(rain))
+              temp = (temp - mean(temp))/sd(temp), # standardized temperature
+              rain = (rain - mean(rain))/sd(rain)) # standardized rainfall
 
 # define model
 logistic <- function() {
@@ -67,4 +67,10 @@ apply(storks$BUGSoutput$sims.matrix, 2, quantile, probs = c(2.5, 97.5)/100)
 par(mfrow = c(1, 2))
 hist(storks$BUGSoutput$sims.matrix[, "b.temp"], main = "", xlab = "temp slope")
 hist(storks$BUGSoutput$sims.matrix[, "b.rain"], main = "", xlab = "rain slope")
+
+# compare to frequentist approach
+storks_mle <- glm(cbind(nbchicks, nbpairs - nbchicks) ~ temp + rain, 
+    family = binomial(link = "logit"),
+    data = datax)
+summary(storks_mle)
 
