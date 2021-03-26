@@ -24,14 +24,14 @@ Where: Zoom
 
 # Schedule
 
-1. An introduction to Bayesian inference [[lecture](slides/motivations.pdf) | [practical 1](practicals/practical1.html) | video]
-2. The likelihood [[lecture](slides/likelihood.pdf) | [practical 2](practicals/practical2.html) | video]
-3. Bayesian analyses by hand [[lecture](slides/example.pdf) | video]
-4. A detour to explore priors [[lecture](slides/priors.pdf) | [practical 3](practicals/practical3.html) | [practical 4](practicals/practical4.html)| video]
-5. Markov chains Monte Carlo methods (MCMC) [[lecture](slides/mcmc.pdf) | video]
-6. Bayesian analyses in `R` with the `Jags` software [[lecture](slides/jags.pdf) | [R script](Rscripts/jags_introduction_storks_example.R) | [practical 5](practicals/practical5.html) | [practical 6](practicals/practical6.html) | video]
-7. Contrast scientific hypotheses with model selection [[lecture](slides/modelselection.pdf) | [practical 7](practicals/practical7.html) | video]
-8. Heterogeneity and multilevel models (aka mixed models) [[lecture](slides/mixedmodels.pdf) | [R script](Rscripts/multilevel_models_plants_example.R) | [practical 8](practicals/practical8.html) | [practical 9](practicals/practical9.html) | video]
+1. An introduction to Bayesian inference [[lecture](slides/motivations.pdf) | [practical 1](practicals/practical1.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=0s)]
+2. The likelihood [[lecture](slides/likelihood.pdf) | [practical 2](practicals/practical2.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=3319s)]
+3. Bayesian analyses by hand [[lecture](slides/example.pdf) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=6280s)]
+4. A detour to explore priors [[lecture](slides/priors.pdf) | [practical 3](practicals/practical3.html) | [practical 4](practicals/practical4.html)| [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=8241s)]
+5. Markov chains Monte Carlo methods (MCMC) [[lecture](slides/mcmc.pdf) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=14907s)]
+6. Bayesian analyses in `R` with the `Jags` software [[lecture](slides/jags.pdf) | [R script](Rscripts/jags_introduction_storks_example.R) | [practical 5](practicals/practical5.html) | [practical 6](practicals/practical6.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=20405s)]
+7. Contrast scientific hypotheses with model selection [[lecture](slides/modelselection.pdf) | [practical 7](practicals/practical7.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=28947s)]
+8. Heterogeneity and multilevel models (aka mixed models) [[lecture](slides/mixedmodels.pdf) | [R script](Rscripts/multilevel_models_plants_example.R) | [practical 8](practicals/practical8.html) | [practical 9](practicals/practical9.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=29983s)]
 
 # Learning objectives
 
