@@ -16,6 +16,12 @@ Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](htt
 
 + Properly introduce GLMs.
 
++ Switch to Nimble. 
+
++ Finish up writing that book. 
+
++ Add equivalent analysis in brms so that non-coder can still use bayes stats. 
+
 + Clean up section on convergence diagnostics. Make figure reproducible.  
 
 + Add a plot with several lines from posterior distribution of regression parameters to a plot of mean response function of a covariate; then get the credible interval on the prediction. 
@@ -37,4 +43,3 @@ dens( prior_h )
     + End of the first stops at incorporating info in prior capture-recapture example
 
 + Add something on equivalence w/ MLE: say binomial lik $Bin(n,k)$ and beta prior $Beta(a,b)$ then posterior is beta $Beta(a+k, b+n-k)$; posterior mean is $(a+k)/(a+b+n)$ which can be written $(1-w)(a/a+b) + w k/n$. Posterior mean is weighted average of prior mean and MLE. When sample size is big, $n$ tends to infinity and posterior mean tends to MLE, whatever the prior. Same reasoning with variance shows that Bayes gives reasonable results, even w/ small sample size. 
-
