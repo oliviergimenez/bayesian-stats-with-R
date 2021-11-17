@@ -6,3 +6,5 @@ mixedmodels.log
 modelselection.log
 priors.log
 motivations.log
+.DS_Store
+.gitignore

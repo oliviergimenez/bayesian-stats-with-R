@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 8. Heterogeneity and multilevel models (aka mixed models)
 author: "Olivier Gimenez"
-date: "March 2021"
+date: "November 2021"
 output:
   beamer_presentation:
     fig_caption: no
