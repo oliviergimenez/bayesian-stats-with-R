@@ -43,3 +43,14 @@ dens( prior_h )
     + End of the first stops at incorporating info in prior capture-recapture example
 
 + Add something on equivalence w/ MLE: say binomial lik $Bin(n,k)$ and beta prior $Beta(a,b)$ then posterior is beta $Beta(a+k, b+n-k)$; posterior mean is $(a+k)/(a+b+n)$ which can be written $(1-w)(a/a+b) + w k/n$. Posterior mean is weighted average of prior mean and MLE. When sample size is big, $n$ tends to infinity and posterior mean tends to MLE, whatever the prior. Same reasoning with variance shows that Bayes gives reasonable results, even w/ small sample size. 
+
++ More (ecological) interpretation 
++ Add a script to plot stuff in white stork example
++ Add a script to TP 9 to show how we can build models of increasing complexity
++ Besides (or instead of) wAIC use DIC which is given by JAGS (unpopular opinion)
++ Explain how to add qual explan variable (more than two levels)
++ Explain offset
++ Update website
++ Record again videos using M. Lajeunesse setup
+
++ Include all four case studies
