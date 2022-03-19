@@ -39,8 +39,8 @@ datax <- list(n = nrow(data),
               y = data$Anemones,
               x = (data$Temperature - mean(data$Temperature))/sd(data$Temperature))
 
-init1 <- list(a, bun = -0.5)
-init2 <- list(a, bun = 0.5)
+init1 <- list(a = -0.5, bun = -0.5)
+init2 <- list(a = -0.5, bun = 0.5)
 inits <- list(init1,init2)
 
 params <- c("a", "bun")
@@ -73,7 +73,7 @@ datax <- list(n = nrow(data),
 
 init1 <- list(a, bun = -0.5, bdeux = -0.5)
 init2 <- list(a, bun = 0.5, bdeux = 0.5)
-inits <- list(init1,init2)
+inits <- list(init1, init2)
 
 params <- c("a", "bun", "bdeux")
 
@@ -114,7 +114,7 @@ datax <- list(n = nrow(data),
 
 init1 <- list(mu.a = -0.5, bun = -0.5, bdeux = -0.5)
 init2 <- list(mu.a = 0.5, bun = 0.5, bdeux = -0.5)
-inits <- list(init1,init2)
+inits <- list(init1, init2)
 
 params <- c("mu.a", "bun", "bdeux", "sd.a")
 

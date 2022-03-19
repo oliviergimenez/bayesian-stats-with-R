@@ -35,6 +35,10 @@ navbar:
           href: Rscripts/jags_introduction_storks_example.R
         - text: "Multilevel models: Plants example"
           href: Rscripts/multilevel_models_plants_example.R
+        - text: "Stork example with credible intervals"
+          href: Rscripts/storks_figure_repro.R
+        - text: "R code for Practical 9"
+          href: Rscripts/practical9-glmm-anemone.R
     - text: "Worksheets"
       menu:
         - text: "Motivations: Practical 1"
