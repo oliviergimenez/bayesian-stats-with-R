@@ -308,7 +308,8 @@ $${\color{red}{\Pr(\theta \mid \text{data})}} = \frac{\color{blue}{\Pr(\text{dat
 `r insert_slide_break()`
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics('img/frequentists_vs_bayesians_2x.png')
+# knitr::include_graphics('img/frequentists_vs_bayesians_2x.png')
+knitr::include_graphics('img/bayes_theorem.png')
 ```
 
 
