@@ -39,6 +39,8 @@ navbar:
           href: Rscripts/storks_figure_repro.R
         - text: "R code for Practical 9"
           href: Rscripts/practical9-glmm-anemone.R
+        - text: "brms implementation of lecture examples"
+          href: Rscripts/brms.R
     - text: "Worksheets"
       menu:
         - text: "Motivations: Practical 1"
