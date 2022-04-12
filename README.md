@@ -53,4 +53,16 @@ dens( prior_h )
 + ~~Update website~~
 + Record again videos using M. Lajeunesse setup
 
-+ Include all four case studies
++ Include all four case studies that I used for Master exam
+
++ aller jusqu’au bout de l’exemple survie, en faisant test d’hypothèse
+
++ c'est pas vraiment des prior predictive checks...
++ passer tout en nimble - ca résout pb calcul WAIC
++ montrer le burn-in en faisant tourner le script avec burning = 0 et nb.iter = 250
++ calcul facteur de bayes?
++ réconcilier interprétation des estimations pour les modèles plants no pooling / complete pooling et partial pooling
++ montrer comment on reconstruit les a[j] pour partial pooling model
++ régler pb de mise en page
++ basculer des éléments de mes chapitres de bouquin dans ce cours
+

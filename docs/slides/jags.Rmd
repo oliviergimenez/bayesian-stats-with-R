@@ -112,7 +112,9 @@ temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4,
 rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86,
            78,87)
 
-datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, 
+datax <- list(N = 23, 
+              nbchicks = nbchicks, 
+              nbpairs = nbpairs, 
               temp = (temp - mean(temp))/sd(temp), 
               rain = (rain - mean(rain))/sd(rain))
 ```
@@ -217,8 +219,8 @@ library(R2jags)
 storks <- jags(data  = datax,
                inits = inits,
                parameters.to.save = parameters,
-               model.file = "code/logistic.txt",
-               # model.file = logistic, # if a function was written
+               #model.file = "code/logistic.txt",
+               model.file = logistic, # if a function was written
                n.chains = 2,
                n.iter = nb.iterations,
                n.burnin = nb.burnin)
