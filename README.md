@@ -55,14 +55,21 @@ dens( prior_h )
 
 + Include all four case studies that I used for Master exam
 
-+ aller jusqu’au bout de l’exemple survie, en faisant test d’hypothèse
++ Aller jusqu’au bout de l’exemple survie, en faisant test d’hypothèse
 
-+ c'est pas vraiment des prior predictive checks...
-+ passer tout en nimble - ca résout pb calcul WAIC
-+ montrer le burn-in en faisant tourner le script avec burning = 0 et nb.iter = 250
-+ calcul facteur de bayes?
-+ réconcilier interprétation des estimations pour les modèles plants no pooling / complete pooling et partial pooling
-+ montrer comment on reconstruit les a[j] pour partial pooling model
-+ régler pb de mise en page
-+ basculer des éléments de mes chapitres de bouquin dans ce cours
++ Pourquoi ne pas illustrer dans le contexte du point précédent, le calcul des Bayes factors? Voir https://rstudio-pubs-static.s3.amazonaws.com/358672_09291d0b37ce43f08cf001cfd25c16c2.html, https://stackoverflow.com/questions/60278806/bayes-factor-in-r-with-jaggs, https://www.martinmodrak.cz/2021/03/28/three-ways-to-compute-a-bayes-factor/, http://yourdomain.com/statistics,/modeling/2017/07/07/BF_computation.html ou encore https://michael-franke.github.io/statistics,/modeling/2017/07/07/BF_computation.html
+
++ Pas vraiment des prior predictive checks
+
++ Passer tout en nimble - ca résout pb calcul WAIC
+
++ Montrer le burn-in en faisant tourner le script avec burning = 0 et nb.iter = 250
+
++ Réconcilier interprétation des estimations pour les modèles plants no pooling / complete pooling et partial pooling ; check calcul du DIC qui donne modèle nul (sans cov) comme meilleur modèle
+
++ Montrer comment on reconstruit les a[j] pour partial pooling model
+
++ Régler pb de mise en page
+
++ Basculer des éléments de mes chapitres de bouquin dans ce cours
 
