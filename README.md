@@ -73,3 +73,5 @@ dens( prior_h )
 
 + Basculer des éléments de mes chapitres de bouquin dans ce cours
 
++ Add random-intercept random-slope example? See Alford et al Global amphibian
+population declines as suggested by B. Bolker?
