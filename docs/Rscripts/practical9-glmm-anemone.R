@@ -1,5 +1,5 @@
 # fixe la graine du generateur de donnees
-set.seed(2021)
+set.seed(2023)
 
 # charge package R2jags
 library(R2jags)
@@ -40,7 +40,7 @@ datax <- list(n = nrow(data),
               x = (data$Temperature - mean(data$Temperature))/sd(data$Temperature))
 
 init1 <- list(a = -0.5, bun = -0.5)
-init2 <- list(a = -0.5, bun = 0.5)
+init2 <- list(a = 0.5, bun = 0.5)
 inits <- list(init1,init2)
 
 params <- c("a", "bun")
@@ -71,9 +71,9 @@ datax <- list(n = nrow(data),
               y = data$Anemones,
               x = (data$Temperature - mean(data$Temperature))/sd(data$Temperature))
 
-init1 <- list(a, bun = -0.5, bdeux = -0.5)
-init2 <- list(a, bun = 0.5, bdeux = 0.5)
-inits <- list(init1, init2)
+init1 <- list(a = -0.5, bun = -0.5, bdeux = -0.5)
+init2 <- list(a = 0.5, bun = 0.5, bdeux = 0.5)
+inits <- list(init1,init2)
 
 params <- c("a", "bun", "bdeux")
 
@@ -114,7 +114,7 @@ datax <- list(n = nrow(data),
 
 init1 <- list(mu.a = -0.5, bun = -0.5, bdeux = -0.5)
 init2 <- list(mu.a = 0.5, bun = 0.5, bdeux = -0.5)
-inits <- list(init1, init2)
+inits <- list(init1,init2)
 
 params <- c("mu.a", "bun", "bdeux", "sd.a")
 
@@ -128,5 +128,47 @@ mod3 <- jags(data = datax,
      n.thin = 1)
 
 mod3
+
+# convert regression coefficients from scaled to non-scaled
+# and compare to values used to generate data
+# https://stats.stackexchange.com/questions/361995/how-to-convert-coefficients-from-quadratic-function-from-scaled-to-not-scaled-co
+
+sbzero <- mod3$BUGSoutput$sims.matrix[,'mu.a']
+sbun <- mod3$BUGSoutput$sims.matrix[,'bun']
+sbdeux <- mod3$BUGSoutput$sims.matrix[,'bdeux']
+
+bzero <- sbzero - sbun*mu/sg + sbdeux*mu^2/(sg^2)
+hist(bzero)
+abline(v = -14, col = "red", lwd = 2)
+mean(bzero)
+
+bun <- sbdeux/sg - 2 * sbdeux * mu / (sg^2)
+hist(bun)
+abline(v = 1.8, col = "red", lwd = 2)
+mean(bun)
+
+bdeux <- sbdeux/(sg^2)
+hist(bdeux)
+abline(v = - 0.045, col = "red", lwd = 2)
+mean(bdeux)
+
+
+# approche fréquentiste
+
+library(lme4)
+mu <- mean(data$Temperature)
+sg <- sd(data$Temperature)
+data$sTemperature <- (data$Temperature - mu)/sg
+fit <- glmer(Anemones ~ sTemperature + I(sTemperature^2) + (1|Transect), family = "poisson", data = data)
+summary(fit)
+
+# convert regression coefficients from scaled to non-scaled
+# and compare to values used to generate data
+# https://stats.stackexchange.com/questions/361995/how-to-convert-coefficients-from-quadratic-function-from-scaled-to-not-scaled-co
+
+fixef(fit)[1] - fixef(fit)[2]*mu/sg + fixef(fit)[3]*mu^2/(sg^2)
+fixef(fit)[2]/sg - 2*fixef(fit)[3] * mu / (sg^2)
+fixef(fit)[3]/(sg^2)
+
 
 

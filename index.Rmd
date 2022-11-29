@@ -20,12 +20,16 @@ Who: [Olivier Gimenez](https://oliviergimenez.github.io/)
 When: 
 ~~March 22-23-25-26, 2021~~  
 ~~Nov 25-Dec 2-Dec 9, 2021~~  
-April 11-12, 2022
+~~April 11-12, 2022~~  
+~~Sept 22-23, 2022~~  
+Nov 24-Dec 1-Dec 8, 2022~~    
 
 Where: 
 ~~Zoom~~  
 ~~Biodiversity Ecology Evolution Master, Montpellier University~~  
-Collège Doctoral, Montpellier University
+~~Collège Doctoral, Montpellier University~~  
+~~Collège Doctoral, Montpellier University~~  
+Biodiversity Ecology Evolution Master, Montpellier University  
 
 <!-- Syllabus: [click here](syllabus.html)   -->
 <!-- Upcoming lectures and assignments: [click here](schedule.html)   -->
@@ -52,10 +56,10 @@ Collège Doctoral, Montpellier University
 
 * You need to have [`R`](https://cloud.r-project.org/) and [`RStudio`](https://rstudio.com/products/rstudio/download/#download) installed
 * Download `Jags` from [sourceforge](http://sourceforge.net/projects/mcmc-jags/files/) and install it
-* Install the following `R` packages: `tidyverse`, `here`, `lme4`, `visreg`, `lattice` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
+* Install the following `R` packages: `tidyverse`, `here`, `lme4`, `visreg`, `lattice`, `brms` and `R2jags`. You can install them all at once by running the following code in the `R` command line:
 
 ```{r eval = FALSE, echo = TRUE}
-install.packages(c("tidyverse", "R2jags", "here", "lme4", "visreg", "lattice"))
+install.packages(c("tidyverse", "R2jags", "here", "lme4", "visreg", "lattice", "brms"))
 ```
 
 

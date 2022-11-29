@@ -50,16 +50,17 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  { color: #00769e; background-color: #f1f3f5; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span { color: #00769e; } /* Normal */
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { color: #657422; } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007ba5; } /* ControlFlow */
+code span.cf { color: #00769e; } /* ControlFlow */
 code span.ch { color: #20794d; } /* Char */
 code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #5e5e5e; } /* Comment */
@@ -73,17 +74,18 @@ code span.fl { color: #ad0000; } /* Float */
 code span.fu { color: #4758ab; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #5e5e5e; } /* Information */
-code span.kw { color: #007ba5; } /* Keyword */
+code span.kw { color: #00769e; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
-code span.ot { color: #007ba5; } /* Other */
+code span.ot { color: #00769e; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>Bayesian statistics with R</title>
@@ -783,6 +785,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -1024,10 +1027,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
-  }
-
-  .figure img {
-    width: 100%;
   }
 
   .figure .caption {
@@ -1859,7 +1858,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1870,6 +1884,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
 
       // clear polling timer
       clearInterval(tid);
@@ -1969,6 +2008,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
       if ($(this).attr('data-layout') !== "l-body") {
         figures.css('width', '100%');
       } else {
@@ -1991,7 +2032,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
-        $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
       });
     }
 
@@ -2360,7 +2401,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2468,130 +2509,68 @@ Worksheets
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#schedule">Schedule</a></li>
-<li><a href="#learning-objectives">Learning objectives</a></li>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#credits">Credits</a>
+<li><a href="#schedule" id="toc-schedule">Schedule</a></li>
+<li><a href="#learning-objectives" id="toc-learning-objectives">Learning objectives</a></li>
+<li><a href="#requirements" id="toc-requirements">Requirements</a></li>
+<li><a href="#credits" id="toc-credits">Credits</a>
 <ul>
-<li><a href="#corrections">Corrections</a></li>
-<li><a href="#reuse">Reuse</a></li>
+<li><a href="#corrections" id="toc-corrections">Corrections</a></li>
+<li><a href="#reuse" id="toc-reuse">Reuse</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
-<p>Who: <a href="https://oliviergimenez.github.io/">Olivier
-Gimenez</a><br />
-When: <del>March 22-23-25-26, 2021</del><br />
+<p>Who: <a href="https://oliviergimenez.github.io/">Olivier Gimenez</a><br />
+When:
+<del>March 22-23-25-26, 2021</del><br />
 <del>Nov 25-Dec 2-Dec 9, 2021</del><br />
-April 11-12, 2022</p>
-<p>Where: <del>Zoom</del><br />
-<del>Biodiversity Ecology Evolution Master, Montpellier
-University</del><br />
-Collège Doctoral, Montpellier University</p>
+<del>April 11-12, 2022</del><br />
+<del>Sept 22-23, 2022</del><br />
+Nov 24-Dec 1-Dec 8, 2022~~</p>
+<p>Where:
+<del>Zoom</del><br />
+<del>Biodiversity Ecology Evolution Master, Montpellier University</del><br />
+<del>Collège Doctoral, Montpellier University</del><br />
+<del>Collège Doctoral, Montpellier University</del><br />
+Biodiversity Ecology Evolution Master, Montpellier University</p>
 <!-- Syllabus: [click here](syllabus.html)   -->
 <!-- Upcoming lectures and assignments: [click here](schedule.html)   -->
 <h1 id="schedule">Schedule</h1>
 <ol type="1">
-<li>An introduction to Bayesian inference [<a
-href="slides/motivations.pdf">lecture</a> | <a
-href="practicals/practical1.html">practical 1</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=0s">video</a>]</li>
-<li>The likelihood [<a href="slides/likelihood.pdf">lecture</a> | <a
-href="practicals/practical2.html">practical 2</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=3319s">video</a>]</li>
-<li>Bayesian analyses by hand [<a href="slides/example.pdf">lecture</a>
-| <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=6280s">video</a>]</li>
-<li>A detour to explore priors [<a href="slides/priors.pdf">lecture</a>
-| <a href="practicals/practical3.html">practical 3</a> | <a
-href="practicals/practical4.html">practical 4</a>| <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=8241s">video</a>]</li>
-<li>Markov chains Monte Carlo methods (MCMC) [<a
-href="slides/mcmc.pdf">lecture</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=14907s">video</a>]</li>
-<li>Bayesian analyses in <code>R</code> with the <code>Jags</code>
-software [<a href="slides/jags.pdf">lecture</a> | <a
-href="Rscripts/jags_introduction_storks_example.R">R script</a> | <a
-href="practicals/practical5.html">practical 5</a> | <a
-href="practicals/practical6.html">practical 6</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=20405s">video</a>]</li>
-<li>Contrast scientific hypotheses with model selection [<a
-href="slides/modelselection.pdf">lecture</a> | <a
-href="practicals/practical7.html">practical 7</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=28947s">video</a>]</li>
-<li>Heterogeneity and multilevel models (aka mixed models) [<a
-href="slides/mixedmodels.pdf">lecture</a> | <a
-href="Rscripts/multilevel_models_plants_example.R">R script</a> | <a
-href="practicals/practical8.html">practical 8</a> | <a
-href="practicals/practical9.html">practical 9</a> | <a
-href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=29983s">video</a>]</li>
+<li>An introduction to Bayesian inference [<a href="slides/motivations.pdf">lecture</a> | <a href="practicals/practical1.html">practical 1</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=0s">video</a>]</li>
+<li>The likelihood [<a href="slides/likelihood.pdf">lecture</a> | <a href="practicals/practical2.html">practical 2</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=3319s">video</a>]</li>
+<li>Bayesian analyses by hand [<a href="slides/example.pdf">lecture</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=6280s">video</a>]</li>
+<li>A detour to explore priors [<a href="slides/priors.pdf">lecture</a> | <a href="practicals/practical3.html">practical 3</a> | <a href="practicals/practical4.html">practical 4</a>| <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=8241s">video</a>]</li>
+<li>Markov chains Monte Carlo methods (MCMC) [<a href="slides/mcmc.pdf">lecture</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=14907s">video</a>]</li>
+<li>Bayesian analyses in <code>R</code> with the <code>Jags</code> software [<a href="slides/jags.pdf">lecture</a> | <a href="Rscripts/jags_introduction_storks_example.R">R script</a> | <a href="practicals/practical5.html">practical 5</a> | <a href="practicals/practical6.html">practical 6</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=20405s">video</a>]</li>
+<li>Contrast scientific hypotheses with model selection [<a href="slides/modelselection.pdf">lecture</a> | <a href="practicals/practical7.html">practical 7</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=28947s">video</a>]</li>
+<li>Heterogeneity and multilevel models (aka mixed models) [<a href="slides/mixedmodels.pdf">lecture</a> | <a href="Rscripts/multilevel_models_plants_example.R">R script</a> | <a href="practicals/practical8.html">practical 8</a> | <a href="practicals/practical9.html">practical 9</a> | <a href="https://www.youtube.com/watch?v=uvU-TmEt8_M&amp;t=29983s">video</a>]</li>
 </ol>
 <h1 id="learning-objectives">Learning objectives</h1>
 <ul>
 <li>Try and demystify Bayesian statistics, and MCMC methods</li>
 <li>Make the difference between Bayesian and Frequentist analyses</li>
-<li>Understand the Methods section of a paper that does Bayesian
-stuff</li>
-<li>Run Bayesian analyses with <code>R</code> (in
-<code>Jags</code>)</li>
+<li>Understand the Methods section of a paper that does Bayesian stuff</li>
+<li>Run Bayesian analyses with <code>R</code> (in <code>Jags</code>)</li>
 </ul>
 <h1 id="requirements">Requirements</h1>
 <ul>
-<li>You need to have <a
-href="https://cloud.r-project.org/"><code>R</code></a> and <a
-href="https://rstudio.com/products/rstudio/download/#download"><code>RStudio</code></a>
-installed</li>
-<li>Download <code>Jags</code> from <a
-href="http://sourceforge.net/projects/mcmc-jags/files/">sourceforge</a>
-and install it</li>
-<li>Install the following <code>R</code> packages:
-<code>tidyverse</code>, <code>here</code>, <code>lme4</code>,
-<code>visreg</code>, <code>lattice</code> and <code>R2jags</code>. You
-can install them all at once by running the following code in the
-<code>R</code> command line:</li>
+<li>You need to have <a href="https://cloud.r-project.org/"><code>R</code></a> and <a href="https://rstudio.com/products/rstudio/download/#download"><code>RStudio</code></a> installed</li>
+<li>Download <code>Jags</code> from <a href="http://sourceforge.net/projects/mcmc-jags/files/">sourceforge</a> and install it</li>
+<li>Install the following <code>R</code> packages: <code>tidyverse</code>, <code>here</code>, <code>lme4</code>, <code>visreg</code>, <code>lattice</code>, <code>brms</code> and <code>R2jags</code>. You can install them all at once by running the following code in the <code>R</code> command line:</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span>, <span class='st'>"R2jags"</span>, <span class='st'>"here"</span>, <span class='st'>"lme4"</span>, <span class='st'>"visreg"</span>, <span class='st'>"lattice"</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span>, <span class='st'>"R2jags"</span>, <span class='st'>"here"</span>, <span class='st'>"lme4"</span>, <span class='st'>"visreg"</span>, <span class='st'>"lattice"</span>, <span class='st'>"brms"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <h1 id="credits">Credits</h1>
-<p>Many slides are from <a
-href="https://www.maths.ed.ac.uk/~rking33/Book-website/index.html">a
-workshop we used to run a loooong time ago</a> with Ruth King, Byron
-Morgan and Steve Brooks. I also re-used or adapted slides by <a
-href="https://github.com/rmcelreath/statrethinking_winter2019">Richard
-McElreath</a>, <a
-href="https://staff.qut.edu.au/staff/k.mengersen">Kerrie Mengersen</a>,
-<a href="https://frodriguezsanchez.net/">Francisco Rodriguez
-Sanchez</a>, <a
-href="https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html">Jim
-Albert and Jingchen Hu</a>, <a href="https://www.tjmahr.com/">Tristan
-Marh</a>, <a
-href="https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/">Jason
-Matthiopoulos</a>, a paper by <a
-href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x">Michael
-McCarthy and Pip Masters</a>, <a
-href="https://www.lopez-sepulcre.com/">Andrés Lopez-Sepulcre</a> and <a
-href="https://sites.google.com/site/doingbayesiandataanalysis/">John
-Kruschke’ book cover</a>. The sources for the images are <a
-href="https://www.elmhurst.edu/blog/thomas-bayes/">James Kulich</a>,
-Matt Buck, <a href="https://xkcd.com/1132/">xkcd</a> and Mike West.</p>
+<p>Many slides are from <a href="https://www.maths.ed.ac.uk/~rking33/Book-website/index.html">a workshop we used to run a loooong time ago</a> with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by <a href="https://github.com/rmcelreath/statrethinking_winter2019">Richard McElreath</a>, <a href="https://staff.qut.edu.au/staff/k.mengersen">Kerrie Mengersen</a>, <a href="https://frodriguezsanchez.net/">Francisco Rodriguez Sanchez</a>, <a href="https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html">Jim Albert and Jingchen Hu</a>, <a href="https://www.tjmahr.com/">Tristan Marh</a>, <a href="https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/">Jason Matthiopoulos</a>, a paper by <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x">Michael McCarthy and Pip Masters</a>, <a href="https://www.lopez-sepulcre.com/">Andrés Lopez-Sepulcre</a> and <a href="https://sites.google.com/site/doingbayesiandataanalysis/">John Kruschke’ book cover</a>. The sources for the images are <a href="https://www.elmhurst.edu/blog/thomas-bayes/">James Kulich</a>, Matt Buck, <a href="https://xkcd.com/1132/">xkcd</a> and Mike West.</p>
 <h2 class="appendix" id="corrections">Corrections</h2>
-<p>If you spot a typo or an error, find a bug, want to suggest changes,
-or have trouble running the code, please <a
-href="https://github.com/oliviergimenez/bayesian-stats-with-R/issues">file
-an issue</a> or <a href="mailto:olivier.gimenez@cefe.cnrs.fr">get back
-to me</a></p>
+<p>If you spot a typo or an error, find a bug, want to suggest changes, or have trouble running the code, please <a href="https://github.com/oliviergimenez/bayesian-stats-with-R/issues">file an issue</a> or <a href="mailto:olivier.gimenez@cefe.cnrs.fr">get back to me</a></p>
 <h2 class="appendix" id="reuse">Reuse</h2>
-<p>Text and figures are licensed under Creative Commons Attribution <a
-href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Any
-computer code (R, HTML, CSS, etc.) in slides and worksheets, including
-in slide and worksheet sources, is also licensed under <a
-href="https://github.com/oliviergimenez/bayesian-stats-with-R/blob/master/LICENSE.md">MIT</a>.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>Text and figures are licensed under Creative Commons Attribution <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Any computer code (R, HTML, CSS, etc.) in slides and worksheets, including in slide and worksheet sources, is also licensed under <a href="https://github.com/oliviergimenez/bayesian-stats-with-R/blob/master/LICENSE.md">MIT</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
