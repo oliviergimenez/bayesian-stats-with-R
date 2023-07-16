@@ -206,8 +206,8 @@ inits <- list(init1,init2)
 parameters <- c("a","b.temp","b.rain")
 
 # specify nb iterations for burn-in and final inference 
-nb.burnin <- 1000
-nb.iterations <- 2000 # beware: nb.iterations includes nb.burnin!
+nb.burnin <- 10000
+nb.iterations <- 20000 # beware: nb.iterations includes nb.burnin!
 ```
 
 ## Run Jags
@@ -236,7 +236,8 @@ storks <- jags(data  = datax,
                model.file = "code/logistic.txt",
                n.chains = 2,
                n.iter = nb.iterations,
-               n.burnin = nb.burnin)
+               n.burnin = nb.burnin,
+               n.thin = 1)
 storks
 ```
 
