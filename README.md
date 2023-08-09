@@ -8,6 +8,27 @@ Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](htt
 
 ## To-do list
 
++ passer les diapos PDF en html ! Et produire le PDF global
+
++ raccourcir cours sur sélection modèle, voire l’intégrer dans un cours existant ; utiliser DIC plutôt que WAIC, plus simple ; mentionner WAIC
+  
++ montrer comme trouver p à partir de logit(p) dans le cours (pour expliquer logit, cf section gLM dans bouquin telling stories)
+
++ montrer brms dans le cours
+
++ remplacer grain par seeds
++ faire rentrer le code qui dépasse sur les diapos
++ remplacer la crazy function avec le cosinus par la prédiction à de nouvelles valeurs de rainfall/temperature (attention la standardisation) ; ou faire les deux
+
++ debug exo anemones ; retrouver paramètres simulations dans estimations ; pb standardisation?
+
++ plus d’interprétation écologique sur les effets aléatoires, pousser jusqu’à allométrie et estimation des BLUPS
++ voir les scripts que j’ai ajoutés sur figure cigognes, et TP9
++ Expliquer comment coder effet region dans case study 4 (variable qualitative)
++ Expliquer comment prendre en compte un offset dans case studies 3 et 4
+
++ maj site web
+
 + Add a section on posterior predictive checks (https://m-clark.github.io/bayesian-basics/diagnostics.html#predictive-accuracy-model-comparison and https://stats.stackexchange.com/questions/115157/what-are-posterior-predictive-checks-and-what-makes-them-useful), to comply with the 3 steps of a Bayesian analysis as defined by Gelman (set up a probabilistic model, inference and model checking; iterate to improve model).
 
 + More details on confidence, credible and HPD intervals.
