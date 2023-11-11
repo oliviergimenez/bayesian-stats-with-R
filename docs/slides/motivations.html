@@ -41,11 +41,15 @@ class: center, middle, title-slide
 
 * Materials shared by [\alert{Tristan Marh}](https://www.tjmahr.com/), [\alert{Jason Matthiopoulos}](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/), [\alert{Francisco Rodriguez Sanchez}](https://frodriguezsanchez.net/), [\alert{Kerrie Mengersen}](https://staff.qut.edu.au/staff/k.mengersen) and [\alert{Mark Lai}](https://quantscience.rbind.io/).
 
+---
+
 ## Slides, code and data
 
 * All material prepared with `R`.
 * `R Markdown` used to write reproducible material.
 * Dedicated website [\alert{https://oliviergimenez.github.io/bayesian-stats-with-R/}](https://oliviergimenez.github.io/bayesian-stats-with-R/).
+
+---
 
 ## Objectives
 
@@ -54,10 +58,9 @@ class: center, middle, title-slide
 * Understand the Methods section of ecological papers doing Bayesian stuff.
 * Run Bayesian analyses, safely hopefully.
 
+&lt;img src="img/brace_yourself.jpeg" width="60%" style="display: block; margin: auto;" /&gt;
 
-
-
-&lt;img src="img/brace_yourself.jpeg" width="13cm" height="7cm" style="display: block; margin: auto;" /&gt;
+---
 
 ## What is on our plate?
 
@@ -70,44 +73,41 @@ class: center, middle, title-slide
 7. Contrast scientific hypotheses with model selection
 8. Heterogeneity and multilevel models (aka mixed models)
 
+---
+
 # I want moooooore
 
-
-
+---
 
 &lt;img src="img/books.jpeg" width="13cm" height="7cm" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/mccarthy.png" width="660" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/kery.png" width="824" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/kruschke.png" width="800" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/mcelreath.png" width="2133" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/gelmanhill.png" width="688" style="display: block; margin: auto;" /&gt;
 
-
-
+---
 
 &lt;img src="img/bda_cover.png" width="13cm" height="7cm" style="display: block; margin: auto;" /&gt;
 
 Free at &lt;http://www.stat.columbia.edu/~gelman/book/&gt;
+
+---
 
 # What is Bayesian inference?
 
@@ -115,6 +115,9 @@ Free at &lt;http://www.stat.columbia.edu/~gelman/book/&gt;
 
 
 ![](img/amazing-thomas-bayes-illustration.jpg)
+
+---
+
 
 ## A reminder on conditional probabilities
 
@@ -129,11 +132,17 @@ Free at &lt;http://www.stat.columbia.edu/~gelman/book/&gt;
 
 ![](img/how_to_cure_vampires.jpg)
 
+---
+
+
 ## Screening for vampirism
 
 * The chance of the  test being positive given you are a vampire is `\(\Pr(+|\text{vampire}) = 0.90\)` (**sensitivity**).
 
 * The chance of a negative test given you are mortal is `\(\Pr(-|\text{mortal}) = 0.95\)` (**specificity**).
+
+
+---
 
 
 ## What is the question?
@@ -143,6 +152,10 @@ Free at &lt;http://www.stat.columbia.edu/~gelman/book/&gt;
 * From the perspective of a person: Given that the test is positive, what is the probability that this person is a vampire? `\(\Pr(\text{vampire}|+) = \; ?\)`
 
 * Assume that vampires are rare, and represent only `\(0.1\%\)` of the population. This means that `\(\Pr(\text{vampire}) = 0.001\)`.
+
+
+---
+
 
 ## What is the answer? Bayes' theorem to the rescue!
 

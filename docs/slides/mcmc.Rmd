@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 5. Markov chains Monte Carlo (MCMC)
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no
@@ -206,7 +206,11 @@ loglikelihood <- function(x, p){
 logprior <- function(p){
   dunif(x = p, min = 0, max = 1, log = TRUE)
 }
+```
 
+`r insert_slide_break()`
+
+```{r}
 # posterior density function (log scale)
 posterior <- function(x, p){
   loglikelihood(x, p) + logprior(p) # - log(Pr(data))
@@ -252,7 +256,11 @@ move <- function(x, away = .2){
 steps <- 100
 theta.post <- rep(NA, steps)
 set.seed(1234)
+```
 
+`r insert_slide_break()`
+
+```{r}
 # pick starting value (step 1)
 inits <- 0.5
 theta.post[1] <- inits

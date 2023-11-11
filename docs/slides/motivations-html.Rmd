@@ -1,19 +1,18 @@
 ---
-title: |
-    | Bayesian statistics with R
-    | 1. An introduction to Bayesian inference
+title: "Bayesian statistics with R"
+subtitle: "1. An introduction to Bayesian inference"
+date: "last updated: `r Sys.Date()`"
 author: "Olivier Gimenez"
-date: "April 2022"
 output:
-  beamer_presentation:
-    fig_caption: no
-    includes:
-      in_header: header.tex
-    slide_level: 2
-    theme: metropolis
-  slidy_presentation: default
-  ioslides_presentation: default
-classoption: aspectratio=169
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
 ---
 
 ```{r setup, include = FALSE}
@@ -56,11 +55,15 @@ insert_html_math <- make_latex_decorator("", "$$")
 
 * Materials shared by [\alert{Tristan Marh}](https://www.tjmahr.com/), [\alert{Jason Matthiopoulos}](https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/), [\alert{Francisco Rodriguez Sanchez}](https://frodriguezsanchez.net/), [\alert{Kerrie Mengersen}](https://staff.qut.edu.au/staff/k.mengersen) and [\alert{Mark Lai}](https://quantscience.rbind.io/).
 
+---
+
 ## Slides, code and data
 
 * All material prepared with `R`.
 * `R Markdown` used to write reproducible material.
 * Dedicated website [\alert{https://oliviergimenez.github.io/bayesian-stats-with-R/}](https://oliviergimenez.github.io/bayesian-stats-with-R/).
+
+---
 
 ## Objectives
 
@@ -69,11 +72,11 @@ insert_html_math <- make_latex_decorator("", "$$")
 * Understand the Methods section of ecological papers doing Bayesian stuff.
 * Run Bayesian analyses, safely hopefully.
 
-`r insert_slide_break()`
-
-```{r, out.width = '13cm',out.height='7cm',fig.align='center',echo=FALSE}
+```{r,fig.align='center',echo=FALSE, out.width="60%"}
 knitr::include_graphics('img/brace_yourself.jpeg')
 ```
+
+---
 
 ## What is on our plate?
 
@@ -86,45 +89,47 @@ knitr::include_graphics('img/brace_yourself.jpeg')
 7. Contrast scientific hypotheses with model selection
 8. Heterogeneity and multilevel models (aka mixed models)
 
+---
+
 # I want moooooore
 
-`r insert_slide_break()`
+---
 
 ```{r, out.width = '13cm',out.height='7cm',fig.align='center',echo=FALSE}
 knitr::include_graphics('img/books.jpeg')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE}
 knitr::include_graphics('img/mccarthy.png')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE}
 knitr::include_graphics('img/kery.png')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE}
 knitr::include_graphics('img/kruschke.png')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE}
 knitr::include_graphics('img/mcelreath.png')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE}
 knitr::include_graphics('img/gelmanhill.png')
 ```
 
-`r insert_slide_break()`
+---
 
 ```{r, fig.align = 'center', echo = FALSE, out.width = '13cm', out.height='7cm'}
 knitr::include_graphics('img/bda_cover.png')
@@ -132,11 +137,16 @@ knitr::include_graphics('img/bda_cover.png')
 
 Free at <http://www.stat.columbia.edu/~gelman/book/>
 
+---
+
 # What is Bayesian inference?
 
 `r insert_slide_break()`
 
 ![](img/amazing-thomas-bayes-illustration.jpg)
+
+---
+
 
 ## A reminder on conditional probabilities
 
@@ -150,11 +160,17 @@ Free at <http://www.stat.columbia.edu/~gelman/book/>
 
 ![](img/how_to_cure_vampires.jpg)
 
+---
+
+
 ## Screening for vampirism
 
 `r insert_inc_bullet()` The chance of the  test being positive given you are a vampire is $\Pr(+|\text{vampire}) = 0.90$ (**sensitivity**).
 
 `r insert_inc_bullet()` The chance of a negative test given you are mortal is $\Pr(-|\text{mortal}) = 0.95$ (**specificity**).
+
+
+---
 
 
 ## What is the question?
@@ -164,6 +180,10 @@ Free at <http://www.stat.columbia.edu/~gelman/book/>
 `r insert_inc_bullet()` From the perspective of a person: Given that the test is positive, what is the probability that this person is a vampire? $\Pr(\text{vampire}|+) = \; ?$
 
 `r insert_inc_bullet()` Assume that vampires are rare, and represent only $0.1\%$ of the population. This means that $\Pr(\text{vampire}) = 0.001$.
+
+
+---
+
 
 ## What is the answer? Bayes' theorem to the rescue!
 

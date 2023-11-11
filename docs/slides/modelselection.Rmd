@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 7. Contrast scientific hypotheses with model selection
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no
@@ -154,6 +154,8 @@ storks <- jags(data  = datax,
                n.burnin = nb.burnin)
 ```
 
+\footnotesize
+
 ```{r}
 # calculate wAIC with JAGS
 # https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c
@@ -162,6 +164,8 @@ samples <- jags.samples(storks$model,c("WAIC","deviance"), type = "mean",
 						n.burnin = 1000,
 						n.thin = 1)
 ```
+
+\normalsize
 
 ## WAIC in Jags
 
