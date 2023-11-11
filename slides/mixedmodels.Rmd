@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 8. Heterogeneity and multilevel models (aka mixed models)
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no
@@ -198,6 +198,8 @@ xyplot(log(nb_grain) ~ Biomass | Species,data=dat,
 
 ## Read in and manipulate data
 
+\footnotesize
+
 ```{r}
 # read in data
 VMG <- read_csv2(here::here("slides","dat","VMG.csv")) %>%
@@ -217,7 +219,11 @@ nbspecies <- length(levels(Sp))
 n <- length(y)
 ```
 
+\normalsize
+
 ## Specify the model in Jags
+
+\footnotesize
 
 ```{r}
 model <- 
@@ -236,6 +242,8 @@ b ~ dnorm(0,0.001)
 writeLines(model,here::here("slides","code","completepooling.bug"))
 ```
 
+\normalsize
+
 ## Prepare ingredients for running Jags
 
 ```{r}
@@ -253,6 +261,8 @@ allom.parameters <- c("a", "b", "sigma.y")
 
 ## Run Jags
 
+\footnotesize
+
 ```{r}
 allom.1 <- jags(allom.data,
                 inits,
@@ -263,11 +273,17 @@ allom.1 <- jags(allom.data,
                 n.burn = 1000)
 ```
 
+\normalsize
+
 ## Display results
+
+\footnotesize
 
 ```{r}
 allom.1
 ```
+
+\normalsize
 
 ## Compare with Frequentist approach
 
@@ -310,6 +326,8 @@ knitr::include_graphics(here::here("slides","img","varyingint.png"))
 
 ## Implementation in Jags
 
+\footnotesize
+
 ```{r}
 model <- paste("
 model {
@@ -330,6 +348,8 @@ model {
 writeLines(model,here::here("slides","code","varint.bug"))
 ```
 
+\normalsize
+
 ## Prepare ingredients for running Jags
 
 ```{r}
@@ -348,6 +368,8 @@ allom.parameters <- c("b", "mu.a","sigma.y", "sigma.a")
 
 ## Run Jags
 
+\footnotesize
+
 ```{r}
 allom.2 <- jags(allom.data,
                 inits,
@@ -358,13 +380,21 @@ allom.2 <- jags(allom.data,
                 n.burn = 1000)
 ```
 
+\normalsize
+
 ## Display results
+
+\footnotesize
 
 ```{r}
 allom.2
 ```
 
+\normalsize
+
 ## Compare with Frequentist approach
+
+\footnotesize
 
 ```{r}
 library(lme4)
@@ -372,6 +402,7 @@ freq_lmm <- lmer(y ~ x + (1 | species), allom.data, REML = FALSE)
 freq_lmm
 ```
 
+\normalsize
 
 ```{r include = FALSE}
 allom.2 <- jags(allom.data,
@@ -434,6 +465,8 @@ xyplot(y ~ x | Sp, panel=panelfun2,
 
 ## Implementation in Jags
 
+\footnotesize
+
 ```{r}
 model <- paste("
 model {
@@ -451,10 +484,16 @@ model {
 writeLines(model,here::here("slides","code","nopooling.bug"))
 ```
 
+\normalsize
+
 ## Prepare ingredients
 
 ```{r include = TRUE}
-allom.data <- list(n = n, nbspecies = nbspecies, x = x, y = y, species = species)
+allom.data <- list(n = n, 
+                   nbspecies = nbspecies, 
+                   x = x, 
+                   y = y, 
+                   species = species)
 init1 <- list(a = rnorm(nbspecies), b = rnorm(1), sigma.y = runif(1))
 init2 <- list(a = rnorm(nbspecies), b = rnorm(1), sigma.y = runif(1))
 inits<-list(init1, init2)
@@ -487,6 +526,8 @@ writeLines(model,here::here("slides","code","nopooling.bug"))
 
 ## Run JAGS
 
+\footnotesize
+
 ```{r include = TRUE}
 allom.3 <- jags(data = allom.data,
                 inits = inits,
@@ -497,11 +538,17 @@ allom.3 <- jags(data = allom.data,
                 n.burn = 1000)
 ```
 
+\normalsize
+
 ## Display results
+
+\footnotesize
 
 ```{r}
 allom.3$BUGSoutput$summary[c(1:4, 32:33, 34), -c(4,6)]
 ```
+
+\normalsize
 
 ## Compare with Frequentist approach
 
@@ -618,7 +665,6 @@ model {
   mu.a ~ dnorm (0, .001)	
   tau.a <- pow(sigma.a, -2)	
   sigma.a ~ dunif (0, 100)	
-	
   mu.b ~ dnorm (0, .001)	
   tau.b <- pow(sigma.b, -2)	
   sigma.b ~ dunif (0, 100)	
@@ -639,10 +685,13 @@ init2 <- list(a = rnorm(nbspecies), b = rnorm(nbspecies),
               mu.a = rnorm(1), mu.b = rnorm(1),	
               sigma.y = runif(1), sigma.a = runif(1), sigma.b = runif(1))	
 inits <- list(init1, init2)	
-allom.parameters <- c ("a", "b", "mu.a", "mu.b", "sigma.y", "sigma.a", "sigma.b")
+allom.parameters <- c ("a","b","mu.a","mu.b","sigma.y","sigma.a","sigma.b")
 ```
 
 ## Run Jags
+
+\footnotesize
+
 ```{r}
 allom.4 <- jags(data = allom.data,
                 inits = inits,
@@ -653,19 +702,32 @@ allom.4 <- jags(data = allom.data,
                 n.burn = 1000)	
 ```
 
+\normalsize
+
 ## Display results
+
+\footnotesize
+
 ```{r}
 round(allom.4$BUGSoutput$summary[c(1:2, 32:33, 34:35, 65:66, 68:72), -c(4,6)],2)
 ```
 
+\normalsize
+
 ## Compare with Frequentist approach
+
+\footnotesize
 
 ```{r}
 freq_lmm2 <- lmer (y ~ x + (1 + x | species), allom.data, REML = FALSE)	
 freq_lmm2
 ```
 
+\normalsize
+
 ## Compare with Frequentist approach - with no correlation
+
+\footnotesize
 
 ```{r}
 freq_lmm_wocorr <- lmer(y ~ x + (1 | species) + 	
@@ -673,6 +735,7 @@ freq_lmm_wocorr <- lmer(y ~ x + (1 | species) +
 freq_lmm_wocorr
 ```
 
+\normalsize
 
 ## Shrinkage results from pooling of information
 

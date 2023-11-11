@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 3. Analyses by hand
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no

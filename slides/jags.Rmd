@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 6. Bayesian analyses in R with the Jags software
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no
@@ -103,15 +103,19 @@ knitr::include_graphics('img/stork_world.png')
 nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71,
               53,41,53,31,35,14,18)
 
-nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80,
-            67,54,58,39,42,23,23)
+nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,
+             90,80,67,54,58,39,42,23,23)
 
-temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4,
-         12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0)
+temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,
+          14.4,12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0)
 
 rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86,
            78,87)
+```
 
+`r insert_slide_break()`
+
+```{r}
 datax <- list(N = 23, 
               nbchicks = nbchicks, 
               nbpairs = nbpairs, 
@@ -228,6 +232,9 @@ storks
 ```
 
 ## Inspect parameter estimates
+
+\footnotesize
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(R2jags)
 storks <- jags(data  = datax,
@@ -240,6 +247,8 @@ storks <- jags(data  = datax,
                n.thin = 1)
 storks
 ```
+
+\normalsize
 
 # Your turn: Practical 5
 
@@ -303,16 +312,23 @@ knitr::include_graphics('img/acf.png')
 
 ## Traceplots for the storks
 
+\footnotesize
+
 ```{r message=FALSE, warning=FALSE}
 traceplot(storks,mfrow = c(1, 2), varname = c('b.rain','b.temp'), ask = FALSE)
 ```
 
+\normalsize
+
 ## Autocorrelation for the storks
+
+\footnotesize
 
 ```{r message=FALSE, warning=FALSE}
 autocorr.plot(as.mcmc(storks),ask = FALSE) 
 ```
 
+\normalsize
 
 ## How do good chains behave? 
 
@@ -371,10 +387,13 @@ knitr::include_graphics('img/mcmc.png')
 
 ## `n.eff` and $\hat{R}$ for the storks
 
+\footnotesize
+
 ```{r}
 storks
 ```
 
+\normalsize
 
 ## To sum up
 
@@ -418,12 +437,22 @@ storks
 # MCMC makes you queens and kings of the stats world
 
 ## Get all values sampled from posteriors
+
+\footnotesize
+
 ```{r message=FALSE, warning=FALSE}
 res <- as.mcmc(storks) # convert outputs in a list
 res <- rbind(res[[1]],res[[2]]) # put two MCMC lists on top of each other
 head(res)
+```
+
+`r insert_slide_break()`
+
+```{r message=FALSE, warning=FALSE}
 tail(res)
 ```
+
+\normalsize
 
 ## Compute a posteriori Pr(rain < 0)
 ```{r message=FALSE, warning=FALSE}

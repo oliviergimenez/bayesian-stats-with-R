@@ -1,19 +1,18 @@
 ---
-title: |
-    | Bayesian statistics with R
-    | 1. An introduction to Bayesian inference
+title: "Bayesian statistics with R"
+subtitle: "1. An introduction to Bayesian inference"
+date: "last updated: `r Sys.Date()`"
 author: "Olivier Gimenez"
-date: "April 2022"
 output:
-  beamer_presentation:
-    fig_caption: no
-    includes:
-      in_header: header.tex
-    slide_level: 2
-    theme: metropolis
-  slidy_presentation: default
-  ioslides_presentation: default
-classoption: aspectratio=169
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
 ---
 
 ```{r setup, include = FALSE}

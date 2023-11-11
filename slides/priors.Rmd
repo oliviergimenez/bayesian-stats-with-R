@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 4. A detour with priors
 author: "Olivier Gimenez"
-date: "April 2022"
+date: "November-December 2023"
 output:
   beamer_presentation:
     fig_caption: no
@@ -100,9 +100,9 @@ points(x,dbeta(x, 20, 1),type='l',lwd=3)
 
 `r insert_slide_break()`
 
-```{r, out.width = '11cm',out.height='7cm',fig.align='center',echo=FALSE}
-knitr::include_graphics('img/falling_man.jpg')    
-```
+<!-- ```{r, out.width = '11cm',out.height='7cm',fig.align='center',echo=FALSE} -->
+<!-- knitr::include_graphics('img/falling_man.jpg')     -->
+<!-- ``` -->
 
 # How to incorporate prior information? 
 
@@ -424,27 +424,27 @@ from = 0, to = 1), main='', xlab='survival')
 
 # Your turn: Practical 4
 
-# Dynamic updating
+<!-- # Dynamic updating -->
 
-## Today's posterior is tomorrow's prior
+<!-- ## Today's posterior is tomorrow's prior -->
 
-If you obtain more data, no need to redo all of the analysis. Your posterior from the first analysis simply becomes your prior for the next analysis (and so on). 
+<!-- If you obtain more data, no need to redo all of the analysis. Your posterior from the first analysis simply becomes your prior for the next analysis (and so on).  -->
 
-`r insert_pause()`
+<!-- `r insert_pause()` -->
 
-* Stage 0. Prior $\Pr(\theta) \sim \text{Beta}(1,1)$.
+<!-- * Stage 0. Prior $\Pr(\theta) \sim \text{Beta}(1,1)$. -->
 
-`r insert_pause()`
+<!-- `r insert_pause()` -->
 
-* Stage 1. Observe $y_1 = 22$ successes from $n_1 = 29$ trials.
-    * Likelihood is $\Pr(y_1 | \theta) \sim \text{Binomial}(n_1=29,\theta)$.
-    * Posterior is $\Pr(\theta | y_1) \sim \text{Beta}(23,8)$ with mean $23/31 = 0.74$.
+<!-- * Stage 1. Observe $y_1 = 22$ successes from $n_1 = 29$ trials. -->
+<!--     * Likelihood is $\Pr(y_1 | \theta) \sim \text{Binomial}(n_1=29,\theta)$. -->
+<!--     * Posterior is $\Pr(\theta | y_1) \sim \text{Beta}(23,8)$ with mean $23/31 = 0.74$. -->
 
-`r insert_pause()`
+<!-- `r insert_pause()` -->
 
-* Stage 2. Observe $y_2=5$ successed from $n_2=10$ new trials.
-    * Likelihood is $\Pr(y_2 | \theta) \sim \text{Binomial}(n_2=10,\theta)$.
-    * Prior is $\Pr(\theta) \sim \text{Beta}(23,8)$ from stage 1.
-    * Posterior is $\Pr(\theta | y_1 \text{ and } y_2) \propto \Pr(\theta | y_1) \Pr(y_2 | \theta) = \text{Beta}(28,13)$ with mean $28/41 = 0.68$.
+<!-- * Stage 2. Observe $y_2=5$ successed from $n_2=10$ new trials. -->
+<!--     * Likelihood is $\Pr(y_2 | \theta) \sim \text{Binomial}(n_2=10,\theta)$. -->
+<!--     * Prior is $\Pr(\theta) \sim \text{Beta}(23,8)$ from stage 1. -->
+<!--     * Posterior is $\Pr(\theta | y_1 \text{ and } y_2) \propto \Pr(\theta | y_1) \Pr(y_2 | \theta) = \text{Beta}(28,13)$ with mean $28/41 = 0.68$. -->
 
 
