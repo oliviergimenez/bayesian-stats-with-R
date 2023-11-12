@@ -85,18 +85,18 @@ $$\text{AIC} = - 2 \log(L(\hat{\theta}_1,\ldots,\hat{\theta}_K)) + {\color{red}{
 
 ## Bayesian version
 
-* Watanabe-Akaike (Widely-Applicable) Information Criteria or WAIC:
+`r insert_inc_bullet()` Deviance Information Criteria or DIC, a Bayesian method for model comparison that JAGS can calculate for (m)any models.
 
-$$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[\Pr(y_i \mid \theta)] + 
-                  2 p_\text{WAIC}$$
+$$\textrm{DIC} = -2 \log L(\mbox{data} \mid \theta) + 
+                  2 p_\text{D}$$
 
-* where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood evaluated pointwise at each $i$th observation.
+`r insert_inc_bullet()` where $-2 \log L(\mbox{data} \mid \theta)$ is the deviance evaluated at the posterior mean of the parameters (measures fit),
 
-* $p_\text{WAIC}$ is a penalty computed using the posterior variance of the likelihood. 
+`r insert_inc_bullet()` and $p_\text{D}$ is the ‘effective number of parameters (measures complexity); it is the posterior mean of the deviance minus the deviance of the posterior means.
 
-* More in this video <https://www.youtube.com/watch?v=vSjL2Zc-gEQ> by McElreath.
+`r insert_inc_bullet()` DIC is intended as a generalisation of AIC, and with little prior information, $p_\text{D}$ should be approximately the true number of parameters.
 
-* Relatively new and not yet available in Jags in routine.
+`r insert_inc_bullet()` The model with the smallest DIC is estimated to be the model that would best predict a replicate dataset with same structure as that observed.
 
 ```{r include = FALSE}
 nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71,
@@ -117,8 +117,7 @@ datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs,
 
 ```
 
-
-## WAIC in Jags
+## DIC in Jags
 
 ```{r include=FALSE}
 model <- 
@@ -157,25 +156,107 @@ storks <- jags(data  = datax,
 \footnotesize
 
 ```{r}
-# calculate wAIC with JAGS
-# https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c
-samples <- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
-						n.iter = 2000,
-						n.burnin = 1000,
-						n.thin = 1)
+storks
 ```
 
 \normalsize
 
-## WAIC in Jags
 
-```{r}
-samples$p_waic <- samples$WAIC
-samples$waic <- samples$deviance + samples$p_waic
-tmp <- sapply(samples, sum)
-waic <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1)
-waic
-```
+
+
+<!-- ## Bayesian version -->
+
+<!-- * Watanabe-Akaike (Widely-Applicable) Information Criteria or WAIC: -->
+
+<!-- $$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[\Pr(y_i \mid \theta)] +  -->
+<!--                   2 p_\text{WAIC}$$ -->
+
+<!-- * where $E[p(y_i \mid \theta)]$ is the posterior mean of the likelihood evaluated pointwise at each $i$th observation. -->
+
+<!-- * $p_\text{WAIC}$ is a penalty computed using the posterior variance of the likelihood.  -->
+
+<!-- * More in this video <https://www.youtube.com/watch?v=vSjL2Zc-gEQ> by McElreath. -->
+
+<!-- * Relatively new and not yet available in Jags in routine. -->
+
+<!-- ```{r include = FALSE} -->
+<!-- nbchicks <- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71, -->
+<!--               53,41,53,31,35,14,18) -->
+
+<!-- nbpairs <- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80, -->
+<!--             67,54,58,39,42,23,23) -->
+
+<!-- temp <- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4, -->
+<!--          12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0) -->
+
+<!-- rain <- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86, -->
+<!--            78,87) -->
+
+<!-- datax <- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs,  -->
+<!--               temp = (temp - mean(temp))/sd(temp),  -->
+<!--               rain = (rain - mean(rain))/sd(rain)) -->
+
+<!-- ``` -->
+
+
+<!-- ## WAIC in Jags -->
+
+<!-- ```{r include=FALSE} -->
+<!-- model <-  -->
+<!-- paste(" -->
+<!-- model -->
+<!-- { -->
+<!-- 	for( i in 1 : N)  -->
+<!-- 		{ -->
+<!-- 		nbchicks[i] ~ dbin(p[i],nbpairs[i]) -->
+<!-- 		logit(p[i]) <- a + b.temp * temp[i] + b.rain * rain[i] -->
+<!-- 		} -->
+
+<!-- # priors for regression parameters -->
+<!-- a ~ dnorm(0,0.001) -->
+<!-- b.temp ~ dnorm(0,0.001) -->
+<!-- b.rain ~ dnorm(0,0.001) -->
+
+<!-- 	} -->
+<!-- ") -->
+<!-- writeLines(model,"code/logistic.txt") -->
+<!-- init1 <- list(a = -0.5, b.temp = -0.5, b.rain = -0.5) -->
+<!-- init2 <- list(a = 0.5, b.temp = 0.5, b.rain = 0.5) -->
+<!-- inits <- list(init1,init2) -->
+<!-- parameters <- c("a","b.temp","b.rain") -->
+<!-- nb.burnin <- 1000 -->
+<!-- nb.iterations <- 2000 -->
+<!-- storks <- jags(data  = datax, -->
+<!--                inits = inits, -->
+<!--                parameters.to.save = parameters, -->
+<!--                model.file = "code/logistic.txt", -->
+<!--                n.chains = 2, -->
+<!--                n.iter = nb.iterations, -->
+<!--                n.burnin = nb.burnin) -->
+<!-- ``` -->
+
+<!-- \footnotesize -->
+
+<!-- ```{r} -->
+<!-- # calculate wAIC with JAGS -->
+<!-- # https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c -->
+<!-- samples <- jags.samples(storks$model,c("WAIC","deviance"), type = "mean",  -->
+<!-- 						n.iter = 2000, -->
+<!-- 						n.burnin = 1000, -->
+<!-- 						n.thin = 1) -->
+<!-- ``` -->
+
+<!-- \normalsize -->
+
+<!-- ## WAIC in Jags -->
+
+<!-- ```{r} -->
+<!-- samples$p_waic <- samples$WAIC -->
+<!-- samples$waic <- samples$deviance + samples$p_waic -->
+<!-- tmp <- sapply(samples, sum) -->
+<!-- waic <- round(c(waic = tmp[["waic"]], p_waic = tmp[["p_waic"]]),1) -->
+<!-- waic -->
+<!-- ``` -->
 
 ## Further reading
 
@@ -183,5 +264,5 @@ waic
 
 + Conn, P.B., Johnson, D.S., Williams, P.J., Melin, S.R. and Hooten, M.B. (2018), A guide to Bayesian model checking for ecologists. Ecol Monogr, 88: 526-542. <https://doi.org/10.1002/ecm.1314>
 
-# Your turn: Practical 7
+<!-- # Your turn: Practical 7 -->
 
