@@ -209,30 +209,36 @@ sg <- sd(boo)
 
 ---
 
-```{r}
+.center[
+```{r, fig.width = 5.5, fig.asp = 1, dev = "svg"}
 bzero <- sbzero - sbun*mu/sg + sbdeux*mu^2/(sg^2)
 hist(bzero)
 abline(v = -14, col = "red", lwd = 2)
 mean(bzero)
 ```
+]
 
 ---
 
-```{r}
+.center[
+```{r, fig.width = 5.5, fig.asp = 1, dev = "svg"}
 bun <- sbdeux/sg - 2 * sbdeux * mu / (sg^2)
 hist(bun)
 abline(v = 1.8, col = "red", lwd = 2)
 mean(bun)
 ```
+]
 
 ---
 
-```{r}
+.center[
+```{r, fig.width = 5.5, fig.asp = 1, dev = "svg"}
 bdeux <- sbdeux/(sg^2)
 hist(bdeux)
 abline(v = - 0.045, col = "red", lwd = 2)
 mean(bdeux)
 ```
+]
 
 ---
 ## Frequentist approach
