@@ -196,6 +196,47 @@ round(fit$BUGSoutput$summary[, -c(4,6)], 3)
 
 ---
 
+Convert regression coefficients from scaled to non-scaled and compare to values used to generate data (from <https://stats.stackexchange.com/questions/361995/how-to-convert-coefficients-from-quadratic-function-from-scaled-to-not-scaled-co>)
+
+```{r}
+sbzero <- fit$BUGSoutput$sims.matrix[,'mu.a']
+sbun <- fit$BUGSoutput$sims.matrix[,'b[1]']
+sbdeux <- fit$BUGSoutput$sims.matrix[,'b[2]']
+
+mu <- mean(boo)
+sg <- sd(boo)
+```
+
+---
+
+```{r}
+bzero <- sbzero - sbun*mu/sg + sbdeux*mu^2/(sg^2)
+hist(bzero)
+abline(v = -14, col = "red", lwd = 2)
+mean(bzero)
+```
+
+---
+
+```{r}
+bun <- sbdeux/sg - 2 * sbdeux * mu / (sg^2)
+hist(bun)
+abline(v = 1.8, col = "red", lwd = 2)
+mean(bun)
+```
+
+---
+
+```{r}
+bdeux <- sbdeux/(sg^2)
+hist(bdeux)
+abline(v = - 0.045, col = "red", lwd = 2)
+mean(bdeux)
+```
+
+---
+## Frequentist approach
+
 .tiny-font[
 ```{r}
 library(lme4)
@@ -213,3 +254,4 @@ Parameter estimates obtained with both approaches are very similar.
 visreg::visreg(fit_lme4, xvar = 'Temp')
 ```
 ]
+

@@ -24,8 +24,6 @@ Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](htt
 
 + Replace crazy function using cosinus by prediction w/ rainfall/temperature (beware standardisation); Or do both
 
-+ Debug GLMM practical
-
 + Complete example on survival, w/ hypothesis testing, illustrate with Bayes factors? See https://rstudio-pubs-static.s3.amazonaws.com/358672_09291d0b37ce43f08cf001cfd25c16c2.html, https://stackoverflow.com/questions/60278806/bayes-factor-in-r-with-jaggs, https://www.martinmodrak.cz/2021/03/28/three-ways-to-compute-a-bayes-factor/, http://yourdomain.com/statistics,/modeling/2017/07/07/BF_computation.html ou encore https://michael-franke.github.io/statistics,/modeling/2017/07/07/BF_computation.html
 
 + Properly introduce GLMs; Illustrate how to find p from logit(p)
@@ -43,8 +41,6 @@ Text and figures are licensed under Creative Commons Attribution [CC BY 4.0](htt
 + Record again videos using M. Lajeunesse setup
 
 + Finish up writing that book
-
-+ ~~Add a plot with several lines from posterior distribution of regression parameters to a plot of mean response function of a covariate; then get the credible interval on the prediction~~ 
 
 + Prior predictive check for logistic storks and lmm plants
 sample_mu <- rnorm( 1e4 , 178 , 20 )
@@ -65,6 +61,9 @@ dens( prior_h )
 + Add something on equivalence w/ MLE: say binomial lik $Bin(n,k)$ and beta prior $Beta(a,b)$ then posterior is beta $Beta(a+k, b+n-k)$; posterior mean is $(a+k)/(a+b+n)$ which can be written $(1-w)(a/a+b) + w k/n$. Posterior mean is weighted average of prior mean and MLE. When sample size is big, $n$ tends to infinity and posterior mean tends to MLE, whatever the prior. Same reasoning with variance shows that Bayes gives reasonable results, even w/ small sample size
 
 
++ ~~Debug GLMM practical~~
+
++ ~~Add a plot with several lines from posterior distribution of regression parameters to a plot of mean response function of a covariate; then get the credible interval on the prediction~~ 
 
 + ~~Make code/outputs fit in slides~~ 
 
