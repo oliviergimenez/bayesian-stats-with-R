@@ -14,7 +14,7 @@ navbar:
     - text: "Slides"
       menu:
         - text: "Motivations"
-          href: slides/motivations.html
+          href: slides/motivations.pdf
         - text: "The likelihood"
           href: slides/likelihood.pdf
         - text: "Bayesian analyses by hand"
