@@ -137,6 +137,9 @@ sbzero <- mod3$BUGSoutput$sims.matrix[,'mu.a']
 sbun <- mod3$BUGSoutput$sims.matrix[,'bun']
 sbdeux <- mod3$BUGSoutput$sims.matrix[,'bdeux']
 
+mu <- mean(data$Temperature)
+sg <- sd(data$Temperature)
+
 bzero <- sbzero - sbun*mu/sg + sbdeux*mu^2/(sg^2)
 hist(bzero)
 abline(v = -14, col = "red", lwd = 2)
