@@ -4,7 +4,7 @@
     <title>Practical 8</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-11
+### last updated: 2024-10-17
 ]
 
 ---
@@ -41,7 +41,7 @@ class: center, middle, title-slide
 ## wAIC of model with no pooling
 
 
-```r
+``` r
 samples &lt;- jags.samples(model = allom.1$model,
                         variable.names = c("WAIC", "deviance"), 
                         type = "mean", 
@@ -59,7 +59,7 @@ waic_completepooling &lt;- round(c(waic = tmp[["waic"]],
 ## wAIC of model with partial pooling
 
 
-```r
+``` r
 samples &lt;- jags.samples(model = allom.2$model,
                         variable.names = c("WAIC","deviance"), 
                         type = "mean", 
@@ -77,7 +77,7 @@ waic_partialpooling &lt;- round(c(waic = tmp[["waic"]],
 ## wAIC of model with complete pooling
 
 
-```r
+``` r
 samples &lt;- jags.samples(model = allom.3$model,
                         variable.names = c("WAIC","deviance"), 
                         type = "mean", 
@@ -95,7 +95,7 @@ waic_nopooling &lt;- round(c(waic = tmp[["waic"]],
 ## Model ranking
 
 
-```r
+``` r
 data.frame(model = c('no pooling', 
                      'partial pooling', 
                      'complete pooling'),

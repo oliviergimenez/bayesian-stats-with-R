@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 7. Contrast scientific hypotheses with model selection
 author: "Olivier Gimenez"
-date: "November-December 2023"
+date: "November-December 2024"
 output:
   beamer_presentation:
     fig_caption: no

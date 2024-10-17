@@ -4,7 +4,7 @@
     <title>Practical 2</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-11
+### last updated: 2024-10-17
 ]
 
 ---
@@ -31,7 +31,7 @@ class: center, middle, title-slide
 
 * Assume we have collected data on the height of 100 people:
 
-```r
+``` r
 # set seed for random numbers
 set.seed(2020)
 # simulate data from Normal distribution
@@ -59,7 +59,7 @@ height &lt;- rnorm(n, mean=170, sd=10)
 
 Function for likelihood of normal distribution w/ mean `\(\mu\)` and standard deviation `\(\sigma\)`:
 
-```r
+``` r
 negloglik &lt;- function(theta, data) {
   mu &lt;- theta[1]
   sigma &lt;- theta[2]
@@ -77,7 +77,7 @@ negloglik(theta = c(150,1), height)
 
 * Minimiiiiiize
 
-```r
+``` r
 fit &lt;- optim(par = c(1,1), fn = negloglik, data = height)
 fit
 ```

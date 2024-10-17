@@ -4,7 +4,7 @@
     <title>Practical 9</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-12
+### last updated: 2024-10-17
 ]
 
 ---
@@ -38,7 +38,7 @@ From Jason Matthiopoulos' book.
 
 .small-font[
 
-```r
+``` r
 transects &lt;- 10
 data &lt;- NULL
 for (tr in 1:transects){
@@ -78,7 +78,7 @@ for (tr in 1:transects){
 
 .tiny-font[
 
-```r
+``` r
 # random effect (intercept)
 ref &lt;- rnorm(1,0,.5) 
 # water temperature gradient
@@ -94,7 +94,7 @@ plot(t,type='l')
 
 .tiny-font[
 
-```r
+``` r
 ans &lt;- exp(ref -14 + 1.8 * t - 0.045 * t^2) # Anemone gradient (expected response)
 
 plot(t,log(ans),type='l')
@@ -107,7 +107,7 @@ plot(t,log(ans),type='l')
 
 .tiny-font[
 
-```r
+``` r
 data &lt;- data.frame(Transect = data[,1],
                    Temperature = data[,2],
                    Anemones = data[,3])
@@ -135,20 +135,20 @@ plot(data$Temperature, data$Anemones)
 Standardize Temperature covariate. 
 .small-font[
 
-```r
+``` r
 boo &lt;- data$Temperature
 data$Temp &lt;- (boo - mean(boo)) / sd(boo)
 head(data)
 ```
 
 ```
-##   Transect Temperature Anemones       Temp
-## 1        1    20.12239      127 -0.7947744
-## 2        1    20.22622      135 -0.7005315
-## 3        1    20.33005      132 -0.6062886
-## 4        1    20.43388      129 -0.5120457
-## 5        1    20.53772      123 -0.4178028
-## 6        1    20.64155      134 -0.3235599
+##   Transect Temperature Anemones      Temp
+## 1        1    20.87208       42 0.4764831
+## 2        1    20.86252       42 0.4693469
+## 3        1    20.85296       46 0.4622108
+## 4        1    20.84340       43 0.4550746
+## 5        1    20.83384       53 0.4479385
+## 6        1    20.82428       36 0.4408023
 ```
 ]
 
@@ -156,7 +156,7 @@ head(data)
 
 .small-font[
 
-```r
+``` r
 model &lt;- 
 paste("
 model {
@@ -182,7 +182,7 @@ writeLines(model,here::here("slides","code","GLMMpoisson.bug"))
 
 .small-font[
 
-```r
+``` r
 dat &lt;- list(n = nrow(data), 
             nbtransects = transects, 
             x = data$Temp, 
@@ -203,7 +203,7 @@ par &lt;- c ("a", "b", "mu.a", "sigma.a")
 
 .tiny-font[
 
-```r
+``` r
 library(R2jags)
 fit &lt;- jags(data = dat, 
             inits = inits, 
@@ -231,27 +231,27 @@ fit &lt;- jags(data = dat,
 
 .tiny-font[
 
-```r
+``` r
 round(fit$BUGSoutput$summary[, -c(4,6)], 3)
 ```
 
 ```
 ##              mean    sd     2.5%      50%    97.5%  Rhat n.eff
-## a[1]        4.817 0.021    4.776    4.818    4.857 1.002   870
-## a[2]        4.263 0.026    4.212    4.263    4.312 1.002  1100
-## a[3]        3.768 0.037    3.697    3.767    3.844 1.001  3000
-## a[4]        3.209 0.045    3.117    3.209    3.294 1.005   340
-## a[5]        4.316 0.026    4.265    4.316    4.366 1.001  3000
-## a[6]        4.450 0.038    4.375    4.450    4.526 1.001  2200
-## a[7]        3.754 0.035    3.685    3.754    3.820 1.002  1000
-## a[8]        3.032 0.073    2.882    3.035    3.174 1.001  3000
-## a[9]        3.717 0.036    3.646    3.717    3.787 1.001  2300
-## a[10]       4.517 0.030    4.457    4.517    4.575 1.001  3000
-## b[1]       -0.103 0.018   -0.139   -0.103   -0.069 1.002   980
-## b[2]       -0.057 0.010   -0.076   -0.056   -0.038 1.002   960
-## deviance 1327.843 5.113 1320.188 1327.120 1339.384 1.001  3000
-## mu.a        3.986 0.226    3.529    3.986    4.453 1.001  3000
-## sigma.a     0.685 0.190    0.425    0.645    1.141 1.001  3000
+## a[1]        3.880 0.035    3.812    3.880    3.949 1.001  2100
+## a[2]        4.010 0.034    3.944    4.010    4.078 1.002  1100
+## a[3]        4.604 0.044    4.516    4.604    4.691 1.002  1800
+## a[4]        2.952 0.088    2.771    2.953    3.119 1.001  3000
+## a[5]        4.052 0.030    3.991    4.053    4.111 1.001  3000
+## a[6]        3.898 0.065    3.768    3.898    4.024 1.001  3000
+## a[7]        3.951 0.040    3.870    3.951    4.030 1.002  1300
+## a[8]        3.510 0.049    3.409    3.512    3.605 1.001  3000
+## a[9]        4.424 0.026    4.373    4.424    4.474 1.003   700
+## a[10]       3.675 0.036    3.604    3.675    3.745 1.001  3000
+## b[1]       -0.053 0.032   -0.113   -0.053    0.010 1.004   410
+## b[2]       -0.059 0.014   -0.086   -0.058   -0.032 1.001  2100
+## deviance 1334.205 4.745 1326.599 1333.547 1345.223 1.001  3000
+## mu.a        3.890 0.183    3.515    3.894    4.241 1.001  3000
+## sigma.a     0.545 0.164    0.331    0.513    0.949 1.002  1400
 ```
 ]
 
@@ -260,7 +260,7 @@ round(fit$BUGSoutput$summary[, -c(4,6)], 3)
 Convert regression coefficients from scaled to non-scaled and compare to values used to generate data (from &lt;https://stats.stackexchange.com/questions/361995/how-to-convert-coefficients-from-quadratic-function-from-scaled-to-not-scaled-co&gt;)
 
 
-```r
+``` r
 sbzero &lt;- fit$BUGSoutput$sims.matrix[,'mu.a']
 sbun &lt;- fit$BUGSoutput$sims.matrix[,'b[1]']
 sbdeux &lt;- fit$BUGSoutput$sims.matrix[,'b[2]']
@@ -273,7 +273,7 @@ sg &lt;- sd(boo)
 
 .center[
 
-```r
+``` r
 bzero &lt;- sbzero - sbun*mu/sg + sbdeux*mu^2/(sg^2)
 hist(bzero)
 abline(v = -14, col = "red", lwd = 2)
@@ -281,12 +281,12 @@ abline(v = -14, col = "red", lwd = 2)
 
 ![](practical9_files/figure-html/unnamed-chunk-11-1.svg)&lt;!-- --&gt;
 
-```r
+``` r
 mean(bzero)
 ```
 
 ```
-## [1] -14.57147
+## [1] -8.678988
 ```
 ]
 
@@ -294,7 +294,7 @@ mean(bzero)
 
 .center[
 
-```r
+``` r
 bun &lt;- sbdeux/sg - 2 * sbdeux * mu / (sg^2)
 hist(bun)
 abline(v = 1.8, col = "red", lwd = 2)
@@ -302,12 +302,12 @@ abline(v = 1.8, col = "red", lwd = 2)
 
 ![](practical9_files/figure-html/unnamed-chunk-12-1.svg)&lt;!-- --&gt;
 
-```r
+``` r
 mean(bun)
 ```
 
 ```
-## [1] 1.903621
+## [1] 1.277598
 ```
 ]
 
@@ -315,7 +315,7 @@ mean(bun)
 
 .center[
 
-```r
+``` r
 bdeux &lt;- sbdeux/(sg^2)
 hist(bdeux)
 abline(v = - 0.045, col = "red", lwd = 2)
@@ -323,12 +323,12 @@ abline(v = - 0.045, col = "red", lwd = 2)
 
 ![](practical9_files/figure-html/unnamed-chunk-13-1.svg)&lt;!-- --&gt;
 
-```r
+``` r
 mean(bdeux)
 ```
 
 ```
-## [1] -0.04654976
+## [1] -0.03265162
 ```
 ]
 
@@ -337,7 +337,7 @@ mean(bdeux)
 
 .tiny-font[
 
-```r
+``` r
 library(lme4)
 fit_lme4 &lt;- glmer(Anemones ~ Temp + I(Temp^2) + (1 | Transect), data = data, family = poisson)
 fit_lme4
@@ -350,14 +350,14 @@ fit_lme4
 ## Formula: Anemones ~ Temp + I(Temp^2) + (1 | Transect)
 ##    Data: data
 ##       AIC       BIC    logLik  deviance  df.resid 
-## 1391.2706 1404.4639 -691.6353 1383.2706       196 
+## 1392.1217 1405.3150 -692.0609 1384.1217       196 
 ## Random effects:
 ##  Groups   Name        Std.Dev.
-##  Transect (Intercept) 0.5527  
+##  Transect (Intercept) 0.4374  
 ## Number of obs: 200, groups:  Transect, 10
 ## Fixed Effects:
 ## (Intercept)         Temp    I(Temp^2)  
-##     3.98602     -0.10341     -0.05692
+##     3.89650     -0.05246     -0.05918
 ```
 ]
 
@@ -367,7 +367,7 @@ Parameter estimates obtained with both approaches are very similar.
 
 .center[
 
-```r
+``` r
 visreg::visreg(fit_lme4, xvar = 'Temp')
 ```
 

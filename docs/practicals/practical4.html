@@ -4,7 +4,7 @@
     <title>Practical 4</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-11
+### last updated: 2024-10-17
 ]
 
 ---
@@ -45,7 +45,7 @@ class: center, middle, title-slide
 
 .center[
 
-```r
+``` r
 plot(density(rnorm(1000, 0, 1000)), main="", xlab="Height (m)")
 ```
 
@@ -59,7 +59,7 @@ plot(density(rnorm(1000, 0, 1000)), main="", xlab="Height (m)")
 
 .center[
 
-```r
+``` r
 plot(density(rnorm(1000, 2, 0.5)), main="", xlab="Height (m)")
 ```
 
@@ -73,7 +73,7 @@ plot(density(rnorm(1000, 2, 0.5)), main="", xlab="Height (m)")
 
 .center[
 
-```r
+``` r
 plot(density(plogis(rnorm(1000,0,10)), from = 0, to = 1), main = '', xlab = 'survival')
 ```
 
@@ -87,7 +87,7 @@ plot(density(plogis(rnorm(1000,0,10)), from = 0, to = 1), main = '', xlab = 'sur
 
 .center[
 
-```r
+``` r
 plot(density(plogis(rnorm(1000,0,1.5)), from = 0, to = 1), main = '', xlab = 'survival')
 ```
 

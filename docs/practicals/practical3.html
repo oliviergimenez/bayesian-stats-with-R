@@ -4,7 +4,7 @@
     <title>Practical 3</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-11
+### last updated: 2024-10-17
 ]
 
 ---
@@ -48,7 +48,7 @@ class: center, middle, title-slide
 
 .small-font[
 
-```r
+``` r
 (alpha &lt;- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2)
 ```
 
@@ -56,7 +56,7 @@ class: center, middle, title-slide
 ## [1] 25.64636
 ```
 
-```r
+``` r
 (beta &lt;- alpha * ( (1/0.57) - 1))
 ```
 
@@ -78,7 +78,7 @@ class: center, middle, title-slide
 # Solution
 
 
-```r
+``` r
 alpha &lt;- ( (1 - 0.57)/(0.073*0.073) - (1/0.57) )*0.57^2
 beta &lt;- alpha * ( (1/0.57) - 1)
 n &lt;- 10000
@@ -86,20 +86,20 @@ samp &lt;- rbeta(n, alpha, beta)
 ```
 
 
-```r
+``` r
 (mu &lt;- mean(samp))
 ```
 
 ```
-## [1] 0.5699368
+## [1] 0.5716494
 ```
 
-```r
+``` r
 (sigma &lt;- sqrt(var(samp)))
 ```
 
 ```
-## [1] 0.07231072
+## [1] 0.07286554
 ```
 
     </textarea>

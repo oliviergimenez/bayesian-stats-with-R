@@ -4,7 +4,7 @@
     <title>Practical 7</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2023-11-12
+### last updated: 2024-10-17
 ]
 
 ---
@@ -50,7 +50,7 @@ class: center, middle, title-slide
 
 
 
-```r
+``` r
 # calculate wAIC with JAGS
 # https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c
 samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), 
@@ -64,7 +64,7 @@ samples &lt;- jags.samples(storks$model,c("WAIC","deviance"),
 ## WAIC in Jags
 
 
-```r
+``` r
 samples$p_waic &lt;- samples$WAIC
 samples$waic &lt;- samples$deviance + samples$p_waic
 tmp &lt;- sapply(samples, sum)
@@ -75,7 +75,7 @@ waic
 
 ```
 ##   waic p_waic 
-##  216.9   12.4
+##  218.4   13.6
 ```
 
 ---
@@ -95,7 +95,7 @@ waic
 ## Data
 
 
-```r
+``` r
 nbchicks &lt;- c(151,105,73,107,113,87,77,108,118,122,112,120,122,
               89,69,71,53,41,53,31,35,14,18)
 
@@ -115,7 +115,7 @@ rain &lt;- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,
 
 .tiny-font[
 
-```r
+``` r
 model &lt;- 
 paste("
 model
@@ -141,7 +141,7 @@ writeLines(model,here::here("slides", "code", "logistic.txt"))
 ## MCMC details and data
 
 
-```r
+``` r
 init1 &lt;- list(a = -0.5, b.temp = -0.5, b.rain = -0.5)
 init2 &lt;- list(a = 0.5, b.temp = 0.5, b.rain = 0.5)
 inits &lt;- list(init1,init2)
@@ -161,7 +161,7 @@ datax &lt;- list(N = 23,
 
 .tiny-font[
 
-```r
+``` r
 storks &lt;- jags(data  = datax,
                inits = inits,
                parameters.to.save = parameters,
@@ -191,7 +191,7 @@ storks &lt;- jags(data  = datax,
 
 .tiny-font[
 
-```r
+``` r
 samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
 						n.iter = 2000,
 						n.burnin = 1000,
@@ -206,7 +206,7 @@ waic
 
 ```
 ##   waic p_waic 
-##  217.4   12.8
+##  216.7   12.3
 ```
 ]
 
@@ -215,7 +215,7 @@ waic
 
 .tiny-font[
 
-```r
+``` r
 # model specification
 model &lt;- 
 paste("
@@ -241,7 +241,7 @@ writeLines(model,here::here("slides", "code", "logtemp.txt"))
 
 .small-font[
 
-```r
+``` r
 # list of lists of initial values (one for each MCMC chain)
 init1 &lt;- list(a = -0.5, b = -0.5)
 init2 &lt;- list(a = 0.5, b = 0.5)
@@ -266,7 +266,7 @@ datax &lt;- list(N = 23,
 
 .tiny-font[
 
-```r
+``` r
 storks_temp &lt;- jags(data  = datax,
                inits = inits,
                parameters.to.save = parameters,
@@ -294,7 +294,7 @@ storks_temp &lt;- jags(data  = datax,
 ## Compute wAIC
 
 
-```r
+``` r
 samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
                         type = "mean", 
 						n.iter = 2000,
@@ -312,7 +312,7 @@ waic_temp &lt;- round(c(waic = tmp[["waic"]],
 ## Model with rainfall only
 
 
-```r
+``` r
 # read in data
 datax &lt;- list(N = 23, 
               nbchicks = nbchicks, 
@@ -325,7 +325,7 @@ datax &lt;- list(N = 23,
 
 .tiny-font[
 
-```r
+``` r
 storks_temp &lt;- jags(data  = datax,
                inits = inits,
                parameters.to.save = parameters,
@@ -353,7 +353,7 @@ storks_temp &lt;- jags(data  = datax,
 ## Compute wAIC
 
 
-```r
+``` r
 samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
                         type = "mean", 
 						n.iter = 2000,
@@ -371,7 +371,7 @@ waic_rain &lt;- round(c(waic = tmp[["waic"]],
 
 .tiny-font[
 
-```r
+``` r
 # model specification
 model &lt;- 
 paste("
@@ -396,7 +396,7 @@ writeLines(model,here::here("slides", "code", "lognull.txt"))
 
 .small-font[
 
-```r
+``` r
 # list of lists of initial values (one for each MCMC chain)
 init1 &lt;- list(a = -0.5)
 init2 &lt;- list(a = 0.5)
@@ -419,7 +419,7 @@ datax &lt;- list(N = 23,
 
 .tiny-font[
 
-```r
+``` r
 storks_temp &lt;- jags(data  = datax,
                inits = inits,
                parameters.to.save = parameters,
@@ -446,7 +446,7 @@ storks_temp &lt;- jags(data  = datax,
 ## Compute wAIC
 
 
-```r
+``` r
 samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
                         type = "mean", 
 						n.iter = 2000,
@@ -464,7 +464,7 @@ waic_null &lt;- round(c(waic = tmp[["waic"]],
 
 .tiny-font[
 
-```r
+``` r
 data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
            waic = c(waic[1], waic_temp[1], waic_rain[1], waic_null[1]),
            p_waic = c(waic[2], waic_temp[2], waic_rain[2], waic_null[2])) %&gt;%
@@ -473,10 +473,10 @@ data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
 
 ```
 ##             model  waic p_waic
-## 1            rain 213.4    9.5
+## 1            rain 213.7    9.7
 ## 2            none 215.2    6.2
-## 3 both_covariates 217.4   12.8
-## 4            temp 219.8    9.9
+## 3 both_covariates 216.7   12.3
+## 4            temp 219.7    9.8
 ```
 ]
 
