@@ -18,12 +18,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Who: [Olivier Gimenez](https://oliviergimenez.github.io/)  
 When: 
+Nov 21-Nov 28-Dec 5, 2024    
 ~~March 22-23-25-26, 2021~~  
 ~~Nov 25-Dec 2-Dec 9, 2021~~  
 ~~April 11-12, 2022~~  
 ~~Sept 22-23, 2022~~  
 ~~Nov 24-Dec 1-Dec 8, 2022~~    
-Nov 23-Nov 30-Dec 7, 2023    
+~~Nov 23-Nov 30-Dec 7, 2023~~    
 
 Where: 
 ~~Zoom~~  
