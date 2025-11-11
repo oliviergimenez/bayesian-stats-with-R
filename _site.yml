@@ -29,6 +29,8 @@ navbar:
           href: slides/modelselection.pdf
         - text: "Heterogeneity and multilevel models (aka mixed models)"
           href: slides/mixedmodels.pdf
+        - text: "Conclusions"
+          href: slides/conclusions.pdf
     - text: "R scripts"
       menu:
         - text: "Jags introduction: Storks example"
@@ -37,8 +39,6 @@ navbar:
           href: Rscripts/multilevel_models_plants_example.R
         - text: "R code for Practical 9"
           href: Rscripts/practical9-glmm-anemone.R
-        - text: "brms implementation of lecture examples"
-          href: Rscripts/brms.R
     - text: "Worksheets"
       menu:
         - text: "Motivations: Practical 1"
@@ -59,6 +59,13 @@ navbar:
           href: practicals/practical8.html
         - text: "Heterogeneity and multilevel models: Practical 9"
           href: practicals/practical9.html
+    - text: "brms"
+      menu:
+        - text: "Quick intro to brms"
+          href: slides/brms.html
+        - text: "brms implementation of lecture examples"
+          href: Rscripts/brms.R
+
     - icon: fab fa-github
       href: https://github.com/oliviergimenez/bayesian-stats-with-R
     - icon: fab fa-twitter

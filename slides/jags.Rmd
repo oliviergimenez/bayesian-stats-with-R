@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 6. Bayesian analyses in R with the Jags software
 author: "Olivier Gimenez"
-date: "November-December 2024"
+date: "November-December 2025"
 output:
   beamer_presentation:
     fig_caption: no
@@ -76,7 +76,7 @@ If you're not into coding:
 \begin{center}
 Martyn Plummer
 \end{center}
-```{r, out.width = '9cm',out.height='5cm',fig.align='center',echo=FALSE}
+```{r, out.width = '5cm',out.height='5cm',fig.align='center',echo=FALSE}
 knitr::include_graphics('img/plummer.png') 
 ```
 
@@ -84,7 +84,7 @@ knitr::include_graphics('img/plummer.png')
 
 Impact of climatic conditions on white stork breeding success
 
-```{r, out.width = '10cm',out.height='8cm',fig.align='center',echo=FALSE}
+```{r, out.width = '12cm',out.height='6cm',fig.align='center',echo=FALSE}
 knitr::include_graphics('img/stork_world.png')    
 ```
 
@@ -251,187 +251,6 @@ storks
 \normalsize
 
 # Your turn: Practical 5
-
-# Assess convergence
-
-## Reminder – MCMC Algorithm
-
-`r insert_inc_bullet()` MCMC algorithms can be used to construct a Markov chain with a given stationary distribution (set to be the posterior distribution).
-
-`r insert_inc_bullet()` For the MCMC algorithm, the posterior distribution is only needed to be known up to proportionality. 
-
-`r insert_inc_bullet()` Once the stationary distribution is reached we can regard the realisations of the chain as a (dependent) sample from the posterior distribution (and obtain Monte Carlo estimates).
-
-`r insert_inc_bullet()` We consider some important implementation issues.
-
-## MCMC – Proposal Distribution
-
-* To implement a MCMC algorithm, we often need to specify a proposal distribution from which we generate candidate value then accept/reject.
-
-`r insert_pause()`
-
-* This typically involves
-    * specifying a given distribution family (e.g. normal, uniform), and then, 
-    * setting the parameters of the given distribution.
-
-`r insert_pause()`
-
-* Although the exact distribution specified is essentially arbitrary – it will have a significant effect on the performance of the MCMC algorithm.
-
-## Why is the proposal distribution so important?
-
-`r insert_inc_bullet()` If only small moves can be proposed, the acceptance probability is high, but it will take a long time to explore the posterior distribution.
-
-`r insert_inc_bullet()` Proposing large jumps has the potential to move further, but generally have smaller acceptance probabilities.
-
-`r insert_inc_bullet()` In order to balance the size of the proposed moves with the chance of accepting them the proposal variance is often tuned to obtain a mean acceptance probability of $20-40\%$. 
-
-`r insert_inc_bullet()` Automatic in Jags – ouf!
-
-`r insert_inc_bullet()` The movement around the parameter space is often referred to as **mixing**.
-
-## Good/Bad Traces
-
-![](img/acceptance.png)
-
-## Autocorrelation functions
-
-`r insert_inc_bullet()` Traceplots of for small and big moves provide (relatively) high correlations (known as autocorrelations) between successive observations of the Markov chain.
-
-`r insert_inc_bullet()` Strongly correlated observations require large sample sizes and therefore longer simulations.
-
-`r insert_inc_bullet()` Autocorrelation function (ACF) plots are a convenient way of displaying the strength of autocorrelation in the given sample values.
-
-`r insert_inc_bullet()` ACF plots provide the autocorrelation between successively sampled values separated by $k$ iterations, referred to as lag, (i.e. $\text{cor}(\theta_t, \theta_{t+k})$) for increasing values of $k$.
-
-## ACFs
-
-```{r, echo=FALSE}
-knitr::include_graphics('img/acf.png')   
-```
-
-## Traceplots for the storks
-
-\footnotesize
-
-```{r message=FALSE, warning=FALSE}
-traceplot(storks,mfrow = c(1, 2), varname = c('b.rain','b.temp'), ask = FALSE)
-```
-
-\normalsize
-
-## Autocorrelation for the storks
-
-\footnotesize
-
-```{r message=FALSE, warning=FALSE}
-autocorr.plot(as.mcmc(storks),ask = FALSE) 
-```
-
-\normalsize
-
-## How do good chains behave? 
-
-`r insert_inc_bullet()` Converge to same target distribution: We need to think of the time required for convergence (realisations of the Markov chain have to be discarded before this is achieved).
-
-`r insert_inc_bullet()` Once there, explore efficiently: The post-convergence sample size required for suitable numerical summaries.
-
-## Convergence assessment
-
-`r insert_inc_bullet()` Here, we are looking to determine how long it takes for the Markov chain to converge to the stationary distribution.
-
-`r insert_inc_bullet()` In practice, we must discard observations from the start of the chain and just use observations from the chain once it has converged.
-
-`r insert_inc_bullet()` The initial observations that we discard are referred to as the **burn-in**.
-
-`r insert_inc_bullet()` The simplest method to determine the length of the burn-in period is to look at trace plots.
-
-## Burn-in (if simulations cheap, be conservative)
-
-```{r, out.width = '11cm',out.height='7cm',fig.align='center',echo=FALSE}
-knitr::include_graphics('img/mcmc.png')   
-```
-
-## Effective sample size `n.eff`
-
-* How long of a chain is needed to produce stable estimates ?
-
-`r insert_pause()`
-
-* Most MCMC chains are strongly autocorrelated.
-
-`r insert_pause()`
-
-* Successive steps are near each other, and are not independent. 
-
-`r insert_pause()`
-
-* The effective sample size (`n.eff`) measures chain length while taking into account the autocorrelation of the chain.
-    * `n.eff` is less than the number of MCMC iterations.
-    * Check the `n.eff` of every parameter of interest.
-    * Check the `n.eff` of any interesting parameter combinations.
-
-`r insert_pause()`
-
-* We need $\text{n.eff} \geq 100$ independent steps. 
-
-## Potential scale reduction factor
-
-`r insert_inc_bullet()` Gelman-Rubin statistic $\hat{R}$
-
-`r insert_inc_bullet()` Measures the ratio of the total variability combining multiple chains (between-chain plus within-chain) to the within-chain variability. Asks the question is there a chain effect? Very much alike the $F$ test in an ANOVA. 
-
-`r insert_inc_bullet()` Values near $1$ indicates likely convergence, a value of $\leq 1.1$ is considered acceptable.
-
-`r insert_inc_bullet()` Necessary condition, not sufficient; In other words, these diagnostics cannot tell you that you have converged for sure, only that you have not. 
-
-## `n.eff` and $\hat{R}$ for the storks
-
-\footnotesize
-
-```{r}
-storks
-```
-
-\normalsize
-
-## To sum up
-
-`r insert_inc_bullet()` Run multiple chains from arbitrary starting places (initial values).
-
-`r insert_inc_bullet()` Assume convergence when all chains reach same regime.
-
-`r insert_inc_bullet()` Discard initial burn-in phase.
-
-`r insert_inc_bullet()` Check autocorrelation, effective sample size and $\hat{R}$.
-
-
-## What if you have issues of convergence?
-
-* Increase burn-in, sample more.
-
-`r insert_pause()`
-
-*	Use more informative priors.
-
-* Pick better initial values (good guess).
-
-`r insert_pause()`
-
-* Reparameterize: 
-     + Standardize covariates.
-     + Non-centering: $\alpha \sim N(0,\sigma)$ becomes $\alpha = z \sigma$ with $z \sim N(0,1)$.
-
-`r insert_pause()`
-
-*	Something wrong with your model? 
-     + Start with a simpler model (remove complexities). 
-     + Use simulations. 
-
-`r insert_pause()`
-
-* Change your sampler. Upgrade to Nimble or Stan.
-
 
 
 # MCMC makes you queens and kings of the stats world

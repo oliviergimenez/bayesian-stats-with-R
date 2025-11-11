@@ -22,87 +22,13 @@ library(palmerpenguins)
 library(tidyverse)
 ```
 
-## Model selection with wAIC
+## Model selection with DIC
 
 * Consider the plant example. 
 
-* Compare the three models (no, partial and complete pooling) with wAIC.
+* Compare the three models (no, partial and complete pooling) with DIC.
 
 ---
 
 # Solution
 
----
-## wAIC of model with no pooling
-
-```{r eval = FALSE}
-samples <- jags.samples(model = allom.1$model,
-                        variable.names = c("WAIC", "deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic <- samples$WAIC
-samples$waic <- samples$deviance + samples$p_waic
-tmp <- sapply(samples, sum)
-waic_completepooling <- round(c(waic = tmp[["waic"]], 
-                                p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## wAIC of model with partial pooling
-
-```{r eval = FALSE}
-samples <- jags.samples(model = allom.2$model,
-                        variable.names = c("WAIC","deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic <- samples$WAIC
-samples$waic <- samples$deviance + samples$p_waic
-tmp <- sapply(samples, sum)
-waic_partialpooling <- round(c(waic = tmp[["waic"]], 
-                               p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## wAIC of model with complete pooling
-
-```{r eval = FALSE}
-samples <- jags.samples(model = allom.3$model,
-                        variable.names = c("WAIC","deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic <- samples$WAIC
-samples$waic <- samples$deviance + samples$p_waic
-tmp <- sapply(samples, sum)
-waic_nopooling <- round(c(waic = tmp[["waic"]], 
-                          p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## Model ranking
-
-```{r eval = FALSE}
-data.frame(model = c('no pooling', 
-                     'partial pooling', 
-                     'complete pooling'),
-           waic = c(waic_nopooling[1],
-                    waic_partialpooling[1],
-                    waic_completepooling[1]),
-           p_waic = c(waic_nopooling[2],
-                      waic_partialpooling[2],
-                      waic_completepooling[2])) %>%
-  arrange(waic)
-```
-
----
-## Model ranking
-
-```{r echo=FALSE}
-load(here::here("slides/dat/waic.RData"))
-waic
-```

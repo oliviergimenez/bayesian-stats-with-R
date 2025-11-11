@@ -1,0 +1,257 @@
+---
+title: "Quick intro to brms"
+author: "Olivier Gimenez"
+date: "last updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: [default, "slides-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: ''
+      titleSlideClass: [center, middle]
+---
+
+```{r setup, include=FALSE, echo=FALSE, massage = FALSE, warning=FALSE, cache = TRUE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(comment = "")
+
+library(tidyverse)
+theme_set(theme_light())
+update_geom_defaults("point", list(size = 2)) 
+library(here)
+library(brms)
+library(posterior) # tools for working with posterior and prior distributions
+library(R2jags) # run Jags from within R
+library(lme4) # fit GLMM in frequentist framework
+```
+
+class: middle center
+background-color: black
+
+![](img/brms.png)
+
+
+
+---
+# What is brms?
+
+--
+
++ Developed by [Paul-Christian Bürkner](https://paul-buerkner.github.io/).  
+
+--
+
++ In brief, `brms` allows fitting GLMMs (but not only) in a `lme4`-like syntax within the Bayesian framework and MCMC methods with `Stan`.
+
+--
+
++ I'm not a `Stan` user, but it doesn't matter. 
+
+--
+
++ The [vignettes](https://paul-buerkner.github.io/brms/articles/) are great to get you started. I also recommend the [list of blog posts about `brms`](https://paul-buerkner.github.io/blog/brms-blogposts/).
+
+--
+
++ Nice alternative to `NIMBLE` if you do not need to code your models.  
+
+---
+# Example
+
+Say we capture, mark and release $n = 57$ animals at the beginning of a winter, out of which we recapture $y = 19$ animals alive:
+```{r}
+dat <- data.frame(alive = 19, # nb of success
+                  total = 57) # nb of attempts
+dat
+```
+
+---
+# Example
+
+Assuming all animals are independent of each other and have the same survival probability $\theta$, then $y$ the number of alive animals at the end of the winter is binomial. Using a uniform prior for survival, we have:
+
+\begin{align*}
+   y &\sim \text{Binomial}(n, \theta) &\text{[likelihood]}
+   \\
+  \theta &\sim \text{Uniform}(0, 1) &\text{[prior for }\theta \text{]} \\
+\end{align*}
+
+We'd like to estimate winter survival $\theta$. An obvious estimate of the probability of a binomial is the proportion of cases, $19/57 = 0.3333333$.
+
+---
+# Maximum-likelihood estimation
+
+To get an estimate of survival, we fit a logistic regression using the `glm()` function. The data are grouped (or aggregated), so we need to specify the number of alive and dead individuals as a two-column matrix on the left hand side of the model formula:
+```{r}
+mle <- glm(cbind(alive, total - alive) ~ 1, 
+           family = binomial("logit"), # family = binomial("identity") would be more straightforward
+           data = dat)
+```
+
+---
+# Maximum-likelihood estimation
+
+On the logit scale, survival is estimated at:
+```{r}
+coef(mle) # logit scale
+```
+
+---
+# Maximum-likelihood estimation
+
+After back-transformation using the reciprocal logit, we obtain:
+```{r}
+plogis(coef(mle))
+```
+
+---
+# Bayesian analysis with `NIMBLE`
+
++ See previous section. 
+
+---
+# Bayesian analysis with `brms`
+
+In `brms`, you write:
+```{r include=FALSE}
+library(brms)
+bayes.brms <- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), # binomial("identity") would be more straightforward
+                  data = dat,
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1) # thinning
+```
+```{r, eval=FALSE}
+library(brms)
+bayes.brms <- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), # binomial("identity") would be more straightforward
+                  data = dat,
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1) # thinning
+```
+
+---
+# Display results
+
+```{r, eval=FALSE}
+bayes.brms
+```
+
+---
+# Display results
+
+```{r echo=FALSE}
+bayes.brms
+```
+
+---
+# Visualize results
+
+```{r eval=FALSE}
+plot(bayes.brms)
+```
+
+---
+# Visualize results
+
+```{r echo=FALSE}
+plot(bayes.brms)
+```
+
+---
+# Working with MCMC draws
+
+To get survival on the $[0,1]$ scale, we extract the MCMC values, then apply the reciprocal logit function to each of these values, and summarize its posterior distribution: 
+```{r eval = FALSE}
+library(posterior)
+draws_fit <- as_draws_matrix(bayes.brms)
+draws_fit
+summarize_draws(plogis(draws_fit[,1]))
+```
+
+---
+# Working with MCMC draws
+
+```{r echo = FALSE}
+library(posterior)
+draws_fit <- as_draws_matrix(bayes.brms)
+draws_fit
+```
+
+---
+# Working with MCMC draws
+
+```{r echo = FALSE}
+library(posterior)
+draws_fit <- as_draws_matrix(bayes.brms)
+knitr::kable(draws_fit[1:10,])
+```
+
+
+---
+# Working with MCMC draws
+
+To get survival on the $[0,1]$ scale, we extract the MCMC values, then apply the reciprocal logit function to each of these values. Then summarize its posterior distribution: 
+```{r eval = FALSE}
+library(posterior)
+draws_fit <- as_draws_matrix(bayes.brms)
+draws_fit
+summarize_draws(plogis(draws_fit[,1]))
+```
+
+---
+# Working with MCMC draws
+
+```{r echo = FALSE}
+library(posterior)
+draws_fit <- as_draws_matrix(bayes.brms)
+summarize_draws(plogis(draws_fit[,1]))
+```
+
+---
+# What is the prior used by default?
+
+```{r}
+prior_summary(bayes.brms)
+```
+
+---
+# What if I want to use a different prior instead?
+
+```{r eval = FALSE}
+nlprior <- prior(normal(0, 1.5), class = "Intercept") # new prior
+bayes.brms <- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), 
+                  data = dat, 
+                  prior = nlprior, # set prior by hand
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1)
+```
+```{r include = FALSE, echo=FALSE}
+nlprior <- prior(normal(0, 1.5), class = "Intercept") # new prior
+bayes.brms <- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), 
+                  data = dat, 
+                  prior = nlprior, # set prior by hand
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1)
+```
+---
+# Priors
+
+Double-check the prior that was used:
+```{r}
+prior_summary(bayes.brms)
+```
+

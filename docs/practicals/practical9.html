@@ -4,7 +4,7 @@
     <title>Practical 9</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2024-10-17
+### last updated: 2025-11-11
 ]
 
 ---
@@ -142,13 +142,13 @@ head(data)
 ```
 
 ```
-##   Transect Temperature Anemones      Temp
-## 1        1    20.87208       42 0.4764831
-## 2        1    20.86252       42 0.4693469
-## 3        1    20.85296       46 0.4622108
-## 4        1    20.84340       43 0.4550746
-## 5        1    20.83384       53 0.4479385
-## 6        1    20.82428       36 0.4408023
+##   Transect Temperature Anemones        Temp
+## 1        1    20.15182       71  0.49386289
+## 2        1    19.96973       77  0.35511171
+## 3        1    19.78763       79  0.21636052
+## 4        1    19.60553       87  0.07760934
+## 5        1    19.42344       78 -0.06114185
+## 6        1    19.24134       79 -0.19989303
 ```
 ]
 
@@ -237,21 +237,21 @@ round(fit$BUGSoutput$summary[, -c(4,6)], 3)
 
 ```
 ##              mean    sd     2.5%      50%    97.5%  Rhat n.eff
-## a[1]        3.880 0.035    3.812    3.880    3.949 1.001  2100
-## a[2]        4.010 0.034    3.944    4.010    4.078 1.002  1100
-## a[3]        4.604 0.044    4.516    4.604    4.691 1.002  1800
-## a[4]        2.952 0.088    2.771    2.953    3.119 1.001  3000
-## a[5]        4.052 0.030    3.991    4.053    4.111 1.001  3000
-## a[6]        3.898 0.065    3.768    3.898    4.024 1.001  3000
-## a[7]        3.951 0.040    3.870    3.951    4.030 1.002  1300
-## a[8]        3.510 0.049    3.409    3.512    3.605 1.001  3000
-## a[9]        4.424 0.026    4.373    4.424    4.474 1.003   700
-## a[10]       3.675 0.036    3.604    3.675    3.745 1.001  3000
-## b[1]       -0.053 0.032   -0.113   -0.053    0.010 1.004   410
-## b[2]       -0.059 0.014   -0.086   -0.058   -0.032 1.001  2100
-## deviance 1334.205 4.745 1326.599 1333.547 1345.223 1.001  3000
-## mu.a        3.890 0.183    3.515    3.894    4.241 1.001  3000
-## sigma.a     0.545 0.164    0.331    0.513    0.949 1.002  1400
+## a[1]        4.377 0.031    4.317    4.377    4.437 1.001  3000
+## a[2]        4.417 0.034    4.349    4.416    4.483 1.001  3000
+## a[3]        3.823 0.037    3.748    3.823    3.895 1.001  2000
+## a[4]        3.530 0.038    3.457    3.529    3.605 1.002  2200
+## a[5]        3.804 0.040    3.722    3.803    3.883 1.002  3000
+## a[6]        4.041 0.033    3.976    4.041    4.106 1.001  3000
+## a[7]        4.053 0.036    3.982    4.054    4.122 1.001  3000
+## a[8]        4.639 0.027    4.586    4.639    4.694 1.001  3000
+## a[9]        3.970 0.045    3.881    3.970    4.055 1.001  3000
+## a[10]       2.833 0.056    2.722    2.835    2.937 1.003   810
+## b[1]        0.070 0.021    0.030    0.070    0.111 1.001  3000
+## b[2]       -0.078 0.010   -0.099   -0.078   -0.059 1.002  1400
+## deviance 1323.602 4.941 1316.095 1322.944 1335.128 1.005   310
+## mu.a        3.943 0.201    3.524    3.948    4.330 1.001  3000
+## sigma.a     0.601 0.170    0.369    0.571    1.011 1.004   520
 ```
 ]
 
@@ -286,7 +286,7 @@ mean(bzero)
 ```
 
 ```
-## [1] -8.678988
+## [1] -14.33119
 ```
 ]
 
@@ -307,7 +307,7 @@ mean(bun)
 ```
 
 ```
-## [1] 1.277598
+## [1] 1.707196
 ```
 ]
 
@@ -328,7 +328,7 @@ mean(bdeux)
 ```
 
 ```
-## [1] -0.03265162
+## [1] -0.04528977
 ```
 ]
 
@@ -349,15 +349,15 @@ fit_lme4
 ##  Family: poisson  ( log )
 ## Formula: Anemones ~ Temp + I(Temp^2) + (1 | Transect)
 ##    Data: data
-##       AIC       BIC    logLik  deviance  df.resid 
-## 1392.1217 1405.3150 -692.0609 1384.1217       196 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+## 1383.9629 1397.1562 -687.9815 1375.9629       196 
 ## Random effects:
 ##  Groups   Name        Std.Dev.
-##  Transect (Intercept) 0.4374  
+##  Transect (Intercept) 0.485   
 ## Number of obs: 200, groups:  Transect, 10
 ## Fixed Effects:
 ## (Intercept)         Temp    I(Temp^2)  
-##     3.89650     -0.05246     -0.05918
+##     3.94983      0.07075     -0.07769
 ```
 ]
 
@@ -378,10 +378,10 @@ visreg::visreg(fit_lme4, xvar = 'Temp')
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightStyle": "github",
-"highlightLines": true,
-"slideNumberFormat": ""
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

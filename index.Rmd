@@ -18,7 +18,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Who: [Olivier Gimenez](https://oliviergimenez.github.io/)  
 When: 
-Nov 21-Nov 28-Dec 5, 2024    
+Nov 20-27, Dec 4, 2025
+~~Nov 21-Nov 28-Dec 5, 2024~~ 
 ~~March 22-23-25-26, 2021~~  
 ~~Nov 25-Dec 2-Dec 9, 2021~~  
 ~~April 11-12, 2022~~  
@@ -46,6 +47,7 @@ Biodiversity Ecology Evolution Master, Montpellier University
 6. Bayesian analyses in `R` with the `Jags` software [[lecture](slides/jags.pdf) | [R script](Rscripts/jags_introduction_storks_example.R) | [practical 5](practicals/practical5.html) | [practical 6](practicals/practical6.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=20405s)]
 7. Contrast scientific hypotheses with model selection [[lecture](slides/modelselection.pdf) | [practical 7](practicals/practical7.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=28947s)]
 8. Heterogeneity and multilevel models (aka mixed models) [[lecture](slides/mixedmodels.pdf) | [R script](Rscripts/multilevel_models_plants_example.R) | [practical 8](practicals/practical8.html) | [practical 9](practicals/practical9.html) | [video](https://www.youtube.com/watch?v=uvU-TmEt8_M&t=29983s)]
+9. Conclusions [[lecture](slides/conclusions.pdf)]
 
 # Learning objectives
 

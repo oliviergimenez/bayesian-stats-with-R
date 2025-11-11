@@ -4,7 +4,7 @@
     <title>Practical 8</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2024-10-17
+### last updated: 2025-11-11
 ]
 
 ---
@@ -27,105 +27,24 @@ class: center, middle, title-slide
 
 
 
-## Model selection with wAIC
+## Model selection with DIC
 
 * Consider the plant example. 
 
-* Compare the three models (no, partial and complete pooling) with wAIC.
+* Compare the three models (no, partial and complete pooling) with DIC.
 
 ---
 
 # Solution
 
----
-## wAIC of model with no pooling
-
-
-``` r
-samples &lt;- jags.samples(model = allom.1$model,
-                        variable.names = c("WAIC", "deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_completepooling &lt;- round(c(waic = tmp[["waic"]], 
-                                p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## wAIC of model with partial pooling
-
-
-``` r
-samples &lt;- jags.samples(model = allom.2$model,
-                        variable.names = c("WAIC","deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_partialpooling &lt;- round(c(waic = tmp[["waic"]], 
-                               p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## wAIC of model with complete pooling
-
-
-``` r
-samples &lt;- jags.samples(model = allom.3$model,
-                        variable.names = c("WAIC","deviance"), 
-                        type = "mean", 
-                        n.iter = 2000, 
-                        n.burnin = 1000, 
-                        n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_nopooling &lt;- round(c(waic = tmp[["waic"]], 
-                          p_waic = tmp[["p_waic"]]),1)
-```
-
----
-## Model ranking
-
-
-``` r
-data.frame(model = c('no pooling', 
-                     'partial pooling', 
-                     'complete pooling'),
-           waic = c(waic_nopooling[1],
-                    waic_partialpooling[1],
-                    waic_completepooling[1]),
-           p_waic = c(waic_nopooling[2],
-                      waic_partialpooling[2],
-                      waic_completepooling[2])) %&gt;%
-  arrange(waic)
-```
-
----
-## Model ranking
-
-
-```
-##              model   waic p_waic
-## 1       no pooling 2405.8   65.8
-## 2  partial pooling 2524.4   45.9
-## 3 complete pooling 3674.4    2.4
-```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightStyle": "github",
-"highlightLines": true,
-"slideNumberFormat": ""
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

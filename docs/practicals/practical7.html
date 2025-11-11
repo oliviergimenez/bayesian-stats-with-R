@@ -4,7 +4,7 @@
     <title>Practical 7</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2024-10-17
+### last updated: 2025-11-11
 ]
 
 ---
@@ -27,66 +27,42 @@ class: center, middle, title-slide
 
 
 
-## Bayesian version of AIC
 
-* Watanabe-Akaike (Widely-Applicable) Information Criteria or WAIC:
-
-`$$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[\Pr(y_i \mid \theta)] +
-                  2 p_\text{WAIC}$$`
-
-* where `\(E[p(y_i \mid \theta)]\)` is the posterior mean of the likelihood evaluated pointwise at each `\(i\)`th observation.
-
-* `\(p_\text{WAIC}\)` is a penalty computed using the posterior variance of the likelihood.
-
-* More in this video &lt;https://www.youtube.com/watch?v=vSjL2Zc-gEQ&gt; by McElreath.
-
-* Relatively new and not yet available in Jags in routine.
+## DIC is a Bayesian version of AIC
 
 
 
 ---
-## WAIC in Jags
+## DIC in Jags
 
 
 
 
 ``` r
-# calculate wAIC with JAGS
-# https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c
-samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), 
-                        type = "mean",
-                        n.iter = 2000,
-                        n.burnin = 1000,
-                        n.thin = 1)
+storks$BUGSoutput$DIC
 ```
 
----
-## WAIC in Jags
-
+```
+## [1] 207.6708
+```
 
 ``` r
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic &lt;- round(c(waic = tmp[["waic"]], 
-                p_waic = tmp[["p_waic"]]),1)
-waic
+storks$BUGSoutput$pV
 ```
 
 ```
-##   waic p_waic 
-##  218.4   13.6
+## [1] 2.959272
 ```
 
 ---
 # Problem
 
 ---
-## Model selection with wAIC
+## Model selection with DIC
 
 * Fit models with rainfall effect, temperature effect and without any covariate to the stork data.
 
-* Rank them with wAIC.
+* Rank them with DIC.
 
 ---
 # Solution
@@ -182,31 +158,9 @@ storks &lt;- jags(data  = datax,
 ## 
 ## Initializing model
 ```
-]
-
----
-## Calculate wAIC with Jags
-
-* Check out post at &lt;https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c&gt;
-
-.tiny-font[
 
 ``` r
-samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), type = "mean", 
-						n.iter = 2000,
-						n.burnin = 1000,
-						n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic &lt;- round(c(waic = tmp[["waic"]], 
-                p_waic = tmp[["p_waic"]]),1)
-waic
-```
-
-```
-##   waic p_waic 
-##  216.7   12.3
+dic &lt;- c(storks$BUGSoutput$DIC, storks$BUGSoutput$pV)
 ```
 ]
 
@@ -287,25 +241,11 @@ storks_temp &lt;- jags(data  = datax,
 ## 
 ## Initializing model
 ```
-]
-
----
-
-## Compute wAIC
-
 
 ``` r
-samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
-                        type = "mean", 
-						n.iter = 2000,
-						n.burnin = 1000,
-						n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_temp &lt;- round(c(waic = tmp[["waic"]], 
-                     p_waic = tmp[["p_waic"]]),1)
+dic_temp &lt;- c(storks_temp$BUGSoutput$DIC, storks_temp$BUGSoutput$pV)
 ```
+]
 
 ---
 
@@ -326,13 +266,13 @@ datax &lt;- list(N = 23,
 .tiny-font[
 
 ``` r
-storks_temp &lt;- jags(data  = datax,
-               inits = inits,
-               parameters.to.save = parameters,
-               model.file = here::here("slides", "code", "logtemp.txt"),
-               n.chains = 2,
-               n.iter = nb.iterations,
-               n.burnin = nb.burnin)
+storks_rain &lt;- jags(data  = datax,
+                    inits = inits,
+                    parameters.to.save = parameters,
+                    model.file = here::here("slides", "code", "logtemp.txt"),
+                    n.chains = 2,
+                    n.iter = nb.iterations,
+                    n.burnin = nb.burnin)
 ```
 
 ```
@@ -346,25 +286,12 @@ storks_temp &lt;- jags(data  = datax,
 ## 
 ## Initializing model
 ```
-]
-
----
-
-## Compute wAIC
-
 
 ``` r
-samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
-                        type = "mean", 
-						n.iter = 2000,
-						n.burnin = 1000,
-						n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_rain &lt;- round(c(waic = tmp[["waic"]], 
-                     p_waic = tmp[["p_waic"]]),1)
+dic_rain &lt;- c(storks_rain$BUGSoutput$DIC, storks_rain$BUGSoutput$pV)
 ```
+]
+
 
 ---
 ## Model with no effect of covariates
@@ -420,13 +347,13 @@ datax &lt;- list(N = 23,
 .tiny-font[
 
 ``` r
-storks_temp &lt;- jags(data  = datax,
-               inits = inits,
-               parameters.to.save = parameters,
-               model.file = here::here("slides", "code", "lognull.txt"),
-               n.chains = 2,
-               n.iter = nb.iterations,
-               n.burnin = nb.burnin)
+storks_null &lt;- jags(data  = datax,
+                    inits = inits,
+                    parameters.to.save = parameters,
+                    model.file = here::here("slides", "code", "lognull.txt"),
+                    n.chains = 2,
+                    n.iter = nb.iterations,
+                    n.burnin = nb.burnin)
 ```
 
 ```
@@ -440,57 +367,471 @@ storks_temp &lt;- jags(data  = datax,
 ## 
 ## Initializing model
 ```
-]
-
----
-## Compute wAIC
-
 
 ``` r
-samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"), 
-                        type = "mean", 
-						n.iter = 2000,
-						n.burnin = 1000,
-						n.thin = 1)
-samples$p_waic &lt;- samples$WAIC
-samples$waic &lt;- samples$deviance + samples$p_waic
-tmp &lt;- sapply(samples, sum)
-waic_null &lt;- round(c(waic = tmp[["waic"]], 
-                     p_waic = tmp[["p_waic"]]),1)
+dic_null &lt;- c(storks_null$BUGSoutput$DIC, storks_null$BUGSoutput$pV)
 ```
+]
+
 
 ---
-## Compare WAIC
+## Compare DIC
 
 .tiny-font[
 
 ``` r
 data.frame(model = c('both_covariates', 'temp', 'rain', 'none'),
-           waic = c(waic[1], waic_temp[1], waic_rain[1], waic_null[1]),
-           p_waic = c(waic[2], waic_temp[2], waic_rain[2], waic_null[2])) %&gt;%
-  arrange(waic)
+           dic = c(dic[1], dic_temp[1], dic_rain[1], dic_null[1]),
+           pv = c(dic[2], dic_temp[2], dic_rain[2], dic_null[2])) %&gt;%
+  arrange(dic)
 ```
 
 ```
-##             model  waic p_waic
-## 1            rain 213.7    9.7
-## 2            none 215.2    6.2
-## 3 both_covariates 216.7   12.3
-## 4            temp 219.7    9.8
+##             model      dic       pv
+## 1            rain 206.7205 2.696616
+## 2 both_covariates 207.9183 3.209029
+## 3            none 209.9280 1.006815
+## 4            temp 212.4213 2.295603
 ```
 ]
 
 * Model with rainfall only seems to be better supported by the data. 
 
-* In case models have similar wAIC values, model-averaging might be useful. 
+* In case models have similar DIC values, model-averaging might be useful. 
+
+
+
+
+&lt;!-- ## Bayesian version of AIC --&gt;
+
+&lt;!-- * Watanabe-Akaike (Widely-Applicable) Information Criteria or WAIC: --&gt;
+
+&lt;!-- $$\textrm{WAIC} = -2 \sum_{i = 1}^n \log E[\Pr(y_i \mid \theta)] + --&gt;
+&lt;!--                   2 p_\text{WAIC}$$ --&gt;
+
+&lt;!-- * where `\(E[p(y_i \mid \theta)]\)` is the posterior mean of the likelihood evaluated pointwise at each `\(i\)`th observation. --&gt;
+
+&lt;!-- * `\(p_\text{WAIC}\)` is a penalty computed using the posterior variance of the likelihood. --&gt;
+
+&lt;!-- * More in this video &lt;https://www.youtube.com/watch?v=vSjL2Zc-gEQ&gt; by McElreath. --&gt;
+
+&lt;!-- * Relatively new and not yet available in Jags in routine. --&gt;
+
+&lt;!-- ```{r include = FALSE} --&gt;
+&lt;!-- nbchicks &lt;- c(151,105,73,107,113,87,77,108,118,122,112,120,122,89,69,71, --&gt;
+&lt;!--               53,41,53,31,35,14,18) --&gt;
+
+&lt;!-- nbpairs &lt;- c(173,164,103,113,122,112,98,121,132,136,133,137,145,117,90,80, --&gt;
+&lt;!--             67,54,58,39,42,23,23) --&gt;
+
+&lt;!-- temp &lt;- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7,15.3,14.4,14.4, --&gt;
+&lt;!--          12.7,11.7,11.9,15.9,13.4,14.0,13.9,12.9,15.1,13.0) --&gt;
+
+&lt;!-- rain &lt;- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26,28,96,48,90,86, --&gt;
+&lt;!--            78,87) --&gt;
+
+&lt;!-- datax &lt;- list(N = 23, nbchicks = nbchicks, nbpairs = nbpairs, --&gt;
+&lt;!--               temp = (temp - mean(temp))/sd(temp), --&gt;
+&lt;!--               rain = (rain - mean(rain))/sd(rain)) --&gt;
+
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## WAIC in Jags --&gt;
+
+&lt;!-- ```{r include=FALSE} --&gt;
+&lt;!-- model &lt;- --&gt;
+&lt;!-- paste(" --&gt;
+&lt;!-- model --&gt;
+&lt;!-- { --&gt;
+&lt;!-- 	for( i in 1 : N) --&gt;
+&lt;!-- 		{ --&gt;
+&lt;!-- 		nbchicks[i] ~ dbin(p[i],nbpairs[i]) --&gt;
+&lt;!-- 		logit(p[i]) &lt;- a + b.temp * temp[i] + b.rain * rain[i] --&gt;
+&lt;!-- 		} --&gt;
+
+&lt;!-- # priors for regression parameters --&gt;
+&lt;!-- a ~ dnorm(0,0.001) --&gt;
+&lt;!-- b.temp ~ dnorm(0,0.001) --&gt;
+&lt;!-- b.rain ~ dnorm(0,0.001) --&gt;
+
+&lt;!-- 	} --&gt;
+&lt;!-- ") --&gt;
+&lt;!-- writeLines(model,"logistic.txt") --&gt;
+&lt;!-- init1 &lt;- list(a = -0.5, b.temp = -0.5, b.rain = -0.5) --&gt;
+&lt;!-- init2 &lt;- list(a = 0.5, b.temp = 0.5, b.rain = 0.5) --&gt;
+&lt;!-- inits &lt;- list(init1,init2) --&gt;
+&lt;!-- parameters &lt;- c("a","b.temp","b.rain") --&gt;
+&lt;!-- nb.burnin &lt;- 1000 --&gt;
+&lt;!-- nb.iterations &lt;- 2000 --&gt;
+&lt;!-- storks &lt;- jags(data  = datax, --&gt;
+&lt;!--                inits = inits, --&gt;
+&lt;!--                parameters.to.save = parameters, --&gt;
+&lt;!--                model.file = "logistic.txt", --&gt;
+&lt;!--                n.chains = 2, --&gt;
+&lt;!--                n.iter = nb.iterations, --&gt;
+&lt;!--                n.burnin = nb.burnin) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- # calculate wAIC with JAGS --&gt;
+&lt;!-- # https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c --&gt;
+&lt;!-- samples &lt;- jags.samples(storks$model,c("WAIC","deviance"),  --&gt;
+&lt;!--                         type = "mean", --&gt;
+&lt;!--                         n.iter = 2000, --&gt;
+&lt;!--                         n.burnin = 1000, --&gt;
+&lt;!--                         n.thin = 1) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## WAIC in Jags --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- samples$p_waic &lt;- samples$WAIC --&gt;
+&lt;!-- samples$waic &lt;- samples$deviance + samples$p_waic --&gt;
+&lt;!-- tmp &lt;- sapply(samples, sum) --&gt;
+&lt;!-- waic &lt;- round(c(waic = tmp[["waic"]],  --&gt;
+&lt;!--                 p_waic = tmp[["p_waic"]]),1) --&gt;
+&lt;!-- waic --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- # Problem --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Model selection with wAIC --&gt;
+
+&lt;!-- * Fit models with rainfall effect, temperature effect and without any covariate to the stork data. --&gt;
+
+&lt;!-- * Rank them with wAIC. --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- # Solution --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Data --&gt;
+
+&lt;!-- ```{r } --&gt;
+&lt;!-- nbchicks &lt;- c(151,105,73,107,113,87,77,108,118,122,112,120,122, --&gt;
+&lt;!--               89,69,71,53,41,53,31,35,14,18) --&gt;
+
+&lt;!-- nbpairs &lt;- c(173,164,103,113,122,112,98,121,132,136,133,137, --&gt;
+&lt;!--              145,117,90,80,67,54,58,39,42,23,23) --&gt;
+
+&lt;!-- temp &lt;- c(15.1,13.3,15.3,13.3,14.6,15.6,13.1,13.1,15.0,11.7, --&gt;
+&lt;!--           15.3,14.4,14.4,12.7,11.7,11.9,15.9,13.4,14.0,13.9, --&gt;
+&lt;!--           12.9,15.1,13.0) --&gt;
+
+&lt;!-- rain &lt;- c(67,52,88,61,32,36,72,43,92,32,86,28,57,55,66,26, --&gt;
+&lt;!--           28,96,48,90,86,78,87) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Model with both covariates --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- model &lt;-  --&gt;
+&lt;!-- paste(" --&gt;
+&lt;!-- model --&gt;
+&lt;!-- { --&gt;
+&lt;!-- 	for( i in 1 : N)  --&gt;
+&lt;!-- 		{ --&gt;
+&lt;!-- 		nbchicks[i] ~ dbin(p[i],nbpairs[i]) --&gt;
+&lt;!-- 		logit(p[i]) &lt;- a + b.temp * temp[i] + b.rain * rain[i] --&gt;
+&lt;!-- 		} --&gt;
+
+&lt;!-- # priors for regression parameters --&gt;
+&lt;!-- a ~ dnorm(0,0.001) --&gt;
+&lt;!-- b.temp ~ dnorm(0,0.001) --&gt;
+&lt;!-- b.rain ~ dnorm(0,0.001) --&gt;
+
+&lt;!-- 	} --&gt;
+&lt;!-- ") --&gt;
+&lt;!-- writeLines(model,here::here("slides", "code", "logistic.txt")) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## MCMC details and data --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- init1 &lt;- list(a = -0.5, b.temp = -0.5, b.rain = -0.5) --&gt;
+&lt;!-- init2 &lt;- list(a = 0.5, b.temp = 0.5, b.rain = 0.5) --&gt;
+&lt;!-- inits &lt;- list(init1,init2) --&gt;
+&lt;!-- parameters &lt;- c("a","b.temp","b.rain") --&gt;
+&lt;!-- nb.burnin &lt;- 1000 --&gt;
+&lt;!-- nb.iterations &lt;- 2000 --&gt;
+
+&lt;!-- datax &lt;- list(N = 23,  --&gt;
+&lt;!--               nbchicks = nbchicks,  --&gt;
+&lt;!--               nbpairs = nbpairs,  --&gt;
+&lt;!--               temp = (temp - mean(temp)) / sd(temp),  --&gt;
+&lt;!--               rain = (rain - mean(rain)) / sd(rain)) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Run Jags --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- storks &lt;- jags(data  = datax, --&gt;
+&lt;!--                inits = inits, --&gt;
+&lt;!--                parameters.to.save = parameters, --&gt;
+&lt;!--                model.file = here::here("slides", "code", "logistic.txt"), --&gt;
+&lt;!--                n.chains = 2, --&gt;
+&lt;!--                n.iter = nb.iterations, --&gt;
+&lt;!--                n.burnin = nb.burnin) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Calculate wAIC with Jags --&gt;
+
+&lt;!-- * Check out post at &lt;https://sourceforge.net/p/mcmc-jags/discussion/610036/thread/8211df61/#ea5c&gt; --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- samples &lt;- jags.samples(storks$model,c("WAIC","deviance"), type = "mean",  --&gt;
+&lt;!-- 						n.iter = 2000, --&gt;
+&lt;!-- 						n.burnin = 1000, --&gt;
+&lt;!-- 						n.thin = 1) --&gt;
+&lt;!-- samples$p_waic &lt;- samples$WAIC --&gt;
+&lt;!-- samples$waic &lt;- samples$deviance + samples$p_waic --&gt;
+&lt;!-- tmp &lt;- sapply(samples, sum) --&gt;
+&lt;!-- waic &lt;- round(c(waic = tmp[["waic"]],  --&gt;
+&lt;!--                 p_waic = tmp[["p_waic"]]),1) --&gt;
+&lt;!-- waic --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Model with temperature only --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- # model specification --&gt;
+&lt;!-- model &lt;-  --&gt;
+&lt;!-- paste(" --&gt;
+&lt;!-- model --&gt;
+&lt;!-- { --&gt;
+&lt;!-- 	for( i in 1 : N)  --&gt;
+&lt;!-- 		{ --&gt;
+&lt;!-- 		nbchicks[i] ~ dbin(p[i],nbpairs[i]) --&gt;
+&lt;!-- 		logit(p[i]) &lt;- a + b * cov[i] --&gt;
+&lt;!-- 		} --&gt;
+
+&lt;!-- # priors for regression parameters --&gt;
+&lt;!-- a ~ dnorm(0,0.001) --&gt;
+&lt;!-- b ~ dnorm(0,0.001) --&gt;
+&lt;!-- 	} --&gt;
+&lt;!-- ") --&gt;
+&lt;!-- writeLines(model,here::here("slides", "code", "logtemp.txt")) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## MCMC details and data --&gt;
+
+&lt;!-- .small-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- # list of lists of initial values (one for each MCMC chain) --&gt;
+&lt;!-- init1 &lt;- list(a = -0.5, b = -0.5) --&gt;
+&lt;!-- init2 &lt;- list(a = 0.5, b = 0.5) --&gt;
+&lt;!-- inits &lt;- list(init1,init2) --&gt;
+&lt;!-- # specify parameters that need to be estimated --&gt;
+&lt;!-- parameters &lt;- c("a","b") --&gt;
+&lt;!-- # specify nb iterations for burn-in and final inference  --&gt;
+&lt;!-- nb.burnin &lt;- 1000 --&gt;
+&lt;!-- nb.iterations &lt;- 2000 --&gt;
+
+&lt;!-- # read in data --&gt;
+&lt;!-- datax &lt;- list(N = 23,  --&gt;
+&lt;!--               nbchicks = nbchicks,  --&gt;
+&lt;!--               nbpairs = nbpairs,  --&gt;
+&lt;!--               cov = (temp - mean(temp)) / sd(temp)) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Load R2jags to run Jags through R --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- storks_temp &lt;- jags(data  = datax, --&gt;
+&lt;!--                inits = inits, --&gt;
+&lt;!--                parameters.to.save = parameters, --&gt;
+&lt;!--                model.file = here::here("slides", "code", "logtemp.txt"), --&gt;
+&lt;!--                n.chains = 2, --&gt;
+&lt;!--                n.iter = nb.iterations, --&gt;
+&lt;!--                n.burnin = nb.burnin) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Compute wAIC --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"),  --&gt;
+&lt;!--                         type = "mean",  --&gt;
+&lt;!-- 						n.iter = 2000, --&gt;
+&lt;!-- 						n.burnin = 1000, --&gt;
+&lt;!-- 						n.thin = 1) --&gt;
+&lt;!-- samples$p_waic &lt;- samples$WAIC --&gt;
+&lt;!-- samples$waic &lt;- samples$deviance + samples$p_waic --&gt;
+&lt;!-- tmp &lt;- sapply(samples, sum) --&gt;
+&lt;!-- waic_temp &lt;- round(c(waic = tmp[["waic"]],  --&gt;
+&lt;!--                      p_waic = tmp[["p_waic"]]),1) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Model with rainfall only --&gt;
+
+&lt;!-- ```{r message=FALSE, warning=FALSE, paged.print=FALSE} --&gt;
+&lt;!-- # read in data --&gt;
+&lt;!-- datax &lt;- list(N = 23,  --&gt;
+&lt;!--               nbchicks = nbchicks,  --&gt;
+&lt;!--               nbpairs = nbpairs,  --&gt;
+&lt;!--               cov = (rain - mean(rain)) / sd(rain)) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Load R2jags to run Jags through R --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- storks_temp &lt;- jags(data  = datax, --&gt;
+&lt;!--                inits = inits, --&gt;
+&lt;!--                parameters.to.save = parameters, --&gt;
+&lt;!--                model.file = here::here("slides", "code", "logtemp.txt"), --&gt;
+&lt;!--                n.chains = 2, --&gt;
+&lt;!--                n.iter = nb.iterations, --&gt;
+&lt;!--                n.burnin = nb.burnin) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Compute wAIC --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"),  --&gt;
+&lt;!--                         type = "mean",  --&gt;
+&lt;!-- 						n.iter = 2000, --&gt;
+&lt;!-- 						n.burnin = 1000, --&gt;
+&lt;!-- 						n.thin = 1) --&gt;
+&lt;!-- samples$p_waic &lt;- samples$WAIC --&gt;
+&lt;!-- samples$waic &lt;- samples$deviance + samples$p_waic --&gt;
+&lt;!-- tmp &lt;- sapply(samples, sum) --&gt;
+&lt;!-- waic_rain &lt;- round(c(waic = tmp[["waic"]],  --&gt;
+&lt;!--                      p_waic = tmp[["p_waic"]]),1) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Model with no effect of covariates --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- # model specification --&gt;
+&lt;!-- model &lt;-  --&gt;
+&lt;!-- paste(" --&gt;
+&lt;!-- model --&gt;
+&lt;!-- { --&gt;
+&lt;!-- 	for( i in 1 : N)  --&gt;
+&lt;!-- 		{ --&gt;
+&lt;!-- 		nbchicks[i] ~ dbin(p[i],nbpairs[i]) --&gt;
+&lt;!-- 		logit(p[i]) &lt;- a --&gt;
+&lt;!-- 		} --&gt;
+
+&lt;!-- # priors for regression parameters --&gt;
+&lt;!-- a ~ dnorm(0,0.001) --&gt;
+&lt;!-- 	} --&gt;
+&lt;!-- ") --&gt;
+&lt;!-- writeLines(model,here::here("slides", "code", "lognull.txt")) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## MCMC details and data --&gt;
+
+&lt;!-- .small-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- # list of lists of initial values (one for each MCMC chain) --&gt;
+&lt;!-- init1 &lt;- list(a = -0.5) --&gt;
+&lt;!-- init2 &lt;- list(a = 0.5) --&gt;
+&lt;!-- inits &lt;- list(init1,init2) --&gt;
+&lt;!-- # specify parameters that need to be estimated --&gt;
+&lt;!-- parameters &lt;- c("a") --&gt;
+&lt;!-- # specify nb iterations for burn-in and final inference  --&gt;
+&lt;!-- nb.burnin &lt;- 1000 --&gt;
+&lt;!-- nb.iterations &lt;- 2000 --&gt;
+
+&lt;!-- # read in data --&gt;
+&lt;!-- datax &lt;- list(N = 23,  --&gt;
+&lt;!--               nbchicks = nbchicks,  --&gt;
+&lt;!--               nbpairs = nbpairs) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Load R2jags to run Jags through R --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- storks_temp &lt;- jags(data  = datax, --&gt;
+&lt;!--                inits = inits, --&gt;
+&lt;!--                parameters.to.save = parameters, --&gt;
+&lt;!--                model.file = here::here("slides", "code", "lognull.txt"), --&gt;
+&lt;!--                n.chains = 2, --&gt;
+&lt;!--                n.iter = nb.iterations, --&gt;
+&lt;!--                n.burnin = nb.burnin) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Compute wAIC --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- samples &lt;- jags.samples(storks_temp$model,c("WAIC","deviance"),  --&gt;
+&lt;!--                         type = "mean",  --&gt;
+&lt;!-- 						n.iter = 2000, --&gt;
+&lt;!-- 						n.burnin = 1000, --&gt;
+&lt;!-- 						n.thin = 1) --&gt;
+&lt;!-- samples$p_waic &lt;- samples$WAIC --&gt;
+&lt;!-- samples$waic &lt;- samples$deviance + samples$p_waic --&gt;
+&lt;!-- tmp &lt;- sapply(samples, sum) --&gt;
+&lt;!-- waic_null &lt;- round(c(waic = tmp[["waic"]],  --&gt;
+&lt;!--                      p_waic = tmp[["p_waic"]]),1) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+&lt;!-- ## Compare WAIC --&gt;
+
+&lt;!-- .tiny-font[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- data.frame(model = c('both_covariates', 'temp', 'rain', 'none'), --&gt;
+&lt;!--            waic = c(waic[1], waic_temp[1], waic_rain[1], waic_null[1]), --&gt;
+&lt;!--            p_waic = c(waic[2], waic_temp[2], waic_rain[2], waic_null[2])) %&gt;% --&gt;
+&lt;!--   arrange(waic) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- * Model with rainfall only seems to be better supported by the data.  --&gt;
+
+&lt;!-- * In case models have similar wAIC values, model-averaging might be useful.  --&gt;
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"highlightStyle": "github",
-"highlightLines": true,
-"slideNumberFormat": ""
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "slideNumberFormat": ""
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

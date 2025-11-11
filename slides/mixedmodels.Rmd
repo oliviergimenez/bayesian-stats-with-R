@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 8. Heterogeneity and multilevel models (aka mixed models)
 author: "Olivier Gimenez"
-date: "November-December 2024"
+date: "November-December 2025"
 output:
   beamer_presentation:
     fig_caption: no
@@ -46,6 +46,201 @@ insert_inc_bullet <- make_latex_decorator("> *", "*")
 insert_html_math <- make_latex_decorator("", "$$")
 ```
 
+
+# What is a Generalized Linear Model (or GLM)?
+
+## Survival of passengers on the Titanic ~ Class
+
+Read `titanic_long.csv` dataset.
+
+```{r read_titanic, collapse=T}
+titanic <- read.csv("dat/titanic_long.csv")
+head(titanic)
+```
+
+
+## Let's fit a linear model
+
+```{r titanic_lm, echo=1}
+titanic.lm <- lm(survived ~ class, data = titanic)
+#library(broom)
+#tidy(m5)
+#layout(matrix(1:4, nrow=2))
+#plot(m5)
+```
+
+
+## Clearly, the residuals are not normal!
+
+```{r, echo=FALSE}
+hist(resid(titanic.lm), xlab = 'residuals', main = '')
+```
+
+
+## Generalized linear models (GLMs)
+
+* GLMs extend the linear model to scenarios that involve **non-normal error distributions**, hence the term \alert{generalized}
+
+* The **mean response** is expressed as a **linear function of the predictors** using a **link function**, hence the term \alert{linear}
+
+## Generalized Linear Models
+
+1. **Response variable**
+    + Bernoulli/Binomial: Binary variables 0/1
+    + Poisson: Counts 0, 1, 2, ...
+    + Normal: Real values
+    + etc
+  
+2. **Predictors** (continuous or categorical)
+
+3. **Link function**
+    + Gaussian: identity
+    + Binomial: logit
+    + Poisson: log
+    + Type in `?family`
+
+## Bernoulli/Binomial distribution (logistic regression) 
+
+- Response variable: Yes/No (e.g. dead/alive, male/female, presence/absence)
+
+- Link function: `logit` 
+
+$$
+  \begin{aligned} 
+  \text{logit}(p) = \ln \left( \dfrac {p} {1-p}\right) \\ 
+  \end{aligned} 
+$$
+
+- Then, if predictor is $x$
+
+$$  
+  \begin{aligned} 
+  \text{Response} \sim \text{Distribution(Mean Response)} \\
+  Y_i \sim \text{Bernoulli}(p_i) \\
+  \text{logit}(p_i) = a + b \; x_i\\
+p_i = \text{logit}^{-1}(a + b \; x_i) = \dfrac {e^{a+b \; x_i}} {1+e^{a+b \; x_i}} \\
+  \end{aligned}
+$$
+
+
+## Poisson distributoin (Poisson regression)
+
+- Response variable: Counts (0, 1, 2, 3...)
+
+- Link function: `log`
+
+$$
+  \begin{aligned} 
+  \text{Response} \sim \text{Distribution(Mean Response)} \\
+  Y_i \sim \text{Poisson}(\lambda_i) \\
+  \log(\lambda_i) = a + b \; x_i \\  
+  \lambda_i = e^{a+b \; x_i} \\ 
+  \end{aligned} 
+$$
+
+
+## Back to survival of Titanic passengers 
+
+How many passengers traveled in each class?
+```{r,collapse=T}
+tapply(titanic$survived, titanic$class, length)
+```
+
+## Back to survival of Titanic passengers 
+
+How many survived?
+```{r,collapse=TRUE}
+tapply(titanic$survived, titanic$class, sum)
+```
+
+## Back to survival of Titanic passengers 
+
+What proportion survived in each class?
+```{r,collapse=TRUE}
+as.numeric(tapply(titanic$survived, titanic$class, mean))
+```
+
+## Back to survival of Titanic passengers (package `dplyr`)
+
+Arrange passenger survival according to class
+
+```{r eval = FALSE}
+library(dplyr)
+summarise(group_by(titanic, class, survived), count = n())
+```
+
+
+## Back to survival of Titanic passengers (package `dplyr`)
+
+Same manipulation using the pipe operator `%>%`
+
+```{r eval = FALSE}
+titanic %>%
+  group_by(class, survived) %>%
+  summarise(count = n())
+```
+
+## Back to survival of Titanic passengers (package `dplyr`)
+
+Arrange passenger survival according to class
+```{r, message=FALSE, collapse=TRUE, size='tinysize',echo=FALSE}
+library(dplyr)
+titanic %>%
+  dplyr::count(class, survived, sort = TRUE)
+```
+
+## Or graphically...
+
+```{r, echo = FALSE, out.width="90%"}
+titanic %>%
+  mutate(survived = as_factor(survived)) %>%
+  dplyr::count(class, survived) %>%
+  ggplot(aes(x = class, y = n, fill = survived)) +
+  geom_col()
+```
+
+
+## Fitting GLMs in R: `glm` function
+
+```{r titanic_glm, echo=1}
+titanic.glm <- glm(survived ~ class, data = titanic, family = binomial)
+library(broom)
+tidy(titanic.glm)
+```
+
+\alert{These estimates are on the logit scale!}
+
+
+## Interpreting logistic regression outputs 
+
+Parameter estimates on the logit scale:
+```{r tit_glm_coef, echo=FALSE,collapse=TRUE}
+coef(titanic.glm)
+```
+
+\alert{We need to back-transform} using the inverse logit function:  
+```{r tit_glm_invlogit, collapse=TRUE}
+plogis(coef(titanic.glm)[1]) # crew survival probability
+```
+
+Looking at the data, the proportion of crew who survived is:
+```{r crew_surv,collapse=TRUE}
+sum(titanic$survived[titanic$class == "crew"]) / 
+  nrow(titanic[titanic$class == "crew", ])
+```
+
+## Probability of survival for 1st class passengers? 
+
+Needs to add intercept (baseline) to the parameter estimate:
+```{r first_surv, collapse=TRUE}
+plogis(coef(titanic.glm)[1] + coef(titanic.glm)[2])
+```
+
+Again this value matches the data: 
+```{r first_surv_data, collapse=TRUE}
+sum(titanic$survived[titanic$class == "first"]) /   
+  nrow(titanic[titanic$class == "first", ])
+```
 
 # Multilevel (aka mixed-effect) models
 
@@ -762,43 +957,4 @@ individual clusters look more different than they are (overfitting). The complet
 
 `r insert_inc_bullet()` We may **include predictors at the cluster level**. Imagine we know something about functional traits, and wish to determine whether some species-to-species variation in the allometry relationship is explained by these traits. 
 
-# Your turn: Practical 8
-
-# Conclusions
-
-## Take-home messages about Bayesian statistics
-
-* Frees the modeler in you (M. Kéry)
-     + Uses probability to quantify uncertainty for everything (propagation of uncertainty).
-     + Allows use of prior information ('better' estimates).
-     + Can fit complex (hierarchical) models with same MCMC algorithms.
-
-`r insert_pause()`
-
-* With great tools come great responsabilities
-  + Checking convergence is painful.
-  + Specifying priors might be tricky.
-  + Model adequacy should be checked (posterior predictive checks - not covered).
-  + Computational burden can be high (see function `R2jags::jags.parallel()` and package [\alert{`jagsUI`}](https://github.com/kenkellner/jagsui).
-
-`r insert_pause()`
-
-* So what?
-     + Make an informed and pragmatic choice.
-     + Are you after complexity, speed, uncertainties, etc?
-     + Talk to colleagues.
-
-`r insert_slide_break()`
-
-```{r, out.width = '13cm',out.height='5cm',fig.align='center',echo=FALSE}
-knitr::include_graphics(here::here("slides","img","bayesian_evol.png"))
-```
-
-## [\alert{Why become a bayesian? Ask twitter!}](https://twitter.com/ChelseaParlett/status/1282798645453000704)
-
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics(here::here("slides","img","whytwitter.png"))
-```
-
-# Your turn: Practical 9
-
+# Your turn: Practicals 8 and 9

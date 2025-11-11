@@ -1,0 +1,104 @@
+---
+title: |
+    | Bayesian statistics with R
+    | 9. Conclusions
+author: "Olivier Gimenez"
+date: "November-December 2025"
+output:
+  beamer_presentation:
+    fig_caption: no
+    includes:
+      in_header: header.tex
+    latex_engine: pdflatex
+    slide_level: 2
+    theme: metropolis
+  ioslides_presentation: default
+classoption: aspectratio=169
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE, 
+                      echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      fig.height=6, 
+                      fig.width = 1.777777*6,
+                      tidy = FALSE, 
+                      comment = NA, 
+                      highlight = TRUE, 
+                      prompt = FALSE, 
+                      crop = TRUE,
+                      comment = "#>",
+                      collapse = TRUE)
+knitr::opts_knit$set(width = 60)
+library(tidyverse)
+library(reshape2)
+library(R2jags)
+theme_set(theme_light(base_size = 16))
+make_latex_decorator <- function(output, otherwise) {
+  function() {
+      if (knitr:::is_latex_output()) output else otherwise
+  }
+}
+insert_pause <- make_latex_decorator(". . .", "\n")
+insert_slide_break <- make_latex_decorator("----", "\n")
+insert_inc_bullet <- make_latex_decorator("> *", "*")
+insert_html_math <- make_latex_decorator("", "$$")
+```
+
+# Remember the objectives
+
+* Try and demystify Bayesian statistics, and what we call MCMC.
+* Make the difference between Bayesian and Frequentist analyses.
+* Understand the Methods section of ecological papers doing Bayesian stuff.
+* Run Bayesian analyses, safely hopefully.
+
+# What was on our plate? 
+
+1. An introduction to Bayesian inference
+2. The likelihood
+3. Bayesian analyses by hand
+4. A detour to explore priors
+5. Markov chains Monte Carlo methods (MCMC)
+6. Bayesian analyses in `R` with the `Jags` software
+7. Contrast scientific hypotheses with model selection
+8. Heterogeneity and multilevel models (aka mixed models)
+9. Conclusions
+
+# Free the modeler in you (M. Kéry)
+
++ Uses probability to quantify uncertainty for everything (propagation of uncertainty).
+
++ Allows use of prior information (‘better’ estimates: avoid boundary param estimates, acknowledge existing knowledge).
+
++ Can fit complex (hierarchical) models with same MCMC algorithms.
+
++ Credible intervals make more sense than confidence intervals
+
+
+# With great tools come great responsabilities
+
++ Checking convergence is painful.
+
++ Specifying priors might be tricky.
+
++ Model adequacy should be checked (posterior predictive checks - not covered).
+
++ Computational burden can be high (see function `R2jags::jags.parallel()` and package [\alert{`jagsUI`}](https://github.com/kenkellner/jagsui).
+
+# Tips and tricks
+
+<https://hal.science/CEFE/hal-04731240v2>
+
+```{r, out.width = '55%',fig.align='center',echo=FALSE}
+knitr::include_graphics('img/ten-tips.jpeg')
+```
+
+# So what?
+
++ Make an informed and pragmatic choice.
+
++ Are you after complexity, speed, uncertainties, etc?
+
++ Talk to colleagues.
+

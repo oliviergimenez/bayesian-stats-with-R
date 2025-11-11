@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 1. An introduction to Bayesian inference
 author: "Olivier Gimenez"
-date: "November-December 2024"
+date: "November-December 2025"
 output:
   beamer_presentation:
     fig_caption: no
@@ -69,12 +69,6 @@ insert_html_math <- make_latex_decorator("", "$$")
 * Understand the Methods section of ecological papers doing Bayesian stuff.
 * Run Bayesian analyses, safely hopefully.
 
-`r insert_slide_break()`
-
-```{r, out.width = '13cm',out.height='7cm',fig.align='center',echo=FALSE}
-knitr::include_graphics('img/brace_yourself.jpeg')
-```
-
 ## What is on our plate?
 
 1. An introduction to Bayesian inference
@@ -85,52 +79,54 @@ knitr::include_graphics('img/brace_yourself.jpeg')
 6. Bayesian analyses in `R` with the `Jags` software
 7. Contrast scientific hypotheses with model selection
 8. Heterogeneity and multilevel models (aka mixed models)
+9. Conclusions
 
-# I want moooooore
+# Further reading
 
-`r insert_slide_break()`
-
-```{r, out.width = '13cm',out.height='7cm',fig.align='center',echo=FALSE}
-knitr::include_graphics('img/books.jpeg')
+```{r, out.width = '65%',fig.align='center',echo=FALSE}
+knitr::include_graphics('img/ten-tips.png')
 ```
 
 `r insert_slide_break()`
 
-```{r, fig.align = 'center', echo = FALSE}
-knitr::include_graphics('img/mccarthy.png')
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/kerykellner.jpg')
 ```
+
+<https://www.elsevier.com/books-and-journals/book-companion/9780443137150>
 
 `r insert_slide_break()`
 
-```{r, fig.align = 'center', echo = FALSE}
-knitr::include_graphics('img/kery.png')
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/kruschke.jpg')
 ```
+
+<https://sites.google.com/site/doingbayesiandataanalysis/>
 
 `r insert_slide_break()`
 
-```{r, fig.align = 'center', echo = FALSE}
-knitr::include_graphics('img/kruschke.png')
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/bayesrules.jpeg')
 ```
+
+<https://www.bayesrulesbook.com/>
 
 `r insert_slide_break()`
 
-```{r, fig.align = 'center', echo = FALSE}
-knitr::include_graphics('img/mcelreath.png')
-```
-
-`r insert_slide_break()`
-
-```{r, fig.align = 'center', echo = FALSE}
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
 knitr::include_graphics('img/gelmanhill.png')
 ```
 
+<https://sites.stat.columbia.edu/gelman/arm/>
+
 `r insert_slide_break()`
 
-```{r, fig.align = 'center', echo = FALSE, out.width = '13cm', out.height='7cm'}
-knitr::include_graphics('img/bda_cover.png')
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/mcelreath.png')
 ```
 
-Free at <http://www.stat.columbia.edu/~gelman/book/>
+<https://xcelab.net/rm/>
+
 
 # What is Bayesian inference?
 
@@ -305,11 +301,11 @@ $${\color{red}{\Pr(\theta \mid \text{data})}} = \frac{\color{blue}{\Pr(\text{dat
 
 * $\color{orange}{\Pr(\text{data}) = \int \Pr(\text{data} \mid \theta) \;\Pr(\theta) d\theta }$: Possibly high-dimensional integral, difficult if not impossible to calculate. This is one of the reasons why we need simulation (MCMC) methods - more soon.
 
-`r insert_slide_break()`
+<!-- `r insert_slide_break()` -->
 
-```{r, echo=FALSE, fig.align='center'}
-# knitr::include_graphics('img/frequentists_vs_bayesians_2x.png')
-knitr::include_graphics('img/bayes_theorem.png')
-```
+<!-- ```{r, echo=FALSE, fig.align='center'} -->
+<!-- # knitr::include_graphics('img/frequentists_vs_bayesians_2x.png') -->
+<!-- knitr::include_graphics('img/bayes_theorem.png') -->
+<!-- ``` -->
 
 

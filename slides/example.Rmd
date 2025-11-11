@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 3. Analyses by hand
 author: "Olivier Gimenez"
-date: "November-December 2024"
+date: "November-December 2025"
 output:
   beamer_presentation:
     fig_caption: no
@@ -50,21 +50,19 @@ insert_html_math <- make_latex_decorator("", "$$")
 
 ## A simple example
 * Let us take a simple example to fix ideas.
-* 120 deer were radio-tracked over winter.
-* 61 close to a plant, 59 far from any human activity.
-* Question: is there a treatment effect on survival?
+* 61 coypus were radio-tracked over winter.
+* Question: What is the survival over winter ?
 
 |            | Released   | Alive | Dead | Other |
 |------------+----------+-------+------+-------| 
-| treatment  | 61 | 19 | 38 | 4 |
-| control    | 59 | 21 | 38 | 0 |
+|   | 61 | 19 | 38 | 4 |
 
 
 `r insert_slide_break()`
 
-`r insert_inc_bullet()` So, $n = 57$ deer were assigned to the treatment group of which $k=19$ survived the winter.
+`r insert_inc_bullet()` So, $n = 57$ coypus were released of which $k=19$ survived the winter.
 
-`r insert_inc_bullet()` Of interest is the probability of over-winter survival, call it $\theta$, for the general population within the treatment area.
+`r insert_inc_bullet()` Of interest is the probability of over-winter survival, call it $\theta$.
 
 `r insert_inc_bullet()` The obvious estimate is simply to take the ratio $k/n=19/57$.
 
@@ -142,7 +140,7 @@ $$ \theta \mid k \sim Beta(a+k,b+n-k)$$
 
 * Take a Beta prior with a Binomial likelihood, you get a Beta posterior (conjugacy)
 
-## Application to the deer example
+## Application to the coypus example
 
 `r insert_inc_bullet()` Posterior distribution of survival is $\theta \sim Beta(a+k,b+n-k)$.
 

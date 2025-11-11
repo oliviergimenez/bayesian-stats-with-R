@@ -1,5 +1,5 @@
 # fixe la graine du generateur de donnees
-set.seed(2023)
+set.seed(2024)
 
 # charge package R2jags
 library(R2jags)

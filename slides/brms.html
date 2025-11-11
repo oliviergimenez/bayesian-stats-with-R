@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Quick intro to brms</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Olivier Gimenez" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, title-slide
+
+.title[
+# Quick intro to brms
+]
+.author[
+### Olivier Gimenez
+]
+.date[
+### last updated: 2025-11-11
+]
+
+---
+
+
+
+
+class: middle center
+background-color: black
+
+![](img/brms.png)
+
+
+
+---
+# What is brms?
+
+--
+
++ Developed by [Paul-Christian Bürkner](https://paul-buerkner.github.io/).  
+
+--
+
++ In brief, `brms` allows fitting GLMMs (but not only) in a `lme4`-like syntax within the Bayesian framework and MCMC methods with `Stan`.
+
+--
+
++ I'm not a `Stan` user, but it doesn't matter. 
+
+--
+
++ The [vignettes](https://paul-buerkner.github.io/brms/articles/) are great to get you started. I also recommend the [list of blog posts about `brms`](https://paul-buerkner.github.io/blog/brms-blogposts/).
+
+--
+
++ Nice alternative to `NIMBLE` if you do not need to code your models.  
+
+---
+# Example
+
+Say we capture, mark and release `\(n = 57\)` animals at the beginning of a winter, out of which we recapture `\(y = 19\)` animals alive:
+
+``` r
+dat &lt;- data.frame(alive = 19, # nb of success
+                  total = 57) # nb of attempts
+dat
+```
+
+```
+  alive total
+1    19    57
+```
+
+---
+# Example
+
+Assuming all animals are independent of each other and have the same survival probability `\(\theta\)`, then `\(y\)` the number of alive animals at the end of the winter is binomial. Using a uniform prior for survival, we have:
+
+`\begin{align*}
+   y &amp;\sim \text{Binomial}(n, \theta) &amp;\text{[likelihood]}
+   \\
+  \theta &amp;\sim \text{Uniform}(0, 1) &amp;\text{[prior for }\theta \text{]} \\
+\end{align*}`
+
+We'd like to estimate winter survival `\(\theta\)`. An obvious estimate of the probability of a binomial is the proportion of cases, `\(19/57 = 0.3333333\)`.
+
+---
+# Maximum-likelihood estimation
+
+To get an estimate of survival, we fit a logistic regression using the `glm()` function. The data are grouped (or aggregated), so we need to specify the number of alive and dead individuals as a two-column matrix on the left hand side of the model formula:
+
+``` r
+mle &lt;- glm(cbind(alive, total - alive) ~ 1, 
+           family = binomial("logit"), # family = binomial("identity") would be more straightforward
+           data = dat)
+```
+
+---
+# Maximum-likelihood estimation
+
+On the logit scale, survival is estimated at:
+
+``` r
+coef(mle) # logit scale
+```
+
+```
+(Intercept) 
+ -0.6931472 
+```
+
+---
+# Maximum-likelihood estimation
+
+After back-transformation using the reciprocal logit, we obtain:
+
+``` r
+plogis(coef(mle))
+```
+
+```
+(Intercept) 
+  0.3333333 
+```
+
+---
+# Bayesian analysis with `NIMBLE`
+
++ See previous section. 
+
+---
+# Bayesian analysis with `brms`
+
+In `brms`, you write:
+
+
+``` r
+library(brms)
+bayes.brms &lt;- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), # binomial("identity") would be more straightforward
+                  data = dat,
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1) # thinning
+```
+
+---
+# Display results
+
+
+``` r
+bayes.brms
+```
+
+---
+# Display results
+
+
+```
+ Family: binomial 
+  Links: mu = logit 
+Formula: alive | trials(total) ~ 1 
+   Data: dat (Number of observations: 1) 
+  Draws: 2 chains, each with iter = 5000; warmup = 1000; thin = 1;
+         total post-warmup draws = 8000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept    -0.69      0.28    -1.24    -0.16 1.00     2282     3729
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+# Visualize results
+
+
+``` r
+plot(bayes.brms)
+```
+
+---
+# Visualize results
+
+![](brms_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+# Working with MCMC draws
+
+To get survival on the `\([0,1]\)` scale, we extract the MCMC values, then apply the reciprocal logit function to each of these values, and summarize its posterior distribution: 
+
+``` r
+library(posterior)
+draws_fit &lt;- as_draws_matrix(bayes.brms)
+draws_fit
+summarize_draws(plogis(draws_fit[,1]))
+```
+
+---
+# Working with MCMC draws
+
+
+```
+# A draws_matrix: 4000 iterations, 2 chains, and 4 variables
+    variable
+draw b_Intercept Intercept lprior lp__
+  1        -0.52     -0.52   -1.9 -4.3
+  2        -0.42     -0.42   -1.9 -4.6
+  3        -1.06     -1.06   -2.0 -5.1
+  4        -1.22     -1.22   -2.1 -5.9
+  5        -1.30     -1.30   -2.1 -6.5
+  6        -1.48     -1.48   -2.1 -7.9
+  7        -0.99     -0.99   -2.0 -4.7
+  8        -0.66     -0.66   -2.0 -4.2
+  9        -0.67     -0.67   -2.0 -4.2
+  10       -0.58     -0.58   -2.0 -4.2
+# ... with 7990 more draws
+```
+
+---
+# Working with MCMC draws
+
+
+| b_Intercept|  Intercept|    lprior|      lp__|
+|-----------:|----------:|---------:|---------:|
+|  -0.5155660| -0.5155660| -1.945333| -4.342353|
+|  -0.4180417| -0.4180417| -1.935734| -4.622156|
+|  -1.0649858| -1.0649858| -2.034642| -5.064739|
+|  -1.2242548| -1.2242548| -2.070983| -5.934109|
+|  -1.3022845| -1.3022845| -2.090361| -6.455621|
+|  -1.4814553| -1.4814553| -2.138564| -7.873306|
+|  -0.9884074| -0.9884074| -2.018763| -4.745120|
+|  -0.6588612| -0.6588612| -1.962955| -4.163971|
+|  -0.6698501| -0.6698501| -1.964477| -4.161465|
+|  -0.5781860| -0.5781860| -1.952524| -4.230805|
+
+
+---
+# Working with MCMC draws
+
+To get survival on the `\([0,1]\)` scale, we extract the MCMC values, then apply the reciprocal logit function to each of these values. Then summarize its posterior distribution: 
+
+``` r
+library(posterior)
+draws_fit &lt;- as_draws_matrix(bayes.brms)
+draws_fit
+summarize_draws(plogis(draws_fit[,1]))
+```
+
+---
+# Working with MCMC draws
+
+
+```
+# A tibble: 1 × 10
+  variable     mean median     sd    mad    q5   q95  rhat ess_bulk ess_tail
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 b_Intercept 0.336  0.334 0.0609 0.0611 0.240 0.441  1.00    2282.    3729.
+```
+
+---
+# What is the prior used by default?
+
+
+``` r
+prior_summary(bayes.brms)
+```
+
+```
+Intercept ~ student_t(3, 0, 2.5)
+```
+
+---
+# What if I want to use a different prior instead?
+
+
+``` r
+nlprior &lt;- prior(normal(0, 1.5), class = "Intercept") # new prior
+bayes.brms &lt;- brm(alive | trials(total) ~ 1, 
+                  family = binomial("logit"), 
+                  data = dat, 
+                  prior = nlprior, # set prior by hand
+                  chains = 2, # nb of chains
+                  iter = 5000, # nb of iterations, including burnin
+                  warmup = 1000, # burnin
+                  thin = 1)
+```
+
+---
+# Priors
+
+Double-check the prior that was used:
+
+``` r
+prior_summary(bayes.brms)
+```
+
+```
+Intercept ~ normal(0, 1.5)
+```
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
