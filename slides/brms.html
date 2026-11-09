@@ -4,8 +4,8 @@
     <title>Quick intro to brms</title>
     <meta charset="utf-8" />
     <meta name="author" content="Olivier Gimenez" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.31/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="slides-theme.css" type="text/css" />
   </head>
   <body>
@@ -19,7 +19,7 @@ class: center, middle, title-slide
 ### Olivier Gimenez
 ]
 .date[
-### last updated: 2025-11-11
+### last updated: 2026-11-09
 ]
 
 ---
@@ -69,8 +69,8 @@ dat
 ```
 
 ```
-  alive total
-1    19    57
+##   alive total
+## 1    19    57
 ```
 
 ---
@@ -107,8 +107,8 @@ coef(mle) # logit scale
 ```
 
 ```
-(Intercept) 
- -0.6931472 
+## (Intercept) 
+##  -0.6931472
 ```
 
 ---
@@ -121,8 +121,8 @@ plogis(coef(mle))
 ```
 
 ```
-(Intercept) 
-  0.3333333 
+## (Intercept) 
+##   0.3333333
 ```
 
 ---
@@ -160,20 +160,20 @@ bayes.brms
 
 
 ```
- Family: binomial 
-  Links: mu = logit 
-Formula: alive | trials(total) ~ 1 
-   Data: dat (Number of observations: 1) 
-  Draws: 2 chains, each with iter = 5000; warmup = 1000; thin = 1;
-         total post-warmup draws = 8000
-
-Regression Coefficients:
-          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept    -0.69      0.28    -1.24    -0.16 1.00     2282     3729
-
-Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
-and Tail_ESS are effective sample size measures, and Rhat is the potential
-scale reduction factor on split chains (at convergence, Rhat = 1).
+##  Family: binomial 
+##   Links: mu = logit 
+## Formula: alive | trials(total) ~ 1 
+##    Data: dat (Number of observations: 1) 
+##   Draws: 2 chains, each with iter = 5000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 8000
+## 
+## Regression Coefficients:
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    -0.70      0.28    -1.25    -0.16 1.00     3017     3656
+## 
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
 ```
 
 ---
@@ -206,20 +206,41 @@ summarize_draws(plogis(draws_fit[,1]))
 
 
 ```
-# A draws_matrix: 4000 iterations, 2 chains, and 4 variables
-    variable
-draw b_Intercept Intercept lprior lp__
-  1        -0.52     -0.52   -1.9 -4.3
-  2        -0.42     -0.42   -1.9 -4.6
-  3        -1.06     -1.06   -2.0 -5.1
-  4        -1.22     -1.22   -2.1 -5.9
-  5        -1.30     -1.30   -2.1 -6.5
-  6        -1.48     -1.48   -2.1 -7.9
-  7        -0.99     -0.99   -2.0 -4.7
-  8        -0.66     -0.66   -2.0 -4.2
-  9        -0.67     -0.67   -2.0 -4.2
-  10       -0.58     -0.58   -2.0 -4.2
-# ... with 7990 more draws
+## This is posterior version 1.7.0
+```
+
+```
+## 
+## Attaching package: 'posterior'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     mad, sd, var
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     %in%, match
+```
+
+```
+## # A draws_matrix: 4000 iterations, 2 chains, and 4 variables
+##     variable
+## draw b_Intercept Intercept lprior lp__
+##   1        -0.81     -0.81   -2.0 -4.3
+##   2        -0.61     -0.61   -2.0 -4.2
+##   3        -0.59     -0.59   -2.0 -4.2
+##   4        -0.74     -0.74   -2.0 -4.2
+##   5        -0.62     -0.62   -2.0 -4.2
+##   6        -0.37     -0.37   -1.9 -4.8
+##   7        -0.29     -0.29   -1.9 -5.2
+##   8        -0.56     -0.56   -2.0 -4.3
+##   9        -0.78     -0.78   -2.0 -4.2
+##   10       -0.54     -0.54   -1.9 -4.3
+## # ... with 7990 more draws
 ```
 
 ---
@@ -228,16 +249,16 @@ draw b_Intercept Intercept lprior lp__
 
 | b_Intercept|  Intercept|    lprior|      lp__|
 |-----------:|----------:|---------:|---------:|
-|  -0.5155660| -0.5155660| -1.945333| -4.342353|
-|  -0.4180417| -0.4180417| -1.935734| -4.622156|
-|  -1.0649858| -1.0649858| -2.034642| -5.064739|
-|  -1.2242548| -1.2242548| -2.070983| -5.934109|
-|  -1.3022845| -1.3022845| -2.090361| -6.455621|
-|  -1.4814553| -1.4814553| -2.138564| -7.873306|
-|  -0.9884074| -0.9884074| -2.018763| -4.745120|
-|  -0.6588612| -0.6588612| -1.962955| -4.163971|
-|  -0.6698501| -0.6698501| -1.964477| -4.161465|
-|  -0.5781860| -0.5781860| -1.952524| -4.230805|
+|  -0.8097766| -0.8097766| -1.985930| -4.264473|
+|  -0.6103695| -0.6103695| -1.956529| -4.193858|
+|  -0.5903237| -0.5903237| -1.954010| -4.215257|
+|  -0.7360015| -0.7360015| -1.974142| -4.179259|
+|  -0.6231921| -0.6231921| -1.958182| -4.182954|
+|  -0.3665978| -0.3665978| -1.931464| -4.822651|
+|  -0.2855547| -0.2855547| -1.925858| -5.213733|
+|  -0.5641424| -0.5641424| -1.950842| -4.251245|
+|  -0.7824707| -0.7824707| -1.981444| -4.225005|
+|  -0.5427264| -0.5427264| -1.948354| -4.287497|
 
 
 ---
@@ -257,10 +278,10 @@ summarize_draws(plogis(draws_fit[,1]))
 
 
 ```
-# A tibble: 1 × 10
-  variable     mean median     sd    mad    q5   q95  rhat ess_bulk ess_tail
-  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-1 b_Intercept 0.336  0.334 0.0609 0.0611 0.240 0.441  1.00    2282.    3729.
+## # A tibble: 1 × 10
+##   variable     mean median     sd    mad    q5   q95  rhat ess_bulk ess_tail
+##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 b_Intercept 0.335  0.333 0.0615 0.0631 0.238 0.440  1.00    3017.    3656.
 ```
 
 ---
@@ -272,7 +293,7 @@ prior_summary(bayes.brms)
 ```
 
 ```
-Intercept ~ student_t(3, 0, 2.5)
+## Intercept ~ student_t(3, 0, 2.5)
 ```
 
 ---
@@ -301,7 +322,7 @@ prior_summary(bayes.brms)
 ```
 
 ```
-Intercept ~ normal(0, 1.5)
+## Intercept ~ normal(0, 1.5)
 ```
 
     </textarea>

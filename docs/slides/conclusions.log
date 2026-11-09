@@ -1,15 +1,15 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.9)  11 NOV 2025 18:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.10.17)  9 NOV 2026 11:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **conclusions.tex
 (./conclusions.tex
-LaTeX2e <2025-06-01> patch level 1
-L3 programming layer <2025-08-13>
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/beamer/beamer.cls
-Document Class: beamer 2025/08/13 v3.76 A class for typesetting presentations
+Document Class: beamer 2026/01/22 v3.77 A class for typesetting presentations
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasemodes.sty (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count275
 )
 \beamer@tempbox=\box53
@@ -139,7 +139,7 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen183
 \Gin@req@width=\dimen184
@@ -270,7 +270,7 @@ Package: xxcolor 2003/10/24 ver 0.1
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
+Package: hyperref 2026-01-29 v7.01p Hypertext links for LaTeX
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
@@ -290,7 +290,7 @@ Package pdftexcmds Info: \pdfdraftmode found.
 )) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
+Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
@@ -306,7 +306,7 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 \Hy@linkcounter=\count323
 \Hy@pagecounter=\count324
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
+File: pd1enc.def 2026-01-29 v7.01p Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
@@ -314,27 +314,27 @@ Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count325
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
-File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
+File: puenc.def 2026-01-29 v7.01p Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
-Package hyperref Info: Option `unicode' set `true' on input line 4066.
-Package hyperref Info: Option `bookmarks' set `true' on input line 4066.
-Package hyperref Info: Option `bookmarksopen' set `true' on input line 4066.
-Package hyperref Info: Option `implicit' set `false' on input line 4066.
-Package hyperref Info: Hyper figures OFF on input line 4195.
-Package hyperref Info: Link nesting OFF on input line 4200.
-Package hyperref Info: Hyper index ON on input line 4203.
-Package hyperref Info: Plain pages OFF on input line 4210.
-Package hyperref Info: Backreferencing OFF on input line 4215.
+Package hyperref Info: Option `unicode' set `true' on input line 4072.
+Package hyperref Info: Option `bookmarks' set `true' on input line 4072.
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 4072.
+Package hyperref Info: Option `implicit' set `false' on input line 4072.
+Package hyperref Info: Hyper figures OFF on input line 4201.
+Package hyperref Info: Link nesting OFF on input line 4206.
+Package hyperref Info: Hyper index ON on input line 4209.
+Package hyperref Info: Plain pages OFF on input line 4216.
+Package hyperref Info: Backreferencing OFF on input line 4221.
 Package hyperref Info: Implicit mode OFF; no redefinition of LaTeX internals.
-Package hyperref Info: Bookmarks ON on input line 4462.
+Package hyperref Info: Bookmarks ON on input line 4468.
 \c@Hy@tempcnt=\count326
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 4801.
+LaTeX Info: Redefining \url on input line 4807.
 \XeTeXLinkMargin=\dimen276
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -344,13 +344,13 @@ Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 \Fld@menulength=\count327
 \Field@Width=\dimen277
 \Fld@charsize=\dimen278
-Package hyperref Info: Hyper figures OFF on input line 6078.
-Package hyperref Info: Link nesting OFF on input line 6083.
-Package hyperref Info: Hyper index ON on input line 6086.
-Package hyperref Info: backreferencing OFF on input line 6093.
-Package hyperref Info: Link coloring OFF on input line 6098.
-Package hyperref Info: Link coloring with OCG OFF on input line 6103.
-Package hyperref Info: PDF/A mode OFF on input line 6108.
+Package hyperref Info: Hyper figures OFF on input line 6084.
+Package hyperref Info: Link nesting OFF on input line 6089.
+Package hyperref Info: Hyper index ON on input line 6092.
+Package hyperref Info: backreferencing OFF on input line 6099.
+Package hyperref Info: Link coloring OFF on input line 6104.
+Package hyperref Info: Link coloring with OCG OFF on input line 6109.
+Package hyperref Info: PDF/A mode OFF on input line 6114.
 \Hy@abspage=\count328
 
 Package hyperref Message: Stopped early.
@@ -358,7 +358,7 @@ Package hyperref Message: Stopped early.
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
+File: hpdftex.def 2026-01-29 v7.01p Hyperref driver for pdfTeX
 \Fld@listcount=\count329
 \c@bookmark@seq@number=\count330
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
@@ -443,7 +443,7 @@ Package: enumerate 2023/07/04 v3.00 enumerate extensions (DPC)
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasenavigation.sty (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasenavigationsymbols.tex)
 \beamer@section@min@dim=\dimen290
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetheorems.sty (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2025/06/16 v2.17y AMS math features
+Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip61
 For additional information on amsmath, use the `?' option.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty
@@ -503,8 +503,8 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \multlinegap=\skip62
 \multlinetaggap=\skip63
 \mathdisplay@stack=\toks39
-LaTeX Info: Redefining \[ on input line 2949.
-LaTeX Info: Redefining \] on input line 2950.
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks40
@@ -546,7 +546,7 @@ LaTeX Info: Redefining \addtolength on input line 87.
 \pgfphysicalwidth=\dimen305
 \pgfpages@shipoutbox=\box78
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2024/12/21 v2.1c Standard LaTeX package
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks46
@@ -701,33 +701,33 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO)
 \BKM@id=\count378
 ))
-LaTeX Font Info:    Trying to load font information for T1+lmss on input line 122.
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 119.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2025-06-09 L3 backend support: PDF output (pdfTeX)
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count379
 ) (./conclusions.aux)
 \openout1 = `conclusions.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 122.
-LaTeX Font Info:    ... okay on input line 122.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -768,53 +768,53 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 122.
+Package hyperref Info: Link coloring OFF on input line 119.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/lmr/m/n --> OT1/cmss/m/n on input line 122.
+(Font)                  OT1/lmr/m/n --> OT1/cmss/m/n on input line 119.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/lmr/bx/n --> OT1/cmss/b/n on input line 122.
+(Font)                  OT1/lmr/bx/n --> OT1/cmss/b/n on input line 119.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 122.
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 119.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmss/b/n --> OT1/lmss/b/n on input line 122.
+(Font)                  OT1/cmss/b/n --> OT1/lmss/b/n on input line 119.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmss/m/n --> T1/lmr/m/n on input line 122.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 122.
+(Font)                  OT1/lmss/m/n --> T1/lmr/m/n on input line 119.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 122.
+(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 122.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 122.
+(Font)                  OT1/lmr/bx/n --> T1/lmss/b/n on input line 119.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> T1/lmss/m/n on input line 122.
+(Font)                  OT1/lmss/m/n --> T1/lmss/m/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> T1/lmss/m/n on input line 122.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 122.
+(Font)                  OT1/lmss/bx/n --> T1/lmss/m/n on input line 119.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> T1/lmss/m/it on input line 122.
+(Font)                  OT1/lmr/m/it --> T1/lmss/m/it on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/lmr/bx/it --> T1/lmss/m/it on input line 122.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 122.
+(Font)                  OT1/lmr/bx/it --> T1/lmss/m/it on input line 119.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 122.
+(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 122.
+(Font)                  OT1/lmtt/m/n --> T1/lmtt/m/n on input line 119.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 122.
+(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 119.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 122.
+(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/lmss/b/n --> T1/lmr/b/n on input line 122.
+(Font)                  OT1/lmss/b/n --> T1/lmr/b/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  T1/lmss/b/n --> T1/lmss/b/n on input line 122.
+(Font)                  T1/lmss/b/n --> T1/lmss/b/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 122.
+(Font)                  T1/lmss/m/n --> T1/lmss/b/n on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 122.
+(Font)                  T1/lmss/m/it --> T1/lmss/b/it on input line 119.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  T1/lmtt/m/n --> T1/lmtt/b/n on input line 122.
+(Font)                  T1/lmtt/m/n --> T1/lmtt/b/n on input line 119.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/translator/translator-basic-dictionary-English.dict
 Dictionary: translator-basic-dictionary, Language: English 
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/translator/translator-bibliography-dictionary-English.dict
@@ -828,13 +828,13 @@ Dictionary: translator-numbers-dictionary, Language: English
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/translator/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \microtypecontext on input line 122.
-Package microtype Info: Applying patch `item' on input line 122.
-Package microtype Info: Applying patch `toc' on input line 122.
-Package microtype Info: Applying patch `eqnum' on input line 122.
-Package microtype Info: Applying patch `footnote' on input line 122.
-Package microtype Info: Applying patch `verbatim' on input line 122.
-LaTeX Info: Redefining \microtypesetup on input line 122.
+LaTeX Info: Redefining \microtypecontext on input line 119.
+Package microtype Info: Applying patch `item' on input line 119.
+Package microtype Info: Applying patch `toc' on input line 119.
+Package microtype Info: Applying patch `eqnum' on input line 119.
+Package microtype Info: Applying patch `footnote' on input line 119.
+Package microtype Info: Applying patch `verbatim' on input line 119.
+LaTeX Info: Redefining \microtypesetup on input line 119.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -850,15 +850,13 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 (./conclusions.nav)
-Overfull \vbox (44.55624pt too high) detected at line 123
+Overfull \vbox (44.55624pt too high) detected at line 120
  []
-
-
 
 [1
 
 {/Users/oliviergimenez/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 125.
+LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -866,57 +864,51 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 125.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 125.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 125.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 125.
+(Font)              <10.95> on input line 122.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 125.
+(Font)              <8> on input line 122.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 125.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 125.
+(Font)              <6> on input line 122.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 125.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 122.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 125.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 122.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <8> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 125.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 122.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 125.
-
-
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 122.
 [2
 
 ]
-LaTeX Font Info:    Trying to load font information for TS1+lmss on input line 140.
+LaTeX Font Info:    Trying to load font information for TS1+lmss on input line 137.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmss.fd
 File: ts1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+) [3
 
-[3
-
-{/Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
-
-[4
+{/Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}] [4
 
 ]
 \openout4 = `conclusions.vrb'.
@@ -925,50 +917,32 @@ File: ts1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 15.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-))
+)) [5
 
-[5
+] [6
 
-]
+] [7
 
-[6
-
-]
-
-[7
-
-]
-
-[8
+] [8
 
 ]
 \openout4 = `conclusions.vrb'.
 
-(./conclusions.vrb)
+(./conclusions.vrb) [9
 
-[9
-
-]
-
-[10
+] [10
 
 ]
 <img/ten-tips.png, id=83, 1002.74625pt x 743.77875pt>
 File: img/ten-tips.png Graphic file (type png)
 <use img/ten-tips.png>
-Package pdftex.def Info: img/ten-tips.png  used on input line 211.
+Package pdftex.def Info: img/ten-tips.png  used on input line 208.
 (pdftex.def)             Requested size: 219.08743pt x 162.49692pt.
-
-
 [11
 
- <./img/ten-tips.png>]
+ <./img/ten-tips.png>] [12
 
-[12
-
-]
-
-[13
+] [13
 
 ]
 \tf@nav=\write5
@@ -982,20 +956,20 @@ Package pdftex.def Info: img/ten-tips.png  used on input line 211.
 
 (./conclusions.aux)
  ***********
-LaTeX2e <2025-06-01> patch level 1
-L3 programming layer <2025-08-13>
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 27437 strings out of 469738
- 552284 string characters out of 5479349
- 940525 words of memory out of 5000000
- 55186 multiletter control sequences out of 15000+600000
- 677484 words of font info for 107 fonts, out of 8000000 for 9000
+ 27453 strings out of 469471
+ 552652 string characters out of 5466954
+ 944028 words of memory out of 5000000
+ 55469 multiletter control sequences out of 15000+600000
+ 678380 words of font info for 107 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 102i,13n,123p,1880b,758s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,13n,123p,1880b,760s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss8.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on conclusions.pdf (13 pages, 658538 bytes).
+Output written on conclusions.pdf (13 pages, 658299 bytes).
 PDF statistics:
  155 PDF objects out of 1000 (max. 8388607)
  121 compressed objects within 2 object streams

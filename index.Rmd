@@ -18,7 +18,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Who: [Olivier Gimenez](https://oliviergimenez.github.io/)  
 When: 
-Nov 20-27, Dec 4, 2025
+Nov 19-26, Dec 3, 2026    
+~~Nov 20-27, Dec 4, 2025~~
 ~~Nov 21-Nov 28-Dec 5, 2024~~ 
 ~~March 22-23-25-26, 2021~~  
 ~~Nov 25-Dec 2-Dec 9, 2021~~  
@@ -27,12 +28,12 @@ Nov 20-27, Dec 4, 2025
 ~~Nov 24-Dec 1-Dec 8, 2022~~    
 ~~Nov 23-Nov 30-Dec 7, 2023~~    
 
-Where: 
+Where:    
+Biodiversity Ecology Evolution Master, Montpellier University     
 ~~Zoom~~  
 ~~Biodiversity Ecology Evolution Master, Montpellier University~~  
 ~~Collège Doctoral, Montpellier University~~  
 ~~Collège Doctoral, Montpellier University~~  
-Biodiversity Ecology Evolution Master, Montpellier University  
 
 <!-- Syllabus: [click here](syllabus.html)   -->
 <!-- Upcoming lectures and assignments: [click here](schedule.html)   -->
@@ -66,6 +67,12 @@ Biodiversity Ecology Evolution Master, Montpellier University
 install.packages(c("tidyverse", "R2jags", "here", "lme4", "visreg", "lattice", "brms"))
 ```
 
+
+# Book
+
+[English version](https://oliviergimenez.github.io/introduction-to-bayesian-statistics-with-R/) ![](cover.png)
+
+[French version](https://oliviergimenez.github.io/statistique-bayes-quae/) ![](couverture.png)
 
 # Credits
 

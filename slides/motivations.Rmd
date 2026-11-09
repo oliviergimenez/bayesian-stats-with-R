@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 1. An introduction to Bayesian inference
 author: "Olivier Gimenez"
-date: "November-December 2025"
+date: "November-December 2026"
 output:
   beamer_presentation:
     fig_caption: no
@@ -127,6 +127,22 @@ knitr::include_graphics('img/mcelreath.png')
 
 <https://xcelab.net/rm/>
 
+`r insert_slide_break()`
+
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/couverture.png')
+```
+
+<https://oliviergimenez.github.io/statistique-bayes-quae/>
+
+
+`r insert_slide_break()`
+
+```{r, fig.align = 'center', echo = FALSE, out.width = '30%'}
+knitr::include_graphics('img/cover.png')
+```
+
+<https://oliviergimenez.github.io/introduction-to-bayesian-statistics-with-R/>
 
 # What is Bayesian inference?
 

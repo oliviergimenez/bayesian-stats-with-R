@@ -20,8 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -2426,7 +2427,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2548,6 +2549,7 @@ brms
 <li><a href="#schedule" id="toc-schedule">Schedule</a></li>
 <li><a href="#learning-objectives" id="toc-learning-objectives">Learning objectives</a></li>
 <li><a href="#requirements" id="toc-requirements">Requirements</a></li>
+<li><a href="#book" id="toc-book">Book</a></li>
 <li><a href="#credits" id="toc-credits">Credits</a>
 <ul>
 <li><a href="#corrections" id="toc-corrections">Corrections</a></li>
@@ -2558,7 +2560,8 @@ brms
 </div>
 <p>Who: <a href="https://oliviergimenez.github.io/">Olivier Gimenez</a><br />
 When:
-Nov 20-27, Dec 4, 2025
+Nov 19-26, Dec 3, 2026<br />
+<del>Nov 20-27, Dec 4, 2025</del>
 <del>Nov 21-Nov 28-Dec 5, 2024</del>
 <del>March 22-23-25-26, 2021</del><br />
 <del>Nov 25-Dec 2-Dec 9, 2021</del><br />
@@ -2566,12 +2569,12 @@ Nov 20-27, Dec 4, 2025
 <del>Sept 22-23, 2022</del><br />
 <del>Nov 24-Dec 1-Dec 8, 2022</del><br />
 <del>Nov 23-Nov 30-Dec 7, 2023</del></p>
-<p>Where:
+<p>Where:<br />
+Biodiversity Ecology Evolution Master, Montpellier University<br />
 <del>Zoom</del><br />
 <del>Biodiversity Ecology Evolution Master, Montpellier University</del><br />
 <del>Collège Doctoral, Montpellier University</del><br />
-<del>Collège Doctoral, Montpellier University</del><br />
-Biodiversity Ecology Evolution Master, Montpellier University</p>
+<del>Collège Doctoral, Montpellier University</del></p>
 <!-- Syllabus: [click here](syllabus.html)   -->
 <!-- Upcoming lectures and assignments: [click here](schedule.html)   -->
 <h1 id="schedule">Schedule</h1>
@@ -2604,6 +2607,9 @@ Biodiversity Ecology Evolution Master, Montpellier University</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span>, <span class='st'>"R2jags"</span>, <span class='st'>"here"</span>, <span class='st'>"lme4"</span>, <span class='st'>"visreg"</span>, <span class='st'>"lattice"</span>, <span class='st'>"brms"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<h1 id="book">Book</h1>
+<p><a href="https://oliviergimenez.github.io/introduction-to-bayesian-statistics-with-R/">English version</a> <img src="cover.png" /></p>
+<p><a href="https://oliviergimenez.github.io/statistique-bayes-quae/">French version</a> <img src="couverture.png" /></p>
 <h1 id="credits">Credits</h1>
 <p>Many slides are from <a href="https://www.maths.ed.ac.uk/~rking33/Book-website/index.html">a workshop we used to run a loooong time ago</a> with Ruth King, Byron Morgan and Steve Brooks. I also re-used or adapted slides by <a href="https://github.com/rmcelreath/statrethinking_winter2019">Richard McElreath</a>, <a href="https://staff.qut.edu.au/staff/k.mengersen">Kerrie Mengersen</a>, <a href="https://frodriguezsanchez.net/">Francisco Rodriguez Sanchez</a>, <a href="https://bayesball.github.io/BOOK/probability-a-measurement-of-uncertainty.html">Jim Albert and Jingchen Hu</a>, <a href="https://www.tjmahr.com/">Tristan Marh</a>, <a href="https://www.gla.ac.uk/researchinstitutes/bahcm/staff/jasonmatthiopoulos/">Jason Matthiopoulos</a>, a paper by <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2664.2005.01101.x">Michael McCarthy and Pip Masters</a>, <a href="https://www.lopez-sepulcre.com/">Andrés Lopez-Sepulcre</a> and <a href="https://sites.google.com/site/doingbayesiandataanalysis/">John Kruschke’ book cover</a>. The sources for the images are <a href="https://www.elmhurst.edu/blog/thomas-bayes/">James Kulich</a>, Matt Buck, <a href="https://xkcd.com/1132/">xkcd</a> and Mike West.</p>
 <h2 class="appendix" id="corrections">Corrections</h2>

@@ -112,6 +112,8 @@ waic(bayes.brms)
 
 #----------- GLMM example w/ transects and anemones counts
 
+set.seed(666)
+
 # simulate data
 transects <- 10
 data <- NULL

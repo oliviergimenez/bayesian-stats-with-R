@@ -3,7 +3,7 @@ title: |
     | Bayesian statistics with R
     | 4. A detour with priors
 author: "Olivier Gimenez"
-date: "November-December 2025"
+date: "November-December 2026"
 output:
   beamer_presentation:
     fig_caption: no
