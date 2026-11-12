@@ -1,7 +1,7 @@
 ---
 title: |
     | Bayesian statistics with R
-    | 6. Bayesian analyses in R with the Jags software
+    | 6. Bayesian analyses in R with Jags (and brms)
 author: "Olivier Gimenez"
 date: "November-December 2026"
 output:
@@ -130,9 +130,9 @@ datax <- list(N = 23,
    \text{nbchicks}_i &\sim \text{Binomial(nbpairs}_i,p_i) &\text{[likelihood]}
    \\
   \text{logit}(p_i) &= a + b_{temp} \; \text{temp}_{i} + b_{rain} \; \text{rain}_{i} &\text{[linear model]} \\
-  a &\sim \text{Normal}(0, 1000) &\text{[prior for }a] \\ 
-  b_{temp} &\sim \text{Normal}(0, 1000) &\text{[prior for }b_{temp}] \\ 
-  b_{rain} &\sim \text{Normal}(0, 1000) &\text{[prior for }b_{rain}] \\ 
+  a &\sim \text{Normal}(0, 1.5) &\text{[prior for }a] \\ 
+  b_{temp} &\sim \text{Normal}(0, 1.5) &\text{[prior for }b_{temp}] \\ 
+  b_{rain} &\sim \text{Normal}(0, 1.5) &\text{[prior for }b_{rain}] \\ 
 \end{align*}
 `r insert_html_math()`
 
@@ -151,9 +151,9 @@ datax <- list(N = 23,
 ## Specify priors 
 ```{r, echo=TRUE, eval=FALSE}
 # Priors
-a ~ dnorm(0,0.001)
-b.temp ~ dnorm(0,0.001)
-b.rain ~ dnorm(0,0.001)
+a ~ dnorm(0,1/1.5)
+b.temp ~ dnorm(0,1/1.5)
+b.rain ~ dnorm(0,1/1.5)
 }
 ```
 **Warning**: Jags uses precision for Normal distributions (1 / variance)
@@ -170,9 +170,9 @@ model
 		nbchicks[i] ~ dbin(p[i],nbpairs[i])
 		logit(p[i]) <- a + b.temp * temp[i] + b.rain * rain[i]
 		}
-a ~ dnorm(0,0.001)
-b.temp ~ dnorm(0,0.001)
-b.rain ~ dnorm(0,0.001)
+a ~ dnorm(0,1/1.5)
+b.temp ~ dnorm(0,1/1.5)
+b.rain ~ dnorm(0,1/1.5)
 	}
 ")
 writeLines(model,"code/logistic.txt")
@@ -189,9 +189,9 @@ logistic <- function() {
 		}
 			
 # priors for regression parameters
-a ~ dnorm(0,0.001)
-b.temp ~ dnorm(0,0.001)
-b.rain ~ dnorm(0,0.001)
+a ~ dnorm(0,1/1.5)
+b.temp ~ dnorm(0,1/1.5)
+b.rain ~ dnorm(0,1/1.5)
 	}
 ```
 

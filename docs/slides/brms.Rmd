@@ -56,7 +56,7 @@ background-color: black
 
 --
 
-+ Nice alternative to `NIMBLE` if you do not need to code your models.  
++ Nice alternative to `Jags` if you do not need to code your models.  
 
 ---
 # Example
@@ -106,11 +106,6 @@ After back-transformation using the reciprocal logit, we obtain:
 ```{r}
 plogis(coef(mle))
 ```
-
----
-# Bayesian analysis with `NIMBLE`
-
-+ See previous section. 
 
 ---
 # Bayesian analysis with `brms`
