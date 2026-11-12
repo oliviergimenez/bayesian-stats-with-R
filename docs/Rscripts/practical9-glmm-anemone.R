@@ -31,8 +31,8 @@ reg_poisson_lineaire <- function(){
     y[i] ~ dpois(lambda[i])
     log(lambda[i]) <- a + bun * x[i]
   }
-  bun ~ dnorm(0, 0.001)
-  a ~ dnorm(0, 0.001)
+  bun ~ dnorm(0, 1/1.5^2)
+  a ~ dnorm(0, 1/1.5^2)
 }
 
 datax <- list(n = nrow(data),
@@ -56,15 +56,18 @@ mod1 <- jags(data = datax,
 
 mod1
 
+# traceplot
+traceplot(mod1)
+
 # glm avec effet quadratique de la temperature de l'eau sur effectifs anemones
 reg_poisson_quadratique <- function(){
   for(i in 1:n){
     y[i] ~ dpois(lambda[i])
     log(lambda[i]) <- a + bun * x[i] + bdeux * x[i] * x[i]
   }
-  bun ~ dnorm(0, 0.001)
-  bdeux ~ dnorm(0, 0.001)
-  a ~ dnorm(0, 0.001)
+  bun ~ dnorm(0, 1/1.5^2)
+  bdeux ~ dnorm(0, 1/1.5^2)
+  a ~ dnorm(0, 1/1.5^2)
 }
 
 datax <- list(n = nrow(data),
@@ -88,6 +91,8 @@ mod2 <- jags(data = datax,
 
 mod2
 
+# traceplot
+traceplot(mod2)
 
 # glm avec effet quadratique de la temperature de l'eau sur effectifs anemones
 # et effet aleatoire transect (GLMM)
@@ -96,12 +101,12 @@ reg_poisson_quadratique_randomtransect <- function(){
     y[i] ~ dpois(lambda[i])
     log(lambda[i]) <- a[transect[i]] + bun * x[i] + bdeux * x[i] * x[i]
   }
-  bun ~ dnorm(0, 0.001)
-  bdeux ~ dnorm(0, 0.001)
+  bun ~ dnorm(0, 1/1.5^2)
+  bdeux ~ dnorm(0, 1/1.5^2)
   for (j in 1:nbtransect){
     a[j] ~ dnorm(mu.a, tau.a)
   }
-  mu.a ~ dnorm(0, 0.001)
+  mu.a ~ dnorm(0, 1/1.5^2)
   tau.a <- 1 / (sd.a * sd.a)
   sd.a ~ dunif(0, 100)
 }
@@ -128,6 +133,9 @@ mod3 <- jags(data = datax,
      n.thin = 1)
 
 mod3
+
+# traceplot
+traceplot(mod3)
 
 # convert regression coefficients from scaled to non-scaled
 # and compare to values used to generate data

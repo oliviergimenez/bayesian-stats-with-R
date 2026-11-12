@@ -58,6 +58,9 @@ complete_pooling_fit <- jags(data = mydata,
                              n.thin = 1)
 complete_pooling_fit
 
+# traceplot
+traceplot(complete_pooling_fit)
+
 # have a look to the MCMC values
 head(complete_pooling_fit$BUGSoutput$sims.matrix)
 
@@ -128,6 +131,9 @@ partial_pooling_fit <- jags(data = mydata,
                              n.burnin = 2500,
                              n.thin = 1)
 partial_pooling_fit
+
+# traceplot
+traceplot(complete_pooling_fit)
 
 # have a look to the MCMC values
 head(partial_pooling_fit$BUGSoutput$sims.matrix)

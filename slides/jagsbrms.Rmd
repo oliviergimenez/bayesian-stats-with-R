@@ -247,6 +247,12 @@ storks
 
 \normalsize
 
+## Trace plot
+
+```{r, out.width='70%', fig.align='center', eval = TRUE, echo = TRUE}
+traceplot(storks, ask = FALSE, mfrow = c(2, 2))
+```
+
 # Your turn: Practical 5
 
 

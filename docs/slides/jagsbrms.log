@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.10.17)  12 NOV 2026 06:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.10.17)  12 NOV 2026 07:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1104,9 +1104,20 @@ Overfull \vbox (119.92416pt too high) detected at line 466
 
 [21
 
-] [22
+]
+\openout4 = `jagsbrms.vrb'.
 
-] [23
+(./jagsbrms.vrb
+<jagsbrms_files/figure-beamer/unnamed-chunk-12-1.pdf, id=174, 743.77875pt x 398.48875pt>
+File: jagsbrms_files/figure-beamer/unnamed-chunk-12-1.pdf Graphic file (type pdf)
+<use jagsbrms_files/figure-beamer/unnamed-chunk-12-1.pdf>
+Package pdftex.def Info: jagsbrms_files/figure-beamer/unnamed-chunk-12-1.pdf  used on input line 9.
+(pdftex.def)             Requested size: 278.83578pt x 149.39035pt.
+) [22
+
+ <./jagsbrms_files/figure-beamer/unnamed-chunk-12-1.pdf>] [23
+
+] [24
 
 ]
 \openout4 = `jagsbrms.vrb'.
@@ -1114,12 +1125,12 @@ Overfull \vbox (119.92416pt too high) detected at line 466
 (./jagsbrms.vrb
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 7.
-) [24
+) [25
 
 ]
 \openout4 = `jagsbrms.vrb'.
 
-(./jagsbrms.vrb) [25
+(./jagsbrms.vrb) [26
 
 ]
 \openout4 = `jagsbrms.vrb'.
@@ -1128,12 +1139,7 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 6.
 (/Users/oliviergimenez/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)) [26
-
-]
-\openout4 = `jagsbrms.vrb'.
-
-(./jagsbrms.vrb) [27
+)) [27
 
 ]
 \openout4 = `jagsbrms.vrb'.
@@ -1146,30 +1152,33 @@ File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 (./jagsbrms.vrb) [29
 
 ]
-<jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-18-1.pdf, id=226, 708.6475pt x 362.35374pt>
-File: jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-18-1.pdf Graphic file (type pdf)
-<use jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-18-1.pdf>
-Package pdftex.def Info: jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-18-1.pdf  used on input line 557.
+\openout4 = `jagsbrms.vrb'.
+
+(./jagsbrms.vrb) [30
+
+]
+<jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-19-1.pdf, id=241, 708.6475pt x 362.35374pt>
+File: jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-19-1.pdf Graphic file (type pdf)
+<use jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-19-1.pdf>
+Package pdftex.def Info: jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-19-1.pdf  used on input line 568.
 (pdftex.def)             Requested size: 708.64578pt x 362.35286pt.
 
-Overfull \vbox (9.01102pt too high) detected at line 557
+Overfull \vbox (9.01102pt too high) detected at line 568
  []
 
-[30
+[31
 
- <./jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-18-1.pdf>] [31
+ <./jagsbrms_files/jagsbrms_files/figure-beamer/unnamed-chunk-19-1.pdf>] [32
 
 ]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 562.
-[32
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 573.
+[33
 
 ]
 \openout4 = `jagsbrms.vrb'.
 
-(./jagsbrms.vrb) [33
-
-] (./jagsbrms.vrb) [34
+(./jagsbrms.vrb) [34
 
 ] (./jagsbrms.vrb) [35
 
@@ -1177,17 +1186,14 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <14.4> not available
 
 ] (./jagsbrms.vrb) [37
 
-]
-\openout4 = `jagsbrms.vrb'.
-
-(./jagsbrms.vrb) [38
-
-] [39
+] (./jagsbrms.vrb) [38
 
 ]
 \openout4 = `jagsbrms.vrb'.
 
-(./jagsbrms.vrb) [40
+(./jagsbrms.vrb) [39
+
+] [40
 
 ]
 \openout4 = `jagsbrms.vrb'.
@@ -1202,40 +1208,40 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <14.4> not available
 ]
 \openout4 = `jagsbrms.vrb'.
 
+(./jagsbrms.vrb) [43
+
+]
+\openout4 = `jagsbrms.vrb'.
+
 (./jagsbrms.vrb)
-Overfull \vbox (7.47528pt too high) detected at line 712
+Overfull \vbox (7.47528pt too high) detected at line 723
  []
 
-[43
+[44
 
 ]
 \openout4 = `jagsbrms.vrb'.
 
 (./jagsbrms.vrb
-<jagsbrms_files/figure-beamer/unnamed-chunk-26-1.pdf, id=336, 752.8125pt x 423.5825pt>
-File: jagsbrms_files/figure-beamer/unnamed-chunk-26-1.pdf Graphic file (type pdf)
-<use jagsbrms_files/figure-beamer/unnamed-chunk-26-1.pdf>
-Package pdftex.def Info: jagsbrms_files/figure-beamer/unnamed-chunk-26-1.pdf  used on input line 9.
+<jagsbrms_files/figure-beamer/unnamed-chunk-27-1.pdf, id=351, 752.8125pt x 423.5825pt>
+File: jagsbrms_files/figure-beamer/unnamed-chunk-27-1.pdf Graphic file (type pdf)
+<use jagsbrms_files/figure-beamer/unnamed-chunk-27-1.pdf>
+Package pdftex.def Info: jagsbrms_files/figure-beamer/unnamed-chunk-27-1.pdf  used on input line 9.
 (pdftex.def)             Requested size: 278.83578pt x 156.89758pt.
 )
-Overfull \vbox (1.90085pt too high) detected at line 723
- []
-
-[44
-
- <./jagsbrms_files/figure-beamer/unnamed-chunk-26-1.pdf>]
-\openout4 = `jagsbrms.vrb'.
-
-(./jagsbrms.vrb)
-Overfull \vbox (41.81934pt too high) detected at line 760
+Overfull \vbox (1.90085pt too high) detected at line 734
  []
 
 [45
 
-]
+ <./jagsbrms_files/figure-beamer/unnamed-chunk-27-1.pdf>]
 \openout4 = `jagsbrms.vrb'.
 
-(./jagsbrms.vrb) [46
+(./jagsbrms.vrb)
+Overfull \vbox (41.81934pt too high) detected at line 771
+ []
+
+[46
 
 ]
 \openout4 = `jagsbrms.vrb'.
@@ -1258,6 +1264,11 @@ Overfull \vbox (41.81934pt too high) detected at line 760
 (./jagsbrms.vrb) [50
 
 ]
+\openout4 = `jagsbrms.vrb'.
+
+(./jagsbrms.vrb) [51
+
+]
 \tf@nav=\write6
 \openout6 = `jagsbrms.nav'.
 
@@ -1274,18 +1285,18 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29967 strings out of 469471
- 598662 string characters out of 5466954
+ 29984 strings out of 469471
+ 599282 string characters out of 5466954
  990050 words of memory out of 5000000
- 57771 multiletter control sequences out of 15000+600000
+ 57783 multiletter control sequences out of 15000+600000
  686677 words of font info for 119 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  102i,13n,123p,1877b,760s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss8.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss9.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsso8.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></Users/oliviergimenez/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on jagsbrms.pdf (50 pages, 849564 bytes).
+Output written on jagsbrms.pdf (51 pages, 1248848 bytes).
 PDF statistics:
- 501 PDF objects out of 1000 (max. 8388607)
- 401 compressed objects within 5 object streams
- 140 named destinations out of 1000 (max. 500000)
- 36967 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 516 PDF objects out of 1000 (max. 8388607)
+ 412 compressed objects within 5 object streams
+ 143 named destinations out of 1000 (max. 500000)
+ 36972 words of extra memory for PDF output out of 42996 (max. 10000000)
 

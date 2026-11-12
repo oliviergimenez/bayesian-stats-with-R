@@ -20,9 +20,9 @@ logistic <- function() {
                                                          # on logit scale
   }
   # priors
-  a ~ dnorm(0,0.001) # intercept
-  b.temp ~ dnorm(0,0.001) # slope for temperature
-  b.rain ~ dnorm(0,0.001) # slope for rainfall
+  a ~ dnorm(0,1/1.5^2) # intercept
+  b.temp ~ dnorm(0,1/1.5^2) # slope for temperature
+  b.rain ~ dnorm(0,1/1.5^2) # slope for rainfall
 }
 
 
@@ -53,6 +53,9 @@ storks <- jags(data = datax,
 
 # display results
 storks
+
+# traceplots
+traceplot(storks, ask = FALSE, mfrow = c(2,2))
 
 # explore MCMC simulations
 head(storks$BUGSoutput$sims.matrix)
@@ -175,7 +178,6 @@ data.frame(pluie = grid.pluie,
 
 
 
-
 #---------------- fit model with constant breeding success
 
 # read in data
@@ -193,7 +195,7 @@ M0 <- function() {
     # on logit scale
   }
   # priors
-  a ~ dnorm(0,0.001) # intercept
+  a ~ dnorm(0,1/1.5^2) # intercept
 }
 
 
@@ -230,6 +232,7 @@ DIC <- rbind(DIC, data.frame(model = 'null (no covariate)', DIC = storks0$BUGSou
 
 # get prob of success (via back-transformation)
 p <- plogis(a)
+dev.off()
 hist(p)
 mean(p)
 
@@ -253,8 +256,8 @@ M1 <- function() {
     # on logit scale
   }
   # priors
-  a ~ dnorm(0,0.001) # intercept
-  b.rain ~ dnorm(0,0.001) # slope for rainfall
+  a ~ dnorm(0,1/1.5^2) # intercept
+  b.rain ~ dnorm(0,1/1.5^2) # slope for rainfall
 }
 
 
